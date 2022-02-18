@@ -203,6 +203,7 @@ namespace {
     unsigned i = 0; while (!fonts[fonts.size() - 1].empty()) { fonts.push_back(ngs::fs::directory_contents_next()); message_pump(); } 
     while (!fonts[fonts.size() - 1].empty()) { fonts.pop_back(); message_pump(); }
     ngs::fs::directory_contents_close(); unsigned long long fontSize = strtoull(ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").c_str(), nullptr, 10);
+    // for (unsigned i = 0; i < fonts.size(); i++) { if (ngs::fs::file_exists(fonts[i])) { printf("%s\n", fonts[i].c_str()); } message_pump(); }
     for (unsigned i = 0; i < fonts.size(); i++) if (ngs::fs::file_exists(fonts[i])) io.Fonts->AddFontFromFileTTF(fonts[i].c_str(), fontSize, (!i) ? nullptr : &config, ranges);
     io.Fonts->Build(); ImGui::StyleColorsDark();
     #if defined(USE_OGL_RENDERER)
