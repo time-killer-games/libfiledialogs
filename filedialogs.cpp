@@ -36,8 +36,6 @@
 #include <SDL2/SDL_syswm.h>
 #if defined(__APPLE__) && defined(__MACH__)
 #include <AppKit/AppKit.h>
-#endif
-#if defined(_WIN32) || (defined(__APPLE__) && defined(__MACH__))
 #include <imgui_impl_sdlrenderer.h>
 #define USE_SDL_RENDERER
 #else
