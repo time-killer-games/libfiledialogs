@@ -28,28 +28,32 @@
 #include <climits>
 #include <cstdlib>
 #include <sstream>
-#include <filesystem>
 #include <vector>
 #include <map>
-
-#include "filedialogs.h"
-#if defined(__APPLE__) && defined(__MACH__)
-#include "modifywindow.h"
-#endif
 
 #include <sys/stat.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
+#if defined(__APPLE__) && defined(__MACH__)
+#include <AppKit/AppKit.h>
+#endif
+#if defined(_WIN32) || (defined(__APPLE__) && defined(__MACH__))
+#include <imgui_impl_sdlrenderer.h>
+#define USE_SDL_RENDERER
+#else
+#define USE_OGL_RENDERER
+#include <imgui_impl_opengl2.h>
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <SDL2/SDL_opengles2.h>
 #else
 #include <SDL2/SDL_opengl.h>
 #endif
+#endif
 #include <imgui.h>
 #include <imgui_impl_sdl.h>
-#include <imgui_impl_opengl2.h>
 #include <lib/ImGuiFileDialog/ImGuiFileDialog.h>
 #include <lib/ImGuiFileDialog/filesystem.hpp>
+#include <lib/ImGuiFileDialog/filesystem.h>
 #include <unistd.h>
 #if defined(_WIN32) 
 #include <windows.h>
@@ -133,219 +137,6 @@ namespace {
     return string_output;
   }
 
-  string filename_path(string fname) {
-    #if defined(_WIN32)
-    size_t fp = fname.find_last_of("\\/");
-    #else
-    size_t fp = fname.find_last_of("/");
-    #endif
-    if (fp == string::npos) return fname;
-    return fname.substr(0, fp + 1);
-  }
-
-  string filename_name(string fname) {
-    #if defined(_WIN32)
-    size_t fp = fname.find_last_of("\\/");
-    #else
-    size_t fp = fname.find_last_of("/");
-    #endif
-    if (fp == string::npos) return fname;
-    return fname.substr(fp + 1);
-  }
-
-  string filename_ext(string fname) {
-    fname = filename_name(fname);
-    size_t fp = fname.find_last_of(".");
-    if (fp == string::npos) return "";
-    return fname.substr(fp);
-  }
-
-  string environment_get_variable(string name) {
-    #if defined(_WIN32)
-    string value;
-    wchar_t buffer[32767];
-    wstring u8name = widen(name);
-    if (GetEnvironmentVariableW(u8name.c_str(), buffer, 32767) != 0) {
-      value = narrow(buffer);
-    }
-    return value;
-    #else
-    char *value = getenv(name.c_str());
-    return value ? value : "";
-    #endif
-  }
-
-  bool environment_set_variable(string name, string value) {
-    #if defined(_WIN32)
-    wstring u8name = widen(name);
-    wstring u8value = widen(value);
-    return (SetEnvironmentVariableW(u8name.c_str(), u8value.c_str()) != 0);
-    #else
-    return (setenv(name.c_str(), value.c_str(), 1) == 0);
-    #endif
-  }
-
-  bool environment_unset_variable(string name) {
-    #if defined(_WIN32)
-    wstring u8name = widen(name);
-    return (SetEnvironmentVariableW(u8name.c_str(), nullptr) != 0);
-    #else
-    return (unsetenv(name.c_str()) == 0);
-    #endif
-  }
-
-  string filename_canonical(string fname);
-  string filename_remove_slash(string dname, bool canonical = false) {
-    if (canonical) dname = filename_canonical(dname);
-    #if defined(_WIN32)
-    while (dname.back() == '\\' || dname.back() == '/') {
-      message_pump(); dname.pop_back();
-    }
-    #else
-    while (dname.back() == '/' && (!dname.empty() && dname[0] != '/' && dname.length() != 1)) {
-      dname.pop_back();
-    }
-    #endif
-    return dname;
-  }
-
-  string filename_add_slash(string dname, bool canonical = false) {
-    dname = filename_remove_slash(dname, canonical);
-    #if defined(_WIN32)
-    if (dname.back() != '\\') dname += "\\";
-    #else
-    if (dname.back() != '/') dname += "/";
-    #endif
-    return dname;
-  }
-
-  string directory_get_current_working() {
-    std::error_code ec;
-    string result = filename_add_slash(ghc::filesystem::current_path(ec).string());
-    return (ec.value() == 0) ? result : "";
-  }
-
-  bool directory_set_current_working(string dname) {
-    std::error_code ec;
-    const ghc::filesystem::path path = ghc::filesystem::path(dname);
-    ghc::filesystem::current_path(path, ec);
-    return (ec.value() == 0);
-  }
-
-  string directory_get_temporary_path() {
-    std::error_code ec;
-    string result = filename_add_slash(ghc::filesystem::temp_directory_path(ec).string());
-    return (ec.value() == 0) ? result : directory_get_current_working();
-  }
-
-  string environment_expand_variables(string str) {
-    if (str.find("${") == string::npos) return str;
-    string pre = str.substr(0, str.find("${"));
-    string post = str.substr(str.find("${") + 2);
-    if (post.find('}') == string::npos) return str;
-    string variable = post.substr(0, post.find('}'));
-    post = post.substr(post.find('}') + 1);
-    string value = environment_get_variable(variable);
-    return environment_expand_variables(pre + value + post);
-  }
-
-  bool file_exists(string fname) {
-    std::error_code ec;
-    fname = environment_expand_variables(fname);
-    const ghc::filesystem::path path = ghc::filesystem::path(fname);
-    return (ghc::filesystem::exists(path, ec) && ec.value() == 0 && 
-      (!ghc::filesystem::is_directory(path, ec)) && ec.value() == 0);
-  }
-
-  bool directory_exists(string dname) {
-    std::error_code ec;
-    dname = filename_remove_slash(dname, false);
-    dname = environment_expand_variables(dname);
-    const ghc::filesystem::path path = ghc::filesystem::path(dname);
-    return (ghc::filesystem::exists(path, ec) && ec.value() == 0 && 
-      ghc::filesystem::is_directory(path, ec) && ec.value() == 0);
-  }
-
-  string filename_canonical(string fname) {
-    std::error_code ec;
-    fname = environment_expand_variables(fname);
-    const ghc::filesystem::path path = ghc::filesystem::path(fname);
-    string result = ghc::filesystem::weakly_canonical(path, ec).string();
-    if (ec.value() == 0 && directory_exists(result)) {
-      return filename_add_slash(result);
-    }
-    return (ec.value() == 0) ? result : "";
-  }
-
-  string filename_absolute(string fname) {
-    string result = "";
-    if (directory_exists(fname)) {
-      result = filename_add_slash(fname, true);
-    } else if (file_exists(fname)) {
-      result = filename_canonical(fname);
-    }
-    return result;
-  }
-
-  vector<string> directory_contents(string dname, string pattern, bool includedirs) {
-    std::error_code ec; vector<string> result_unfiltered;
-    if (!directory_exists(dname)) return result_unfiltered;
-    dname = filename_remove_slash(dname, true);
-    const ghc::filesystem::path path = ghc::filesystem::path(dname);
-    if (directory_exists(dname)) {
-      ghc::filesystem::directory_iterator end_itr;
-      for (ghc::filesystem::directory_iterator dir_ite(path, ec); dir_ite != end_itr; dir_ite.increment(ec)) {
-        message_pump(); if (ec.value() != 0) { break; }
-        ghc::filesystem::path file_path = ghc::filesystem::path(filename_absolute(dir_ite->path().string()));
-        if (!ghc::filesystem::is_directory(dir_ite->status(ec)) && ec.value() == 0) {
-          result_unfiltered.push_back(file_path.string());
-        } else if (ec.value() == 0 && includedirs) {
-          result_unfiltered.push_back(filename_add_slash(file_path.string()));
-        }
-      }
-    }
-    if (pattern.empty()) pattern = "*.*";
-    pattern = string_replace_all(pattern, " ", "");
-    pattern = string_replace_all(pattern, "*", "");
-    vector<string> extVec = string_split(pattern, ';');
-    std::set<string> filteredItems;
-    for (const string &item : result_unfiltered) {
-      message_pump();
-      for (const string &ext : extVec) {
-        message_pump();
-        if (ext == "." || ext == filename_ext(item) || directory_exists(item)) {
-          filteredItems.insert(item);
-          break;
-        }
-      }
-    }
-    vector<string> result_filtered;
-    if (filteredItems.empty()) return result_filtered;
-    for (const string &filteredName : filteredItems) {
-      message_pump();
-      result_filtered.push_back(filteredName);
-    }
-    return result_filtered;
-  }
-
-  string filename_drive(string fname) {
-    #if defined(_WIN32)
-    size_t fp = fname.find_first_of("\\/");
-    #else
-    size_t fp = fname.find_first_of("/");
-    #endif
-    if (!fp || fp == string::npos || fname[fp - 1] != ':')
-      return "";
-    return fname.substr(0, fp);
-  }
-
-  bool directory_create(string dname) {
-    std::error_code ec;
-    dname = filename_remove_slash(dname, true);
-    const ghc::filesystem::path path = ghc::filesystem::path(dname);
-    return (ghc::filesystem::create_directories(path, ec) && ec.value() == 0);
-  }
-
   enum {
     openFile,
     openFiles,
@@ -355,18 +146,30 @@ namespace {
 
   string file_dialog_helper(string filter, string fname, string dir, string title, int type) {
     std::setlocale(LC_ALL, ".UTF8");
-    SDL_Window *window; SDL_Renderer *renderer;
+    SDL_Window *window;
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
       return "";
     }
+    #if defined(USE_OGL_RENDERER)
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    #endif
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
+    #if defined(USE_OGL_RENDERER)
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI |
-    SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR); window = SDL_CreateWindow(title.c_str(), 
+    SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR);
+    #elif defined(USE_SDL_RENDERER)
+    SDL_WindowFlags windowFlags = (SDL_WindowFlags)(SDL_WINDOW_ALLOW_HIGHDPI |
+    SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR);
+    #endif
+    window = SDL_CreateWindow(title.c_str(), 
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 720, 348, windowFlags);
     if (window == nullptr) return "";
+    #if defined(USE_SDL_RENDERER)
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+    if (renderer == nullptr) return "";
+    #endif
     #if defined(_WIN32)
     SDL_SysWMinfo system_info;
     SDL_VERSION(&system_info.version);
@@ -378,24 +181,39 @@ namespace {
     SDL_SysWMinfo system_info;
     SDL_VERSION(&system_info.version);
     if (!SDL_GetWindowWMInfo(window, &system_info)) return "";
-    void *nsWnd = (void *)system_info.info.cocoa.window;
-    modifywindow(nsWnd);
+    NSWindow *nsWnd = system_info.info.cocoa.window;
+    [[nsWnd standardWindowButton:NSWindowCloseButton] setHidden:NO];
+    [[nsWnd standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
+    [[nsWnd standardWindowButton:NSWindowZoomButton] setHidden:YES];
+    [[nsWnd standardWindowButton:NSWindowCloseButton] setEnabled:YES];
+    [[nsWnd standardWindowButton:NSWindowMiniaturizeButton] setEnabled:NO];
+    [[nsWnd standardWindowButton:NSWindowZoomButton] setEnabled:NO];
     #endif
+    #if defined(USE_OGL_RENDERER)
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
     SDL_GL_MakeCurrent(window, gl_context);
     SDL_GL_SetSwapInterval(1);
+    #endif
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext(); if (environment_get_variable("IMGUI_FONT_PATH").empty())
-    environment_set_variable("IMGUI_FONT_PATH", directory_get_current_working() + "fonts");
-    if (environment_get_variable("IMGUI_FONT_SIZE").empty())
-    environment_set_variable("IMGUI_FONT_SIZE", std::to_string(30));
+    ImGui::CreateContext(); if (ngs::fs::environment_get_variable("IMGUI_FONT_PATH").empty())
+    ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
+    if (ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").empty())
+    ngs::fs::environment_set_variable("IMGUI_FONT_SIZE", std::to_string(30));
     ImGuiIO& io = ImGui::GetIO(); (void)io; ImFontConfig config; 
     config.MergeMode = true; ImFont *font = nullptr; ImWchar ranges[] = { 0x0020, 0xFFFF, 0 }; 
-    vector<string> fonts = directory_contents(filename_absolute(environment_get_variable("IMGUI_FONT_PATH")), "*.ttf;*.otf", false);
-    unsigned long long fontSize = strtoull(environment_get_variable("IMGUI_FONT_SIZE").c_str(), nullptr, 10);
-    for (unsigned i = 0; i < fonts.size(); i++) if (file_exists(fonts[i])) io.Fonts->AddFontFromFileTTF(fonts[i].c_str(), fontSize, (!i) ? nullptr : &config, ranges);
-    io.Fonts->Build(); ImGui::StyleColorsDark(); ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
-    ImGui_ImplOpenGL2_Init(); ImVec4 clear_color = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+    vector<string> fonts; fonts.push_back(ngs::fs::directory_contents_first(ngs::fs::filename_absolute(ngs::fs::environment_get_variable("IMGUI_FONT_PATH")), "*.ttf;*.otf", false, false));
+    unsigned i = 0; while (!fonts[fonts.size() - 1].empty()) fonts.push_back(ngs::fs::directory_contents_next()); while (!fonts[fonts.size() - 1].empty()) fonts.pop_back();
+    ngs::fs::directory_contents_close(); unsigned long long fontSize = strtoull(ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").c_str(), nullptr, 10);
+    for (unsigned i = 0; i < fonts.size(); i++) if (ngs::fs::file_exists(fonts[i])) io.Fonts->AddFontFromFileTTF(fonts[i].c_str(), fontSize, (!i) ? nullptr : &config, ranges);
+    io.Fonts->Build(); ImGui::StyleColorsDark();
+    #if defined(USE_OGL_RENDERER)
+    ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
+    ImGui_ImplOpenGL2_Init();
+    #elif defined(USE_SDL_RENDERER)
+    ImGui_ImplSDL2_InitForSDLRenderer(window);
+    ImGui_ImplSDLRenderer_Init(renderer); 
+    #endif
+    ImVec4 clear_color = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
     string filterNew = imgui_filter(filter); bool quit = false; SDL_Event e;
     string result; while (!quit) {
       while (SDL_PollEvent(&e)) {
@@ -404,7 +222,12 @@ namespace {
           quit = true;
         }
       }
-      ImGui_ImplOpenGL2_NewFrame(); ImGui_ImplSDL2_NewFrame();
+      #if defined(USE_OGL_RENDERER)
+      ImGui_ImplOpenGL2_NewFrame();
+      #elif defined(USE_SDL_RENDERER)
+      ImGui_ImplSDLRenderer_NewFrame();
+      #endif 
+      ImGui_ImplSDL2_NewFrame();
       ImGui::NewFrame(); ImGui::SetNextWindowPos(ImVec2(0, 0));
       if (!dir.empty() && dir.back() != CHR_SLASH) dir.push_back(CHR_SLASH);
       if (type == openFile) ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "", filterNew.c_str(), dir.c_str(), fname.c_str(), 1, nullptr, 0);
@@ -419,7 +242,7 @@ namespace {
           if (type == openFile || type == openFiles) {
             auto selection = ImGuiFileDialog::Instance()->GetSelection();
             for (auto const& [key, val] : selection) {
-              result += filename_absolute(val) + string("\n");
+              result += ngs::fs::filename_absolute(val) + string("\n");
             }
             if (!result.empty() && result.back() == '\n') {
               result.pop_back();
@@ -427,7 +250,7 @@ namespace {
           } else if (type == saveFile || type == selectFolder) {
             result = ImGuiFileDialog::Instance()->GetFilePathName();
             if (type == saveFile) {
-              result = string_replace_all(filename_canonical(result), ".*", "");
+              result = string_replace_all(ngs::fs::filename_canonical(result), ".*", "");
             } else {
               while (!result.empty() && result.back() == CHR_SLASH) {
                 result.pop_back();
@@ -439,10 +262,11 @@ namespace {
               #else
               result.push_back(CHR_SLASH);
               #endif
-              result = filename_canonical(result);
-              bool ret = (directory_exists(result) || strcmp(result.c_str(), 
-              (filename_drive(result + STR_SLASH) + STR_SLASH).c_str()) == 0);
-              if (!ret) ret = directory_create(result);
+              result = ngs::fs::filename_canonical(result);
+              ghc::filesystem::path respath = ghc::filesystem::path(result);
+              bool ret = (ngs::fs::directory_exists(result) || strcmp(result.c_str(), 
+              (respath.root_name().string() + STR_SLASH).c_str()) == 0);
+              if (!ret) ret = ngs::fs::directory_create(result);
               if (!ret) result = "";
             }
           }
@@ -450,15 +274,31 @@ namespace {
         ImGuiFileDialog::Instance()->Close();
         quit = true;
       }
-      ImGui::Render(); glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+
+      ImGui::Render();
+      #if defined(USE_OGL_RENDERER)
+      glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
       glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-      glClear(GL_COLOR_BUFFER_BIT); ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+      glClear(GL_COLOR_BUFFER_BIT);
+      ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
       SDL_GL_SwapWindow(window);
+      #elif defined(USE_SDL_RENDERER)
+      SDL_SetRenderDrawColor(renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
+      SDL_RenderClear(renderer);
+      ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+      SDL_RenderPresent(renderer);
+      #endif
     }
+    #if defined(USE_OGL_RENDERER)
     ImGui_ImplOpenGL2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
     SDL_GL_DeleteContext(gl_context);
+    #elif defined(USE_SDL_RENDERER)
+    ImGui_ImplSDLRenderer_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+    #endif
     SDL_DestroyWindow(window);
     SDL_Quit();
     return result;
@@ -469,7 +309,7 @@ namespace {
 namespace ngs::imgui {
 
   string get_open_filename(string filter, string fname) {
-    return file_dialog_helper(filter, fname, directory_get_current_working(), "Open", openFile);
+    return file_dialog_helper(filter, fname, ngs::fs::executable_get_directory(), "Open", openFile);
   }
 
   string get_open_filename_ext(string filter, string fname, string dir, string title) {
@@ -477,7 +317,7 @@ namespace ngs::imgui {
   }
 
   string get_open_filenames(string filter, string fname) {
-    return file_dialog_helper(filter, fname, directory_get_current_working(), "Open", openFiles);
+    return file_dialog_helper(filter, fname, ngs::fs::executable_get_directory(), "Open", openFiles);
   }
  
   string get_open_filenames_ext(string filter, string fname, string dir, string title) {
@@ -485,7 +325,7 @@ namespace ngs::imgui {
   }
 
   string get_save_filename(string filter, string fname) {
-    return file_dialog_helper(filter, fname, directory_get_current_working(), "Save As", saveFile);
+    return file_dialog_helper(filter, fname, ngs::fs::executable_get_directory(), "Save As", saveFile);
   }
 
   string get_save_filename_ext(string filter, string fname, string dir, string title) {

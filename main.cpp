@@ -26,20 +26,22 @@
 
 #include <cstring>
 #include <iostream>
+#if defined(__APPLE__) && defined(__MACH__)
+#include <AppKit/AppKit.h>
+#endif
 
 #include "filedialogs.h"
 
 #if defined(_WIN32)
 #undef main
-#elif defined(__APPLE__) && defined(__MACH__)
-#include "setpolicy.h"
 #endif
 
 using namespace ngs::imgui;
 
 int main(int argc, const char **argv) {
   #if defined(__APPLE__) && defined(__MACH__)
-  setpolicy();
+  [[NSApplication sharedApplication] setActivationPolicy:(NSApplicationActivationPolicy)1];
+  [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
   #endif
   if (argc <= 2) {
     return 0;
