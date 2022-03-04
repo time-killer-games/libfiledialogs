@@ -346,7 +346,11 @@ namespace ngs::fs {
           }
         }
       }
-      while (s->index < s->vec.size() - 1) {
+      #if defined(_WIN32)
+      while (findhardlinks_result.size() < s->info.nNumberOfLinks) {
+      #else
+      while (findhardlinks_result.size() < s->info.st_nlink) {
+      #endif
         message_pump(); s->index++;
         file_bin_hardlinks_helper(s);
       }
@@ -469,9 +473,9 @@ namespace ngs::fs {
         directory_create(filename_path(newname));
       #if defined(_WIN32)
       std::error_code ec;
-      const findhardlinks::fs::path path1 = findhardlinks::fs::path(fname);
-      const findhardlinks::fs::path path2 = findhardlinks::fs::path(newname);
-      findhardlinks::fs::create_hard_link(path1, path2, ec);
+      const ghc::filesystem::path path1 = ghc::filesystem::path(fname);
+      const ghc::filesystem::path path2 = ghc::filesystem::path(newname);
+      ghc::filesystem::create_hard_link(path1, path2, ec);
       return (ec.value() == 0);
       #else
       return (!link(fname.c_str(), newname.c_str()));
