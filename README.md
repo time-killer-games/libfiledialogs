@@ -1,4 +1,4 @@
-# ImGuiFileDialogCLI
+# filedialogs
 ImGuiFileDialogCLI
 
-![windows.png](windows.png)
+![screenshot.png](screenshot.png)
