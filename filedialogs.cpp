@@ -2,7 +2,7 @@
 
  MIT License
 
- Copyright © 2021 Samuel Venable
+ Copyright © 2021-2022 Samuel Venable
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -212,10 +212,10 @@ namespace {
     style.PopupBorderSize                   = 1;
     style.FrameBorderSize                   = 1;
     style.TabBorderSize                     = 1;
-    style.WindowRounding                    = 7;
+    style.WindowRounding                    = 0;
     style.ChildRounding                     = 4;
     style.FrameRounding                     = 3;
-    style.PopupRounding                     = 4;
+    style.PopupRounding                     = 0;
     style.ScrollbarRounding                 = 9;
     style.GrabRounding                      = 3;
     style.LogSliderDeadzone                 = 4;
