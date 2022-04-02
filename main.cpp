@@ -36,6 +36,10 @@
 #undef main
 #endif
 
+#ifdef _MSC_VER
+#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+#endif
+
 using namespace ngs::imgui;
 
 int main(int argc, const char **argv) {

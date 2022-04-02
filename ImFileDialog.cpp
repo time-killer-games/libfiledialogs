@@ -337,7 +337,7 @@ namespace ifd {
 		std::error_code ec;
 		Path = path;
 		IsDirectory = ghc::filesystem::is_directory(path, ec);
-		Size = ghc::filesystem::file_size(path, ec);
+		Size = (size_t)ghc::filesystem::file_size(path, ec);
 
 		struct stat attr;
 		stat(path.string().c_str(), &attr);
@@ -724,7 +724,7 @@ namespace ifd {
 
 		SHFILEINFOW fileInfo = { 0 };
 		std::wstring pathW = path.wstring();
-		for (int i = 0; i < pathW.size(); i++)
+		for (unsigned i = 0; i < pathW.size(); i++)
 			if (pathW[i] == '/')
 				pathW[i] = '\\';
 		SHGetFileInfoW(pathW.c_str(), attrs, &fileInfo, sizeof(SHFILEINFOW), flags);

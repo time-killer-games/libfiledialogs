@@ -43,6 +43,10 @@
 #include <stdint.h>     // intptr_t
 #endif
 
+#if defined(_MSC_VER)
+#pragma comment( lib, "OpenGL32.lib" )
+#endif
+
 // Include OpenGL header (without an OpenGL loader) requires a bit of fiddling
 #if defined(_WIN32) && !defined(APIENTRY)
 #define APIENTRY __stdcall                  // It is customary to use APIENTRY for OpenGL function pointer declarations on all platforms.  Additionally, the Windows OpenGL header needs APIENTRY.

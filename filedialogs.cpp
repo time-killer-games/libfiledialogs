@@ -24,34 +24,42 @@
 
 */
 
-#include <clocale>
 #include <climits>
 #include <cstdlib>
 #include <sstream>
 #include <vector>
 #include <map>
 
-#include <sys/stat.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_syswm.h>
-#if defined(__APPLE__) && defined(__MACH__)
-#include <AppKit/AppKit.h>
-#endif
-#include <imgui_impl_opengl2.h>
-#include <SDL2/SDL_opengl.h>
-#include <imgui.h>
-#include <imgui_impl_sdl.h>
-#include <ImFileDialog.h>
-#include <filesystem.hpp>
-#include <filesystem.h>
-#include <unistd.h>
+#include "sys/stat.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_syswm.h"
+#include "imgui_impl_opengl2.h"
+#include "SDL2/SDL_opengl.h"
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "ImFileDialog.h"
+#include "filesystem.hpp"
+#include "filesystem.h"
+
 #if defined(_WIN32) 
 #include <windows.h>
 #define STR_SLASH "\\"
 #define CHR_SLASH '\\'
 #else
+#if defined(__APPLE__) && defined(__MACH__)
+#include <AppKit/AppKit.h>
+#endif
+#include <unistd.h>
 #define STR_SLASH "/"
 #define CHR_SLASH '/'
+#endif
+
+#if defined(_MSC_VER)
+#if defined(_WIN32) && !defined(_WIN64)
+#pragma comment(lib, __FILE__"\\..\\lib\\x86\\SDL2.lib")
+#elif defined(_WIN32) && defined(_WIN64)
+#pragma comment(lib, __FILE__"\\..\\lib\\x64\\SDL2.lib")
+#endif
 #endif
 
 using std::string;
@@ -260,13 +268,13 @@ namespace {
     vector<string> fonts; fonts.push_back(ngs::fs::directory_contents_first(ngs::fs::environment_get_variable("IMGUI_FONT_PATH"), "*.ttf;*.otf", false, false));
     unsigned i = 0; while (!fonts[fonts.size() - 1].empty()) { fonts.push_back(ngs::fs::directory_contents_next()); message_pump(); } 
     while (!fonts[fonts.size() - 1].empty()) { fonts.pop_back(); message_pump(); }
-    ngs::fs::directory_contents_close(); unsigned long long fontSize = strtoull(ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").c_str(), nullptr, 10);
+    ngs::fs::directory_contents_close(); float fontSize = (float)strtod(ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").c_str(), nullptr);
     // for (unsigned i = 0; i < fonts.size(); i++) { if (ngs::fs::file_exists(fonts[i])) { printf("%s\n", fonts[i].c_str()); } message_pump(); }
     for (unsigned i = 0; i < fonts.size(); i++) if (ngs::fs::file_exists(fonts[i])) io.Fonts->AddFontFromFileTTF(fonts[i].c_str(), fontSize, (!i) ? nullptr : &config, ranges);
     io.Fonts->Build(); ApplyDefaultStyle();
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL2_Init();
-    ifd::FileDialog::Instance().CreateTexture = [](uint8_t* data, int w, int h, char fmt) -> void* {
+    ifd::FileDialog::Instance().CreateTexture = [](uint8_t* data, int w, int h, char fmt) -> void * {
       GLuint tex;
       glGenTextures(1, &tex);
       glBindTexture(GL_TEXTURE_2D, tex);
@@ -276,10 +284,10 @@ namespace {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, (fmt == 0) ? GL_BGRA : GL_RGBA, GL_UNSIGNED_BYTE, data);
       glBindTexture(GL_TEXTURE_2D, 0);
-      return (void *)tex;
+      return (void *)(uintptr_t)tex;
     };
     ifd::FileDialog::Instance().DeleteTexture = [](void *tex) {
-      GLuint texID = (GLuint)tex;
+      GLuint texID = (GLuint)(uintptr_t)tex;
       glDeleteTextures(1, &texID);
     };
     ImVec4 clear_color = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
