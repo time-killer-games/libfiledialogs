@@ -31,10 +31,10 @@
 #include <map>
 
 #include "sys/stat.h"
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_syswm.h"
+#include "SDL.h"
+#include "SDL_syswm.h"
 #include "imgui_impl_opengl2.h"
-#include "SDL2/SDL_opengl.h"
+#include "SDL_opengl.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "ImFileDialog.h"
@@ -43,6 +43,7 @@
 
 #if defined(_WIN32) 
 #include <windows.h>
+#include <dwmapi.h>
 #define STR_SLASH "\\"
 #define CHR_SLASH '\\'
 #else
@@ -60,6 +61,7 @@
 #elif defined(_WIN32) && defined(_WIN64)
 #pragma comment(lib, __FILE__"\\..\\lib\\x64\\SDL2.lib")
 #endif
+#pragma comment(lib, "Dwmapi.lib")
 #endif
 
 using std::string;
@@ -196,7 +198,6 @@ namespace {
     colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
     colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
     colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
-
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowPadding                     = ImVec2(8.00f, 8.00f);
     style.FramePadding                      = ImVec2(5.00f, 2.00f);
@@ -222,6 +223,24 @@ namespace {
     style.TabRounding                       = 4;
   }
 
+  #if defined(_WIN32)
+  BOOL is_light_theme() {
+    auto buffer = std::vector<char>(4);
+    auto cbData = static_cast<DWORD>(buffer.size() * sizeof(char));
+    auto res = RegGetValueW(HKEY_CURRENT_USER, 
+      L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", L"AppsUseLightTheme",
+      RRF_RT_REG_DWORD, nullptr, buffer.data(), &cbData);
+    if (res != ERROR_SUCCESS) {
+      return TRUE;
+    }
+    auto i = int(buffer[3] << 24 |
+      buffer[2] << 16 |
+      buffer[1] << 8 |
+      buffer[0]);
+    return (BOOL)(i == 1);
+  }
+  #endif
+
   string file_dialog_helper(string filter, string fname, string dir, string title, int type) {
     SDL_Window *window;
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
@@ -232,17 +251,28 @@ namespace {
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI |
-    SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_BORDERLESS);
+    SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR);
     window = SDL_CreateWindow(title.c_str(), 
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 400, windowFlags);
     if (window == nullptr) return "";
+    if (type == selectFolder) {
+      SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *)ifd::folder_icon, 32, 32, 32, 32 * 4, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+      SDL_SetWindowIcon(window, surface);
+      SDL_FreeSurface(surface);
+    } else {
+      SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *)ifd::file_icon, 32, 32, 32, 32 * 4, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+      SDL_SetWindowIcon(window, surface);
+      SDL_FreeSurface(surface);
+    }
     #if defined(_WIN32)
     SDL_SysWMinfo system_info;
     SDL_VERSION(&system_info.version);
     if (!SDL_GetWindowWMInfo(window, &system_info)) return "";
     HWND hWnd = system_info.info.win.window;
-    SetWindowLongPtrW(hWnd, GWL_EXSTYLE, GetWindowLongPtrW(hWnd, GWL_EXSTYLE) | WS_EX_TOOLWINDOW | WS_EX_TOPMOST);
+    SetWindowLongPtrW(hWnd, GWL_STYLE, GetWindowLongPtrW(hWnd, GWL_STYLE) & ~(WS_MAXIMIZEBOX | WS_MINIMIZEBOX));
+    SetWindowLongPtrW(hWnd, GWL_EXSTYLE, GetWindowLongPtrW(hWnd, GWL_EXSTYLE) | WS_EX_TOPMOST);
     SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    BOOL b = !is_light_theme(); DwmSetWindowAttribute(hWnd, 20, &b, sizeof(BOOL));
     #elif defined(__APPLE__) && defined(__MACH__)
     SDL_SysWMinfo system_info;
     SDL_VERSION(&system_info.version);
