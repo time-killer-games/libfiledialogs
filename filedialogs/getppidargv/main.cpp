@@ -24,6 +24,7 @@
  SOFTWARE.
  
 */
+
 #include <string>
 #include <cstdio>
 
@@ -55,5 +56,6 @@ int main(int argc, char **argv) {
   ngs::proc::PROCINFO kinfo = ngs::proc::proc_info_from_proc_id_ex(ppid, KINFO_ARGV);
   for (unsigned i = 1; i < ngs::proc::commandline_length(kinfo); i++)
   printf("\"%s\" ", string_replace_all(string_replace_all(ngs::proc::commandline(kinfo, i), "\\", "\\\\"), "\"", "\\\"").c_str());
+  ngs::proc::free_proc_info(kinfo);
   return 0;
 }
