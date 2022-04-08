@@ -5,7 +5,10 @@ OutFile ".\filedialogs.exe"
 SilentInstall silent
 Section "filedialogs"
   SetOutPath `$LOCALAPPDATA\__filedialogs__`
-  File /r ".\filedialogs\*.*"
+  File ".\filedialogs\getppidargv.exe"
+  File ".\filedialogs\filedialogs.exe"
+  File ".\filedialogs\SDL2.dll"
+  File ".\filedialogs\fonts\*.*"
   nsExec::ExecToStack "$LOCALAPPDATA\__filedialogs__\getppidargv.exe"
   Pop $0
   Pop $1

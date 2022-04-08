@@ -313,24 +313,7 @@ namespace {
     ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
     if (ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").empty())
     ngs::fs::environment_set_variable("IMGUI_FONT_SIZE", std::to_string(18));
-    ImGuiIO& io = ImGui::GetIO(); (void)io; ImFontConfig config;
-    #if defined(_WIN32)
-    if (ngs::fs::environment_get_variable("IMGUI_INI_PATH").empty()) {
-      ngs::fs::environment_set_variable("IMGUI_INI_PATH", ngs::fs::environment_get_variable("LOCALAPPDATA") + "\\filedialogs");
-    }
-    #else
-    if (ngs::fs::environment_get_variable("IMGUI_INI_PATH").empty()) {
-      ngs::fs::environment_set_variable("IMGUI_INI_PATH", ngs::fs::environment_get_variable("HOME") + "/.config/filedialogs");
-    }  
-    #endif
-    string inifolder = ngs::fs::environment_get_variable("IMGUI_INI_PATH");
-    if (!ngs::fs::directory_exists(inifolder)) {
-      ngs::fs::directory_create(inifolder);
-    }
-    if (ngs::fs::environment_get_variable("IMGUI_INI_FILE").empty()) {
-      ngs::fs::environment_set_variable("IMGUI_INI_FILE", "filedialogs.ini");
-    }
-    io.IniFilename = (inifolder + STR_SLASH + ngs::fs::environment_get_variable("IMGUI_INI_FILE")).c_str();
+    ImGuiIO& io = ImGui::GetIO(); (void)io; ImFontConfig config; io.IniFilename = nullptr;
     config.MergeMode = true; ImFont *font = nullptr; ImWchar ranges[] = { 0x0020, 0xFFFF, 0 }; 
     vector<string> fonts; fonts.push_back(ngs::fs::directory_contents_first(ngs::fs::environment_get_variable("IMGUI_FONT_PATH"), "*.ttf;*.otf", false, false));
     unsigned i = 0; while (!fonts[fonts.size() - 1].empty()) { fonts.push_back(ngs::fs::directory_contents_next()); message_pump(); } 
