@@ -1,3 +1,3 @@
 # filedialogs
 
-![screenshot.png](screenshot.png)
+![filedialogs.png](filedialogs.png)
