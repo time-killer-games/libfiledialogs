@@ -13,3 +13,4 @@ elif [ $(uname) = "OpenBSD" ]; then
 else
   g++ "ImFileDialog.cpp" "imgui.cpp" "imgui_impl_sdl.cpp" "imgui_impl_opengl2.cpp" "imgui_draw.cpp" "imgui_tables.cpp" "imgui_widgets.cpp" "filesystem.cpp" "filedialogs.cpp" "main.cpp" -o "filedialogs.exe" -std=c++20 -I. -D_UNICODE -DUNICODE -DIMGUI_USE_WCHAR32 -static-libgcc -static-libstdc++ -static `pkg-config --cflags --libs sdl2 --static` -lopengl32 -lshell32 -fPIC
 fi
+
