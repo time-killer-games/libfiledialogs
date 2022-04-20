@@ -48,7 +48,7 @@ int main(int argc, const char **argv) {
   [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
   #endif
   if (argc <= 2) {
-    if (argc == 1 || (argc == 2 && strcmp(argv[1], "--help"))) {
+    if (argc == 1 || (argc == 2 && strcmp(argv[1], "--help") == 0)) {
       std::cout << "usage: filedialogs [options]                       " << std::endl;
       std::cout << "  options:                                         " << std::endl;
       std::cout << "    --help                                         " << std::endl;
