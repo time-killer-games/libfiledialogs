@@ -48,6 +48,19 @@ int main(int argc, const char **argv) {
   [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
   #endif
   if (argc <= 2) {
+    if (argc == 1 || (argc == 2 && strcmp(argv[1], "--help"))) {
+      std::cout << "usage: filedialogs [options]                       " << std::endl;
+      std::cout << "  options:                                         " << std::endl;
+      std::cout << "    --help                                         " << std::endl;
+      std::cout << "    --get-open-filename      filter fname          " << std::endl;
+      std::cout << "    --get-open-filename-ext  filter fname dir title" << std::endl;
+      std::cout << "    --get-open-filenames     filter fname          " << std::endl;
+      std::cout << "    --get-open-filenames-ext filter fname dir title" << std::endl;
+      std::cout << "    --get-save-filename      filter fname          " << std::endl;
+      std::cout << "    --get-save-filename-ext  filter fname dir title" << std::endl;
+      std::cout << "    --get-directory          dname                 " << std::endl;
+      std::cout << "    --get-directory-alt      capt   root           " << std::endl;
+    }
     return 0;
   } else if (argc == 4 && strcmp(argv[1], "--get-open-filename") == 0) {
     std::cout << get_open_filename(argv[2], argv[3]) << std::endl;

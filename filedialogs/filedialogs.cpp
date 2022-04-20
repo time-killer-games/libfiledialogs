@@ -467,27 +467,27 @@ namespace {
 namespace ngs::imgui {
 
   string get_open_filename(string filter, string fname) {
-    return file_dialog_helper(filter, fname, ngs::fs::environment_get_variable(HOME_PATH), "Open", openFile);
+    return file_dialog_helper(((filter.empty()) ? "*.*" : filter), fname, ngs::fs::environment_get_variable(HOME_PATH), "Open", openFile);
   }
 
   string get_open_filename_ext(string filter, string fname, string dir, string title) {
-    return file_dialog_helper(filter, fname, ((dir.empty()) ? ngs::fs::environment_get_variable(HOME_PATH) : dir), title, openFile);
+    return file_dialog_helper(((filter.empty()) ? "*.*" : filter), fname, ((dir.empty()) ? ngs::fs::environment_get_variable(HOME_PATH) : dir), title, openFile);
   }
 
   string get_open_filenames(string filter, string fname) {
-    return file_dialog_helper(filter, fname, ngs::fs::environment_get_variable(HOME_PATH), "Open", openFiles);
+    return file_dialog_helper(((filter.empty()) ? "*.*" : filter), fname, ngs::fs::environment_get_variable(HOME_PATH), "Open", openFiles);
   }
  
   string get_open_filenames_ext(string filter, string fname, string dir, string title) {
-    return file_dialog_helper(filter, fname, ((dir.empty()) ? ngs::fs::environment_get_variable(HOME_PATH) : dir), title, openFiles);
+    return file_dialog_helper(((filter.empty()) ? "*.*" : filter), fname, ((dir.empty()) ? ngs::fs::environment_get_variable(HOME_PATH) : dir), title, openFiles);
   }
 
   string get_save_filename(string filter, string fname) {
-    return file_dialog_helper(filter, fname, ngs::fs::environment_get_variable(HOME_PATH), "Save As", saveFile);
+    return file_dialog_helper(((filter.empty()) ? "*.*" : filter), fname, ngs::fs::environment_get_variable(HOME_PATH), "Save As", saveFile);
   }
 
   string get_save_filename_ext(string filter, string fname, string dir, string title) {
-    return file_dialog_helper(filter, fname, ((dir.empty()) ? ngs::fs::environment_get_variable(HOME_PATH) : dir), title, saveFile);
+    return file_dialog_helper(((filter.empty()) ? "*.*" : filter), fname, ((dir.empty()) ? ngs::fs::environment_get_variable(HOME_PATH) : dir), title, saveFile);
   }
 
   string get_directory(string dname) {
