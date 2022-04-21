@@ -1,0 +1,15 @@
+﻿  filedialogs.cpp
+  filesystem.cpp
+  ImFileDialog.cpp
+  imgui.cpp
+  imgui_draw.cpp
+  imgui_impl_opengl2.cpp
+  imgui_impl_sdl.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  main.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 3793 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  filedialogs.vcxproj -> C:\Users\windows\Desktop\filedialogs\filedialogs\Release\filedialogs.exe
