@@ -35,6 +35,7 @@
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="ImFileDialog.h" />
+    <ClInclude Include="ImFileDialogMacros.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_opengl2.h" />
     <ClInclude Include="imgui_impl_sdl.h" />

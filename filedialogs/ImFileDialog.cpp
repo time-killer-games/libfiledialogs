@@ -2,6 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 #include "ImFileDialog.h"
+#include "ImFileDialogMacros.h"
 
 #include <fstream>
 #include <algorithm>
@@ -372,7 +373,7 @@ namespace ifd {
 		m_setDirectory(ghc::filesystem::current_path(), false);
 
 		// favorites are available on every OS
-		FileTreeNode* quickAccess = new FileTreeNode("Quick Access");
+		FileTreeNode* quickAccess = new FileTreeNode(IFD_QUICK_ACCESS);
 		quickAccess->Read = true;
 		m_treeCache.push_back(quickAccess);
 
@@ -388,7 +389,7 @@ namespace ifd {
 			quickAccess->Children.push_back(new FileTreeNode(homePath));
 
 		// This PC
-		FileTreeNode* thisPC = new FileTreeNode("This PC");
+		FileTreeNode* thisPC = new FileTreeNode(IFD_THIS_PC);
 		thisPC->Read = true;
 		DWORD d = GetLogicalDrives();
 		for (int i = 0; i < 26; i++)
@@ -404,7 +405,7 @@ namespace ifd {
 			quickAccess->Children.push_back(new FileTreeNode(homePath));
 
 		// This PC
-		FileTreeNode* thisPC = new FileTreeNode("This PC");
+		FileTreeNode* thisPC = new FileTreeNode(IFD_THIS_PC);
 		thisPC->Read = true;
 		for (const auto& entry : ghc::filesystem::directory_iterator("/", ec)) {
 			if (ghc::filesystem::is_directory(entry, ec))
@@ -523,7 +524,7 @@ namespace ifd {
 
 		// remove from sidebar
 		for (auto& p : m_treeCache)
-			if (p->Path == "Quick Access") {
+			if (p->Path == IFD_QUICK_ACCESS) {
 				for (size_t i = 0; i < p->Children.size(); i++)
 					if (p->Children[i]->Path == path) {
 						p->Children.erase(p->Children.begin() + i);
@@ -556,7 +557,7 @@ namespace ifd {
 		
 		// add to sidebar
 		for (auto& p : m_treeCache)
-			if (p->Path == "Quick Access") {
+			if (p->Path == IFD_QUICK_ACCESS) {
 				p->Children.push_back(new FileTreeNode(path));
 				break;
 			}
@@ -682,7 +683,7 @@ namespace ifd {
 			else if (filter[i] == '{') {
 				std::string filterName = filter.substr(lastSplit, i - lastSplit);
 				if (filterName == "*.*" || filterName == ".*" || filterName == "*") {
-					m_filter += std::string(std::string("All Files (*.*)\0").c_str(), 16);
+					m_filter += std::string((IFD_ALL_FILES + std::string(" (*.*)\0")).c_str(), 16);
 					m_filterExtensions.push_back(std::vector<std::string>());
 				}
 				else
@@ -701,7 +702,7 @@ namespace ifd {
 		if (lastSplit != 0) {
 			std::string filterName = filter.substr(lastSplit);
 			if (filterName == "*.*" || filterName == ".*" || filterName == "*") {
-				m_filter += std::string(std::string("All Files (*.*)\0").c_str(), 16);
+				m_filter += std::string((IFD_ALL_FILES + std::string(" (*.*)\0")).c_str(), 16);
 				m_filterExtensions.push_back(std::vector<std::string>());
 			}
 			else
@@ -953,14 +954,14 @@ namespace ifd {
 			m_clearIcons();
 		}
 
-		if (p.string() == "Quick Access") {
+		if (p.string() == IFD_QUICK_ACCESS) {
 			for (auto& node : m_treeCache) {
 				if (node->Path == p)
 					for (auto& c : node->Children)
 						m_content.push_back(FileData(c->Path));
 			}
 		} 
-		else if (p.string() == "This PC") {
+		else if (p.string() == IFD_THIS_PC) {
 			for (auto& node : m_treeCache) {
 				if (node->Path == p)
 					for (auto& c : node->Children)
@@ -1110,9 +1111,9 @@ namespace ifd {
 		if (m_zoom == 1.0f) {
 			if (ImGui::BeginTable("##contentTable", 3, /*ImGuiTableFlags_Resizable |*/ ImGuiTableFlags_Sortable, ImVec2(0, -FLT_MIN))) {
 				// header
-				ImGui::TableSetupColumn("Name##filename", ImGuiTableColumnFlags_WidthStretch, 0.0f -1.0f, 0);
-				ImGui::TableSetupColumn("Date modified##filedate", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 0.0f, 1);
-				ImGui::TableSetupColumn("Size##filesize", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 0.0f, 2);
+				ImGui::TableSetupColumn((IFD_NAME + std::string("##filename")).c_str(), ImGuiTableColumnFlags_WidthStretch, 0.0f -1.0f, 0);
+				ImGui::TableSetupColumn((IFD_DATE_MODIFIED + std::string("##filedate")).c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 0.0f, 1);
+				ImGui::TableSetupColumn((IFD_SIZE + std::string("##filesize")).c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 0.0f, 2);
                 ImGui::TableSetupScrollFreeze(0, 1);
 				ImGui::TableHeadersRow();
 
@@ -1217,11 +1218,11 @@ namespace ifd {
 	{
 		bool openAreYouSureDlg = false, openNewFileDlg = false, openNewDirectoryDlg = false, openOverwriteDlg = false;
 		if (ImGui::BeginPopupContextItem("##dir_context")) {
-			if (ImGui::Selectable("New file"))
+			if (ImGui::Selectable(IFD_NEW_FILE))
 				openNewFileDlg = true;
-			if (ImGui::Selectable("New directory"))
+			if (ImGui::Selectable(IFD_NEW_DIRECTORY))
 				openNewDirectoryDlg = true;
-			if (m_selectedFileItem != -1 && ImGui::Selectable("Delete"))
+			if (m_selectedFileItem != -1 && ImGui::Selectable(IFD_DELETE))
 				openAreYouSureDlg = true;
 			ImGui::EndPopup();
 		}
@@ -1236,57 +1237,57 @@ namespace ifd {
 			m_result.clear();
 		}
 		if (openAreYouSureDlg)
-			ImGui::OpenPopup("Are you sure?##delete");
+			ImGui::OpenPopup((IFD_ARE_YOU_SURE + std::string("##delete")).c_str());
 		if (openOverwriteDlg)
-			ImGui::OpenPopup("Overwrite file?##overwrite");
+			ImGui::OpenPopup((IFD_OVERWRITE_FILE + std::string("##overwrite")).c_str());
 		if (openNewFileDlg)
-			ImGui::OpenPopup("Enter file name##newfile");
+			ImGui::OpenPopup((IFD_ENTER_FILE_NAME + std::string("##newfile")).c_str());
 		if (openNewDirectoryDlg)
-			ImGui::OpenPopup("Enter directory name##newdir");
+			ImGui::OpenPopup((IFD_ENTER_DIRECTORY_NAME + std::string("##newdir")).c_str());
 		ImGui::SetNextWindowSize(ImVec2(315, 105), ImGuiCond_FirstUseEver);
-		if (ImGui::BeginPopupModal("Are you sure?##delete")) {
+		if (ImGui::BeginPopupModal((IFD_ARE_YOU_SURE + std::string("##delete")).c_str())) {
 			if (m_selectedFileItem >= static_cast<int>(m_content.size()) || m_content.size() == 0)
 				ImGui::CloseCurrentPopup();
 			else {
 				const FileData& data = m_content[m_selectedFileItem];
-				ImGui::TextWrapped("Are you sure you want to delete %s?", data.Path.filename().string().c_str());
-				if (ImGui::Button("Yes")) {
+				ImGui::TextWrapped(IFD_ARE_YOU_SURE_YOU_WANT_TO_DELETE, data.Path.filename().string().c_str());
+				if (ImGui::Button(IFD_YES)) {
 					std::error_code ec;
 					ghc::filesystem::remove_all(data.Path, ec);
 					m_setDirectory(m_currentDirectory, false); // refresh
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("No"))
+				if (ImGui::Button(IFD_NO))
 					ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
 		}
 		ImGui::SetNextWindowSize(ImVec2(315, 105), ImGuiCond_FirstUseEver);
-		if (ImGui::BeginPopupModal("Overwrite file?##overwrite")) {
+		if (ImGui::BeginPopupModal((IFD_OVERWRITE_FILE + std::string("##overwrite")).c_str())) {
 			if (m_selectedFileItem >= static_cast<int>(m_content.size()) || m_content.size() == 0)
 				ImGui::CloseCurrentPopup();
 			else {
 				const FileData& data = m_content[m_selectedFileItem];
-				ImGui::TextWrapped("Are you sure you want to overwrite %s?", m_inputTextbox);
-				if (ImGui::Button("Yes")) {
+				ImGui::TextWrapped(IFD_ARE_YOU_SURE_YOU_WANT_TO_OVERWRITE, m_inputTextbox);
+				if (ImGui::Button(IFD_YES)) {
 					m_isOpen = false;
 					ImGui::CloseCurrentPopup();
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("No")) {
+				if (ImGui::Button(IFD_NO)) {
 					m_result.clear();
 					ImGui::CloseCurrentPopup();
 				}
 			}
 			ImGui::EndPopup();
 		}
-		if (ImGui::BeginPopupModal("Enter file name##newfile")) {
+		if (ImGui::BeginPopupModal((IFD_ENTER_FILE_NAME + std::string("##newfile")).c_str())) {
 			ImGui::PushItemWidth(250.0f);
 			ImGui::InputText("##newfilename", m_newEntryBuffer, 1024); // TODO: remove hardcoded literals
 			ImGui::PopItemWidth();
 
-			if (ImGui::Button("OK")) {
+			if (ImGui::Button(IFD_OK)) {
 				std::ofstream out((m_currentDirectory / std::string(m_newEntryBuffer)).string());
 				out << "";
 				out.close();
@@ -1297,18 +1298,18 @@ namespace ifd {
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("Cancel")) {
+			if (ImGui::Button(IFD_CANCEL)) {
 				m_newEntryBuffer[0] = 0;
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
 		}
-		if (ImGui::BeginPopupModal("Enter directory name##newdir")) {
+		if (ImGui::BeginPopupModal((IFD_ENTER_DIRECTORY_NAME + std::string("##newdir")).c_str())) {
 			ImGui::PushItemWidth(250.0f);
 			ImGui::InputText("##newfilename", m_newEntryBuffer, 1024); // TODO: remove hardcoded literals
 			ImGui::PopItemWidth();
 
-			if (ImGui::Button("OK")) {
+			if (ImGui::Button(IFD_OK)) {
 				std::error_code ec;
 				ghc::filesystem::create_directory(m_currentDirectory / std::string(m_newEntryBuffer), ec);
 				m_setDirectory(m_currentDirectory, false); // refresh
@@ -1316,7 +1317,7 @@ namespace ifd {
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("Cancel")) {
+			if (ImGui::Button(IFD_CANCEL)) {
 				ImGui::CloseCurrentPopup();
 				m_newEntryBuffer[0] = 0;
 			}
@@ -1370,7 +1371,7 @@ namespace ifd {
 		ImGui::SameLine();
 		ImGui::PopStyleColor();
 
-		if (ImGui::InputTextEx("##searchTB", "Search", m_searchBuffer, 128, ImVec2(-FLT_MIN, GUI_ELEMENT_SIZE), 0)) // TODO: no hardcoded literals
+		if (ImGui::InputTextEx("##searchTB", IFD_SEARCH, m_searchBuffer, 128, ImVec2(-FLT_MIN, GUI_ELEMENT_SIZE), 0)) // TODO: no hardcoded literals
 			m_setDirectory(m_currentDirectory, false); // refresh
 
 
@@ -1408,9 +1409,9 @@ namespace ifd {
 
 		
 		/***** BOTTOM BAR *****/
-		ImGui::Text("File name:");
+		ImGui::Text(IFD_FILE_NAME_WITH_COLON);
 		ImGui::SameLine();
-		if (ImGui::InputTextEx("##file_input", "File name", m_inputTextbox, 1024, ImVec2((m_type != IFD_DIALOG_DIRECTORY) ? -250.0f : -FLT_MIN, 0), ImGuiInputTextFlags_EnterReturnsTrue)) {
+		if (ImGui::InputTextEx("##file_input", IFD_FILE_NAME_WITHOUT_COLON, m_inputTextbox, 1024, ImVec2((m_type != IFD_DIALOG_DIRECTORY) ? -250.0f : -FLT_MIN, 0), ImGuiInputTextFlags_EnterReturnsTrue)) {
 			bool success = m_finalize(std::string(m_inputTextbox));
 #ifdef _WIN32
 			if (!success)
@@ -1435,7 +1436,7 @@ namespace ifd {
 		// buttons
 		float ok_cancel_width = GUI_ELEMENT_SIZE * 7;
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - ok_cancel_width);
-		if (ImGui::Button(m_type == IFD_DIALOG_SAVE ? "Save" : "Open", ImVec2(ok_cancel_width / 2 - ImGui::GetStyle().ItemSpacing.x, 0.0f))) {
+		if (ImGui::Button(m_type == IFD_DIALOG_SAVE ? IFD_SAVE : IFD_OPEN, ImVec2(ok_cancel_width / 2 - ImGui::GetStyle().ItemSpacing.x, 0.0f))) {
 			std::string filename(m_inputTextbox);
 			bool success = false;
 
@@ -1456,7 +1457,7 @@ namespace ifd {
 #endif
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Cancel", ImVec2(-FLT_MIN, 0.0f))) {
+		if (ImGui::Button(IFD_CANCEL, ImVec2(-FLT_MIN, 0.0f))) {
 			if (m_type == IFD_DIALOG_DIRECTORY)
 				m_isOpen = false;
 			else {
