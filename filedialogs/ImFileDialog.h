@@ -8,7 +8,10 @@
 #include <unordered_map>
 #include <algorithm> // std::min, std::max
 
-#define NOMINMAX
+#ifndef NOMINMAX
+	#define NOMINMAX
+#endif
+
 #include "filesystem.hpp"
 
 #define IFD_DIALOG_FILE			0
