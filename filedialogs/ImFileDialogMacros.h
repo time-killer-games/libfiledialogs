@@ -1,6 +1,6 @@
 #pragma once
 #include "filesystem.h"
-#define SET_LOCALE_ENVIRON(name, default_value) ((!ngs::fs::environment_get_variable(name).empty()) ? ngs::fs::environment_get_variable(name).c_str() : default_value)
+#define SET_LOCALE_ENVIRON(name, default_value) ((!ngs::fs::environment_get_variable(name).empty()) ? ngs::fs::environment_get_variable(name).c_str() : std::string(default_value).c_str())
 #ifndef IFD_QUICK_ACCESS
 #define IFD_QUICK_ACCESS SET_LOCALE_ENVIRON("IMGUI_QUICK_ACCESS", "Quick Access")
 #endif
