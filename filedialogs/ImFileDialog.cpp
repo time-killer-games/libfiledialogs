@@ -1244,7 +1244,7 @@ namespace ifd {
 			ImGui::OpenPopup((IFD_ENTER_FILE_NAME + std::string("##newfile")).c_str());
 		if (openNewDirectoryDlg)
 			ImGui::OpenPopup((IFD_ENTER_DIRECTORY_NAME + std::string("##newdir")).c_str());
-		ImGui::SetNextWindowSize(ImVec2((GImGui->FontSize * strlen(IFD_ARE_YOU_SURE_YOU_WANT_TO_DELETE)) / 2.85, GImGui->FontSize * 6), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2((float)((GImGui->FontSize * strlen(IFD_ARE_YOU_SURE_YOU_WANT_TO_DELETE)) / 2.85), (float)(GImGui->FontSize * 6)), ImGuiCond_FirstUseEver);
 		if (ImGui::BeginPopupModal((IFD_ARE_YOU_SURE + std::string("##delete")).c_str())) {
 			if (m_selectedFileItem >= static_cast<int>(m_content.size()) || m_content.size() == 0)
 				ImGui::CloseCurrentPopup();
@@ -1263,7 +1263,7 @@ namespace ifd {
 			}
 			ImGui::EndPopup();
 		}
-		ImGui::SetNextWindowSize(ImVec2((GImGui->FontSize * strlen(IFD_ARE_YOU_SURE_YOU_WANT_TO_OVERWRITE)) / 2.85, GImGui->FontSize * 6), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2((float)((GImGui->FontSize * strlen(IFD_ARE_YOU_SURE_YOU_WANT_TO_OVERWRITE)) / 2.85), (float)(GImGui->FontSize * 6)), ImGuiCond_FirstUseEver);
 		if (ImGui::BeginPopupModal((IFD_OVERWRITE_FILE + std::string("##overwrite")).c_str())) {
 			if (m_selectedFileItem >= static_cast<int>(m_content.size()) || m_content.size() == 0)
 				ImGui::CloseCurrentPopup();
