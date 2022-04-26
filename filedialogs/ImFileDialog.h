@@ -12,11 +12,15 @@
 	#define NOMINMAX
 #endif
 
+#include "filesystem.h"
 #include "filesystem.hpp"
 
 #define IFD_DIALOG_FILE			0
 #define IFD_DIALOG_DIRECTORY		1
 #define IFD_DIALOG_SAVE			2
+
+#define IFD_DIALOG_WIDTH		(int)((!ngs::fs::environment_get_variable("IMGUI_DIALOG_WIDTH" ).empty()) ? strtoul(ngs::fs::environment_get_variable("IMGUI_DIALOG_WIDTH" ).c_str(), nullptr, 10) : 600)
+#define IFD_DIALOG_HEIGHT		(int)((!ngs::fs::environment_get_variable("IMGUI_DIALOG_HEIGHT").empty()) ? strtoul(ngs::fs::environment_get_variable("IMGUI_DIALOG_HEIGHT").c_str(), nullptr, 10) : 400)
 
 namespace ifd {
 	class FileDialog {
