@@ -1379,7 +1379,11 @@ namespace ifd {
 		/***** CONTENT *****/
 		float bottomBarHeight = (GImGui->FontSize + ImGui::GetStyle().FramePadding.y + ImGui::GetStyle().ItemSpacing.y * 2.0f) * 2;
 		if (ImGui::BeginTable("##table", 2, ImGuiTableFlags_Resizable, ImVec2(0, -bottomBarHeight))) {
+			#if defined(__linux__)
+			ImGui::TableSetupColumn("##tree", ImGuiTableColumnFlags_WidthFixed, (float)((GImGui->FontSize * std::string((IFD_QUICK_ACCESS >= IFD_THIS_PC) ? IFD_QUICK_ACCESS : IFD_THIS_PC).length())));
+			#else
 			ImGui::TableSetupColumn("##tree", ImGuiTableColumnFlags_WidthFixed, (float)((GImGui->FontSize * std::string((IFD_QUICK_ACCESS >= IFD_THIS_PC) ? IFD_QUICK_ACCESS : IFD_THIS_PC).length()) / 1.7));
+			#endif
 			ImGui::TableSetupColumn("##content", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableNextRow();
 
