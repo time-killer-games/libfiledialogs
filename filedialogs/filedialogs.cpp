@@ -265,10 +265,25 @@ namespace {
   }
   #endif
 
+  vector<string> fonts;
   #if (defined(__MACH__) && defined(__APPLE__))
   SDL_Renderer *renderer = nullptr;
   SDL_Surface *surf = nullptr;
   #endif
+
+  void ifd_load_fonts() {
+    if (ngs::fs::environment_get_variable("IMGUI_FONT_PATH").empty()) {
+      if (!fonts.empty()) fonts.clear();
+      ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
+      fonts.push_back(ngs::fs::directory_contents_first(ngs::fs::environment_get_variable("IMGUI_FONT_PATH"), "*.ttf;*.otf", false, false));
+      while (!fonts[fonts.size() - 1].empty()) {
+        message_pump();
+        fonts.push_back(ngs::fs::directory_contents_next());
+      }
+      if (!fonts.empty()) fonts.pop_back();
+      ngs::fs::directory_contents_close();
+    }
+  }
 
   string file_dialog_helper(string filter, string fname, string dir, string title, int type) {
     SDL_Window *window;
@@ -331,17 +346,12 @@ namespace {
     SDL_GL_SetSwapInterval(1);
     #endif
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext(); if (ngs::fs::environment_get_variable("IMGUI_FONT_PATH").empty())
-    ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
+    ImGui::CreateContext(); ifd_load_fonts();
     if (ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").empty())
     ngs::fs::environment_set_variable("IMGUI_FONT_SIZE", std::to_string(18));
     ImGuiIO& io = ImGui::GetIO(); (void)io; ImFontConfig config; io.IniFilename = nullptr;
     config.MergeMode = true; ImFont *font = nullptr; ImWchar ranges[] = { 0x0020, 0xFFFF, 0 }; 
-    vector<string> fonts; fonts.push_back(ngs::fs::directory_contents_first(ngs::fs::environment_get_variable("IMGUI_FONT_PATH"), "*.ttf;*.otf", false, false));
-    unsigned i = 0; while (!fonts[fonts.size() - 1].empty()) { fonts.push_back(ngs::fs::directory_contents_next()); message_pump(); } 
-    while (!fonts[fonts.size() - 1].empty()) { fonts.pop_back(); message_pump(); }
-    ngs::fs::directory_contents_close(); float fontSize = (float)strtod(ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").c_str(), nullptr);
-    // for (unsigned i = 0; i < fonts.size(); i++) { if (ngs::fs::file_exists(fonts[i])) { printf("%s\n", fonts[i].c_str()); } message_pump(); }
+    float fontSize = (float)strtod(ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").c_str(), nullptr);
     for (unsigned i = 0; i < fonts.size(); i++) if (ngs::fs::file_exists(fonts[i])) io.Fonts->AddFontFromFileTTF(fonts[i].c_str(), fontSize, (!i) ? nullptr : &config, ranges);
     io.Fonts->Build(); ApplyDefaultStyle();
     #if (!defined(__MACH__) && !defined(__APPLE__))
@@ -466,6 +476,19 @@ namespace {
 
 namespace ngs::imgui {
 
+  void ifd_load_fonts() {
+    if (!fonts.empty()) fonts.clear();
+    if (!ngs::fs::environment_get_variable("IMGUI_FONT_PATH").empty()) {
+      fonts.push_back(ngs::fs::directory_contents_first(ngs::fs::environment_get_variable("IMGUI_FONT_PATH"), "*.ttf;*.otf", false, false));
+      while (!fonts[fonts.size() - 1].empty()) {
+        message_pump();
+        fonts.push_back(ngs::fs::directory_contents_next());
+      }
+      if (!fonts.empty()) fonts.pop_back();
+      ngs::fs::directory_contents_close();
+    }
+  }
+
   string get_open_filename(string filter, string fname) {
     return file_dialog_helper(((filter.empty()) ? "*.*" : filter), fname, ngs::fs::environment_get_variable(HOME_PATH), "Open", openFile);
   }
@@ -499,3 +522,57 @@ namespace ngs::imgui {
   }
 
 } // namespace ngs::imgui
+
+#if defined(IFD_SHARED_LIBRARY)
+void ifd_load_fonts() {
+  ngs::imgui::ifd_load_fonts();
+}
+
+const char *get_open_filename(const char *filter, const char *fname) {
+  static string result;
+  result = ngs::imgui::get_open_filename(filter, fname);
+  return result.c_str();
+}
+
+const char *get_open_filename_ext(const char *filter, const char *fname, const char *dir, const char *title) {
+  static string result;
+  result = ngs::imgui::get_open_filename_ext(filter, fname, dir, title);
+  return result.c_str();
+}
+
+const char *get_open_filenames(const char *filter, const char *fname) {
+  static string result;
+  result = ngs::imgui::get_open_filenames(filter, fname);
+  return result.c_str();
+}
+
+const char *get_open_filenames_ext(const char *filter, const char *fname, const char *dir, const char *title) {
+  static string result;
+  result = ngs::imgui::get_open_filenames_ext(filter, fname, dir, title);
+  return result.c_str();
+}
+
+const char *get_save_filename(const char *filter, const char *fname) {
+  static string result;
+  result = ngs::imgui::get_save_filename(filter, fname);
+  return result.c_str();
+}
+
+const char *get_save_filename_ext(const char *filter, const char *fname, const char *dir, const char *title) {
+  static string result;
+  result = ngs::imgui::get_save_filename_ext(filter, fname, dir, title);
+  return result.c_str();
+}
+
+const char *get_directory(const char *dname) {
+  static string result;
+  result = ngs::imgui::get_directory(dname);
+  return result.c_str();
+}
+
+const char *get_directory_alt(const char *capt, const char *root) {
+  static string result;
+  result = ngs::imgui::get_directory_alt(capt, root);
+  return result.c_str();
+}
+#endif

@@ -39,3 +39,19 @@ namespace ngs::imgui {
 
 } // namespace ngs::imgui
 
+#if defined(IFD_SHARED_LIBRARY)
+#ifdef _WIN32
+#define EXPORTED_FUNCTION extern "C" __declspec(dllexport)
+#else
+#define EXPORTED_FUNCTION extern "C" __attribute__((visibility("default")))
+#endif
+EXPORTED_FUNCTION void ifd_load_fonts();
+EXPORTED_FUNCTION const char *get_open_filename(const char *filter, const char *fname);
+EXPORTED_FUNCTION const char *get_open_filename_ext(const char *filter, const char *fname, const char *dir, const char *title);
+EXPORTED_FUNCTION const char *get_open_filenames(const char *filter, const char *fname);
+EXPORTED_FUNCTION const char *get_open_filenames_ext(const char *filter, const char *fname, const char *dir, const char *title);
+EXPORTED_FUNCTION const char *get_save_filename(const char *filter, const char *fname);
+EXPORTED_FUNCTION const char *get_save_filename_ext(const char *filter, const char *fname, const char *dir, const char *title);
+EXPORTED_FUNCTION const char *get_directory(const char *dname);
+EXPORTED_FUNCTION const char *get_directory_alt(const char *capt, const char *root);
+#endif
