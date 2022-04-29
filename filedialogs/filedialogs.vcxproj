@@ -33,6 +33,7 @@
   <ItemGroup>
     <ClInclude Include="filedialogs.h" />
     <ClInclude Include="filesystem.h" />
+    <ClInclude Include="filesystem.hpp" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="ImFileDialog.h" />
     <ClInclude Include="ImFileDialogMacros.h" />
