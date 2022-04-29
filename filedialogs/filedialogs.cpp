@@ -528,51 +528,51 @@ void ifd_load_fonts() {
   ngs::imgui::ifd_load_fonts();
 }
 
-char *get_open_filename(char *filter, char *fname) {
+const char *get_open_filename(const char *filter, const char *fname) {
   static string result;
   result = ngs::imgui::get_open_filename(filter, fname);
-  return (char *)result.c_str();
+  return result.c_str();
 }
 
-char *get_open_filename_ext(char *filter, char *fname, char *dir, char *title) {
+const char *get_open_filename_ext(const char *filter, const char *fname, const char *dir, const char *title) {
   static string result;
   result = ngs::imgui::get_open_filename_ext(filter, fname, dir, title);
-  return (char *)result.c_str();
+  return result.c_str();
 }
 
-char *get_open_filenames(char *filter, char *fname) {
+const char *get_open_filenames(const char *filter, const char *fname) {
   static string result;
   result = ngs::imgui::get_open_filenames(filter, fname);
-  return (char *)result.c_str();
+  return result.c_str();
 }
 
-char *get_open_filenames_ext(char *filter, char *fname, char *dir, char *title) {
+const char *get_open_filenames_ext(const char *filter, const char *fname, const char *dir, const char *title) {
   static string result;
   result = ngs::imgui::get_open_filenames_ext(filter, fname, dir, title);
-  return (char *)result.c_str();
+  return result.c_str();
 }
 
-char *get_save_filename(char *filter, char *fname) {
+const char *get_save_filename(const char *filter, const char *fname) {
   static string result;
   result = ngs::imgui::get_save_filename(filter, fname);
-  return (char *)result.c_str();
+  return result.c_str();
 }
 
-char *get_save_filename_ext(char *filter, char *fname, char *dir, char *title) {
+const char *get_save_filename_ext(const char *filter, const char *fname, const char *dir, const char *title) {
   static string result;
   result = ngs::imgui::get_save_filename_ext(filter, fname, dir, title);
-  return (char *)result.c_str();
+  return result.c_str();
 }
 
-char *get_directory(char *dname) {
+const char *get_directory(const char *dname) {
   static string result;
   result = ngs::imgui::get_directory(dname);
-  return (char *)result.c_str();
+  return result.c_str();
 }
 
-char *get_directory_alt(char *capt, char *root) {
+const char *get_directory_alt(const char *capt, const char *root) {
   static string result;
   result = ngs::imgui::get_directory_alt(capt, root);
-  return (char *)result.c_str();
+  return result.c_str();
 }
 #endif
