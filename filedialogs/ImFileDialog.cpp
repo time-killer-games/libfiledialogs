@@ -687,7 +687,7 @@ namespace ifd {
 			else if (filter[i] == '{') {
 				std::string filterName = filter.substr(lastSplit, i - lastSplit);
 				if (filterName == "*.*" || filterName == ".*" || filterName == "*") {
-					m_filter += std::string((IFD_ALL_FILES + std::string(" (*.*)\0")).c_str(), 16);
+					m_filter += std::string((IFD_ALL_FILES + std::string("\0")).c_str(), strlen(IFD_ALL_FILES) + 1);
 					m_filterExtensions.push_back(std::vector<std::string>());
 				}
 				else
@@ -706,7 +706,7 @@ namespace ifd {
 		if (lastSplit != 0) {
 			std::string filterName = filter.substr(lastSplit);
 			if (filterName == "*.*" || filterName == ".*" || filterName == "*") {
-				m_filter += std::string((IFD_ALL_FILES + std::string(" (*.*)\0")).c_str(), 16);
+				m_filter += std::string((IFD_ALL_FILES + std::string("\0")).c_str(), strlen(IFD_ALL_FILES) + 1);
 				m_filterExtensions.push_back(std::vector<std::string>());
 			}
 			else
