@@ -216,7 +216,11 @@ namespace ifd {
 				if (!ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 					*state |= 0b100;
 			}
-			if (ImGui::InputTextEx("##pathbox_input", "", pathBuffer, 1024, size_arg, ImGuiInputTextFlags_EnterReturnsTrue)) {
+			ghc::filesystem::path compare_with_root = pathBuffer;
+			if (ImGui::InputTextEx("##pathbox_input", "", pathBuffer, 1024, size_arg, ImGuiInputTextFlags_EnterReturnsTrue) && 
+				compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
+				compare_with_root.string() != compare_with_root.root_name().string() + "/" &&
+				compare_with_root.string() != compare_with_root.root_name().string()) {
 				std::string tempStr(pathBuffer);
 				if (ghc::filesystem::exists(tempStr))
 					path = ghc::filesystem::path(tempStr); 
@@ -640,18 +644,18 @@ namespace ifd {
 
 		std::error_code ec;
 		if (!m_result.empty() && m_type == IFD_DIALOG_SAVE && 
-			!ghc::filesystem::exists(m_result.back(), ec) && !ghc::filesystem::is_directory(m_currentDirectory / filename, ec)) {
+			!ghc::filesystem::exists(m_result.back(), ec) && !ghc::filesystem::is_directory(m_result.back(), ec)) {
 			m_isOpen = false;
 			return true;
 		} else if (!m_result.size() && m_type == IFD_DIALOG_SAVE && filename.empty()) {
 			m_isOpen = false;
 			return true;
 		} else if (m_result.size() && m_type == IFD_DIALOG_FILE && 
-			ghc::filesystem::exists(m_result.back(), ec) && !ghc::filesystem::is_directory(m_currentDirectory / filename, ec)) {
+			ghc::filesystem::exists(m_result.back(), ec) && !ghc::filesystem::is_directory(m_result.back(), ec)) {
 			m_isOpen = false;
 			return true;
 		} else if (m_result.size() && m_type == IFD_DIALOG_DIRECTORY && 
-			ghc::filesystem::exists(m_result.back(), ec) && ghc::filesystem::is_directory(m_currentDirectory / filename, ec)) {
+			ghc::filesystem::exists(m_result.back(), ec) && ghc::filesystem::is_directory(m_result.back(), ec)) {
 			m_isOpen = false;
 			return true;
 		}
@@ -1416,7 +1420,17 @@ namespace ifd {
 		ImGui::Text(IFD_FILE_NAME_WITH_COLON);
 		ImGui::SameLine();
 		if (ImGui::InputTextEx("##file_input", IFD_FILE_NAME_WITHOUT_COLON, m_inputTextbox, 1024, ImVec2((m_type != IFD_DIALOG_DIRECTORY) ? -250.0f : -FLT_MIN, 0), ImGuiInputTextFlags_EnterReturnsTrue)) {
-			bool success = m_finalize(std::string(m_inputTextbox));
+			std::string filename(m_inputTextbox);
+			bool success = false;
+
+			std::error_code ec;
+			ghc::filesystem::path compare_with_root = m_currentDirectory / filename;
+			if (!filename.empty() && m_type == IFD_DIALOG_SAVE &&
+				!ghc::filesystem::exists(m_currentDirectory / filename, ec) && !ghc::filesystem::is_directory(m_currentDirectory / filename, ec))
+				success = m_finalize(filename);
+			else if (!filename.empty() || m_type == IFD_DIALOG_DIRECTORY && compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
+				compare_with_root.string() != compare_with_root.root_name().string() + "/")
+				success = m_finalize(filename);
 #ifdef _WIN32
 			if (!success)
 				MessageBeep(MB_ICONERROR);
@@ -1445,10 +1459,12 @@ namespace ifd {
 			bool success = false;
 
 			std::error_code ec;
-			if (!filename.empty() && m_type == IFD_DIALOG_SAVE && 
+			ghc::filesystem::path compare_with_root = m_currentDirectory / filename;
+			if (!filename.empty() && m_type == IFD_DIALOG_SAVE &&
 				!ghc::filesystem::exists(m_currentDirectory / filename, ec) && !ghc::filesystem::is_directory(m_currentDirectory / filename, ec))
 				success = m_finalize(filename);
-			else if (!filename.empty() || m_type == IFD_DIALOG_DIRECTORY)
+			else if (!filename.empty() || m_type == IFD_DIALOG_DIRECTORY && compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
+				compare_with_root.string() != compare_with_root.root_name().string() + "/")
 				success = m_finalize(filename);
 #ifdef _WIN32
 			if (!success)
