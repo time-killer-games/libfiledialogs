@@ -283,6 +283,10 @@ namespace {
       }
       if (!fonts.empty()) fonts.pop_back();
       ngs::fs::directory_contents_close();
+    } else {
+      #if !defined(IFD_SHARED_LIBRARY)
+      ngs::imgui::ifd_load_fonts();
+      #endif
     }
   }
 

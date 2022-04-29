@@ -1419,17 +1419,19 @@ namespace ifd {
 		/***** BOTTOM BAR *****/
 		ImGui::Text(IFD_FILE_NAME_WITH_COLON);
 		ImGui::SameLine();
-		if (ImGui::InputTextEx("##file_input", IFD_FILE_NAME_WITHOUT_COLON, m_inputTextbox, 1024, ImVec2((m_type != IFD_DIALOG_DIRECTORY) ? -250.0f : -FLT_MIN, 0), ImGuiInputTextFlags_EnterReturnsTrue)) {
+		ghc::filesystem::path compare_with_root = m_currentDirectory / m_inputTextbox;
+		if (ImGui::InputTextEx("##file_input", IFD_FILE_NAME_WITHOUT_COLON, m_inputTextbox, 1024, ImVec2((m_type != IFD_DIALOG_DIRECTORY) ? -250.0f : -FLT_MIN, 0), ImGuiInputTextFlags_EnterReturnsTrue) && 
+			compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
+			compare_with_root.string() != compare_with_root.root_name().string() + "/" && 
+			compare_with_root.string() != compare_with_root.root_name().string()) {
 			std::string filename(m_inputTextbox);
 			bool success = false;
 
 			std::error_code ec;
-			ghc::filesystem::path compare_with_root = m_currentDirectory / filename;
 			if (!filename.empty() && m_type == IFD_DIALOG_SAVE &&
 				!ghc::filesystem::exists(m_currentDirectory / filename, ec) && !ghc::filesystem::is_directory(m_currentDirectory / filename, ec))
 				success = m_finalize(filename);
-			else if (!filename.empty() || m_type == IFD_DIALOG_DIRECTORY && compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
-				compare_with_root.string() != compare_with_root.root_name().string() + "/")
+			else if (!filename.empty() || m_type == IFD_DIALOG_DIRECTORY)
 				success = m_finalize(filename);
 #ifdef _WIN32
 			if (!success)
@@ -1454,7 +1456,10 @@ namespace ifd {
 		// buttons
 		float ok_cancel_width = GUI_ELEMENT_SIZE * 7;
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() - ok_cancel_width);
-		if (ImGui::Button(m_type == IFD_DIALOG_SAVE ? IFD_SAVE : IFD_OPEN, ImVec2(ok_cancel_width / 2 - ImGui::GetStyle().ItemSpacing.x, 0.0f))) {
+		if (ImGui::Button(m_type == IFD_DIALOG_SAVE ? IFD_SAVE : IFD_OPEN, ImVec2(ok_cancel_width / 2 - ImGui::GetStyle().ItemSpacing.x, 0.0f)) &&
+			compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
+			compare_with_root.string() != compare_with_root.root_name().string() + "/" &&
+			compare_with_root.string() != compare_with_root.root_name().string()) {
 			std::string filename(m_inputTextbox);
 			bool success = false;
 
@@ -1463,8 +1468,7 @@ namespace ifd {
 			if (!filename.empty() && m_type == IFD_DIALOG_SAVE &&
 				!ghc::filesystem::exists(m_currentDirectory / filename, ec) && !ghc::filesystem::is_directory(m_currentDirectory / filename, ec))
 				success = m_finalize(filename);
-			else if (!filename.empty() || m_type == IFD_DIALOG_DIRECTORY && compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
-				compare_with_root.string() != compare_with_root.root_name().string() + "/")
+			else if (!filename.empty() || m_type == IFD_DIALOG_DIRECTORY)
 				success = m_finalize(filename);
 #ifdef _WIN32
 			if (!success)

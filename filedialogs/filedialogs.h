@@ -28,6 +28,7 @@
 
 namespace ngs::imgui {
 
+  void ifd_load_fonts();
   std::string get_open_filename(std::string filter, std::string fname);
   std::string get_open_filename_ext(std::string filter, std::string fname, std::string dir, std::string title);
   std::string get_open_filenames(std::string filter, std::string fname);
