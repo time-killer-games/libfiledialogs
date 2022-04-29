@@ -397,7 +397,7 @@ namespace ifd {
 		thisPC->Read = true;
 		DWORD d = GetLogicalDrives();
 		for (int i = 0; i < 26; i++)
-			if (d & (1 << i))
+			if ((d & (1 << i)) && GetFileAttributesA((std::string(1, 'A' + i) + ":\\").c_str()) != -1)
 				thisPC->Children.push_back(new FileTreeNode(std::string(1, 'A' + i) + ":\\"));
 		m_treeCache.push_back(thisPC);
 #else
