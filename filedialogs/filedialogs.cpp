@@ -30,9 +30,9 @@
 #include <vector>
 #include <map>
 
-#include "sys/stat.h"
 #include "SDL.h"
 #include "SDL_syswm.h"
+#include "filedialogs.h"
 #if defined(__APPLE__) && defined(__MACH__)
 #include "imgui_impl_sdlrenderer.h"
 #else
@@ -49,6 +49,7 @@
 #include "filesystem.hpp"
 #include "filesystem.h"
 
+#include <sys/stat.h>
 #if defined(_WIN32) 
 #include <windows.h>
 #include <dwmapi.h>
