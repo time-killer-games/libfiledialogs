@@ -1383,9 +1383,9 @@ namespace ifd {
 		/***** CONTENT *****/
 		float bottomBarHeight = (GImGui->FontSize + ImGui::GetStyle().FramePadding.y + ImGui::GetStyle().ItemSpacing.y * 2.0f) * 2;
 		if (ImGui::BeginTable("##table", 2, ImGuiTableFlags_Resizable, ImVec2(0, -bottomBarHeight))) {
-			ImGui::TableSetupColumn("##tree", ImGuiTableColumnFlags_WidthFixed, (float)(ImGui::GetWindowContentRegionMin().x + 
-			ImGui::GetColumnOffset(0) + ImGui::CalcTextSize(((ImGui::CalcTextSize(IFD_QUICK_ACCESS).x >= ImGui::CalcTextSize(IFD_THIS_PC).x) ?
-			IFD_QUICK_ACCESS : IFD_THIS_PC)).x + GImGui->Style.FramePadding.x * 2.0f + GUI_ELEMENT_SIZE));
+			ImGui::TableSetupColumn("##tree", ImGuiTableColumnFlags_WidthFixed, (float)(GImGui->FontSize - ImGui::GetStyle().FramePadding.x / 2 + 
+			ImGui::GetStyle().ItemSpacing.x) * 2 + (ImGui::GetColumnOffset(0) * 2) + ImGui::CalcTextSize(((ImGui::CalcTextSize(IFD_QUICK_ACCESS).x >= 
+			ImGui::CalcTextSize(IFD_THIS_PC).x) ? IFD_QUICK_ACCESS : IFD_THIS_PC)).x); 
 			ImGui::TableSetupColumn("##content", ImGuiTableColumnFlags_WidthStretch);
 			ImGui::TableNextRow();
 
