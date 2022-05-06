@@ -314,7 +314,7 @@ namespace {
     #if (defined(__MACH__) && defined(__APPLE__))
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr) return "";
-    #endif
+    #else
     if (type == selectFolder) {
       SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *)ifd::folder_icon, 32, 32, 32, 32 * 4, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
       SDL_SetWindowIcon(window, surface);
@@ -324,6 +324,7 @@ namespace {
       SDL_SetWindowIcon(window, surface);
       SDL_FreeSurface(surface);
     }
+    #endif
     #if defined(_WIN32)
     SDL_SysWMinfo system_info;
     SDL_VERSION(&system_info.version);
