@@ -410,6 +410,13 @@ namespace ifd {
     FileTreeNode* thisPC = new FileTreeNode(IFD_THIS_PC);
     thisPC->Read = true;
     for (const auto& entry : ghc::filesystem::directory_iterator("/", ec)) {
+      const std::string& filename = entry.path().filename().string();
+      #if !defined(_WIN32)
+      const bool& is_hidden = ((!filename.empty()) ? (filename[0] == '.') : true);
+      #else
+      const bool& is_hidden = (((GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_HIDDEN)) && ((!filename.empty()) ? (filename[0] == '.') : true));
+      #endif
+      if (is_hidden) { continue; }
       if (ghc::filesystem::is_directory(entry, ec))
         thisPC->Children.push_back(new FileTreeNode(entry.path().string()));
     }
@@ -968,6 +975,13 @@ namespace ifd {
       std::error_code ec;
       if (ghc::filesystem::exists(m_currentDirectory, ec))
         for (const auto& entry : ghc::filesystem::directory_iterator(m_currentDirectory, ec)) {
+          const std::string& filename = entry.path().filename().string();
+          #if !defined(_WIN32)
+          const bool& is_hidden = ((!filename.empty()) ? (filename[0] == '.') : true);
+          #else
+          const bool& is_hidden = (((GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_HIDDEN)) && ((!filename.empty()) ? (filename[0] == '.') : true));
+          #endif
+          if (is_hidden) { continue; }
           FileData info(entry.path());
 
           // skip files when IFD_DIALOG_DIRECTORY
@@ -1081,6 +1095,13 @@ namespace ifd {
         // cache children if it's not already cached
         if (ghc::filesystem::exists(node->Path, ec))
           for (const auto& entry : ghc::filesystem::directory_iterator(node->Path, ec)) {
+          const std::string& filename = entry.path().filename().string();
+          #if !defined(_WIN32)
+          const bool& is_hidden = ((!filename.empty()) ? (filename[0] == '.') : true);
+          #else
+          const bool& is_hidden = (((GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_HIDDEN)) && ((!filename.empty()) ? (filename[0] == '.') : true));
+          #endif
+          if (is_hidden) { continue; }
             if (ghc::filesystem::is_directory(entry, ec))
               node->Children.push_back(new FileTreeNode(entry.path().string()));
           }
