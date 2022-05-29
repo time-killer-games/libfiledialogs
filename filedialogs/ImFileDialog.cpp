@@ -78,6 +78,7 @@ namespace ifd {
       ImGui::TreePush(label);
     return opened != 0;
   }
+
   bool FileNode(const char* label, ImTextureID icon) {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -97,6 +98,7 @@ namespace ifd {
     
     return ret;
   }
+
   bool PathBox(const char* label, ghc::filesystem::path& path, char* pathBuffer, ImVec2 size_arg) {
     ImGuiWindow* window = ImGui::GetCurrentWindow();
     if (window->SkipItems)
@@ -182,8 +184,6 @@ namespace ifd {
         isFirstElement = false;
       }
       ImGui::PopStyleVar(2);
-
-
       // click state
       if (!anyOtherHC && clicked) {
         strcpy(pathBuffer, path.string().c_str());
@@ -230,6 +230,7 @@ namespace ifd {
 
     return ret;
   }
+
   bool FavoriteButton(const char* label, bool isFavorite) {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -284,6 +285,7 @@ namespace ifd {
 
     return ret;
   }
+
   bool FileIcon(const char* label, bool isSelected, ImTextureID icon, ImVec2 size, bool hasPreview, int previewWidth, int previewHeight) {
     ImGuiStyle& style = ImGui::GetStyle();
     ImGuiContext& g = *GImGui;
@@ -414,6 +416,7 @@ namespace ifd {
     m_treeCache.push_back(thisPC);
     #endif
   }
+
   FileDialog::~FileDialog() {
     m_clearIconPreview();
     m_clearIcons();
@@ -422,6 +425,7 @@ namespace ifd {
       m_clearTree(fn);
     m_treeCache.clear();
   }
+
   bool FileDialog::Save(const std::string& key, const std::string& title, const std::string& filter, const std::string& startingFile, const std::string& startingDir) {
     if (!m_currentKey.empty())
       return false;
@@ -447,6 +451,7 @@ namespace ifd {
 
     return true;
   }
+
   bool FileDialog::Open(const std::string& key, const std::string& title, const std::string& filter, bool isMultiselect, const std::string& startingFile, const std::string& startingDir) {
     if (!m_currentKey.empty())
       return false;
@@ -472,6 +477,7 @@ namespace ifd {
 
     return true;
   }
+
   bool FileDialog::IsDone(const std::string& key) {
     bool isMe = m_currentKey == key;
 
@@ -491,6 +497,7 @@ namespace ifd {
 
     return isMe && !m_isOpen;
   }
+
   void FileDialog::Close() {
     m_currentKey.clear();
     m_backHistory = std::stack<ghc::filesystem::path>();
@@ -528,6 +535,7 @@ namespace ifd {
         break;
       }
   }
+
   void FileDialog::AddFavorite(const std::string& path) {
     if (std::count(m_favorites.begin(), m_favorites.end(), path) > 0)
       return;
@@ -648,6 +656,7 @@ namespace ifd {
 
     return false;
   }
+
   void FileDialog::m_parseFilter(const std::string& filter) {
     m_filter = "";
     m_filterExtensions.clear();
@@ -815,6 +824,7 @@ namespace ifd {
     return m_icons[pathU8];
     #endif
   }
+
   void FileDialog::m_clearIcons() {
     std::vector<unsigned int> deletedIcons;
 
@@ -831,6 +841,7 @@ namespace ifd {
     m_iconIndices.clear();
     m_icons.clear();
   }
+
   void FileDialog::m_refreshIconPreview() {
     if (m_zoom >= 5.0f) {
       if (m_previewLoader == nullptr) {
@@ -840,6 +851,7 @@ namespace ifd {
     } else
       m_clearIconPreview();
   }
+
   void FileDialog::m_clearIconPreview() {
     m_stopPreviewLoader();
 
@@ -856,6 +868,7 @@ namespace ifd {
       }
     }
   }
+
   void FileDialog::m_stopPreviewLoader() {
     if (m_previewLoader != nullptr) {
       m_previewLoaderRunning = false;
@@ -867,6 +880,7 @@ namespace ifd {
       m_previewLoader = nullptr;
     }
   }
+
   void FileDialog::m_loadPreview() {
     for (size_t i = 0; m_previewLoaderRunning && i < m_content.size(); i++) {
       auto& data = m_content[i];
@@ -893,6 +907,7 @@ namespace ifd {
 
     m_previewLoaderRunning = false;
   }
+
   void FileDialog::m_clearTree(FileTreeNode* node) {
     if (node == nullptr)
       return;
@@ -903,6 +918,7 @@ namespace ifd {
     delete node;
     node = nullptr;
   }
+
   void FileDialog::m_setDirectory(const ghc::filesystem::path& p, bool addHistory, bool clearFileName) {
     bool isSameDir = m_currentDirectory == p;
 
@@ -992,6 +1008,7 @@ namespace ifd {
     m_sortContent(m_sortColumn, m_sortDirection);
     m_refreshIconPreview();
   }
+
   void FileDialog::m_sortContent(unsigned int column, unsigned int sortDirection) {
     // 0 -> name, 1 -> date, 2 -> size
     m_sortColumn = column;
@@ -1080,6 +1097,7 @@ namespace ifd {
       m_setDirectory(node->Path);
     ImGui::PopID();
   }
+
   void FileDialog::m_renderContent() {
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
       m_selectedFileItem = -1;
@@ -1191,6 +1209,7 @@ namespace ifd {
       }
     }
   }
+
   void FileDialog::m_renderPopups() {
     bool openAreYouSureDlg = false, openNewFileDlg = false, openNewDirectoryDlg = false, openOverwriteDlg = false;
     if (ImGui::BeginPopupContextItem("##dir_context")) {
@@ -1300,6 +1319,7 @@ namespace ifd {
       ImGui::EndPopup();
     }
   }
+
   void FileDialog::m_renderFileDialog() {
     /***** TOP BAR *****/
     bool noBackHistory = m_backHistory.empty(), noForwardHistory = m_forwardHistory.empty();
