@@ -414,7 +414,8 @@ namespace ifd {
       #if !defined(_WIN32)
       const bool& is_hidden = ((!filename.empty()) ? (filename[0] == '.') : true);
       #else
-      const bool& is_hidden = (((GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_HIDDEN)) && ((!filename.empty()) ? (filename[0] == '.') : true));
+      const bool& is_hidden = ((GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_HIDDEN) ||
+        (GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_SYSTEM) || ((!filename.empty()) ? (filename[0] == '.') : true));
       #endif
       if (is_hidden) { continue; }
       if (ghc::filesystem::is_directory(entry, ec))
@@ -979,7 +980,8 @@ namespace ifd {
           #if !defined(_WIN32)
           const bool& is_hidden = ((!filename.empty()) ? (filename[0] == '.') : true);
           #else
-          const bool& is_hidden = (((GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_HIDDEN)) && ((!filename.empty()) ? (filename[0] == '.') : true));
+          const bool& is_hidden = ((GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_HIDDEN) ||
+            (GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_SYSTEM) || ((!filename.empty()) ? (filename[0] == '.') : true));
           #endif
           if (is_hidden) { continue; }
           FileData info(entry.path());
@@ -1099,7 +1101,8 @@ namespace ifd {
           #if !defined(_WIN32)
           const bool& is_hidden = ((!filename.empty()) ? (filename[0] == '.') : true);
           #else
-          const bool& is_hidden = (((GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_HIDDEN)) && ((!filename.empty()) ? (filename[0] == '.') : true));
+          const bool& is_hidden = ((GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_HIDDEN) ||
+            (GetFileAttributesW(entry.path().wstring().c_str()) & FILE_ATTRIBUTE_SYSTEM) || ((!filename.empty()) ? (filename[0] == '.') : true));
           #endif
           if (is_hidden) { continue; }
             if (ghc::filesystem::is_directory(entry, ec))
