@@ -9,7 +9,7 @@
 #include <algorithm> // std::min, std::max
 
 #ifndef NOMINMAX
-  #define NOMINMAX
+#define NOMINMAX
 #endif
 
 #include "filesystem.h"
