@@ -216,11 +216,15 @@ namespace ifd {
       }
       ghc::filesystem::path compare_with_root = pathBuffer;
       if (ImGui::InputTextEx("##pathbox_input", "", pathBuffer, 1024, size_arg, ImGuiInputTextFlags_EnterReturnsTrue) && 
+        #if defined(_WIN32)
+        (INVALID_FILE_ATTRIBUTES != GetFileAttributesW(compare_with_root.wstring().c_str()) && GetLastError() != ERROR_FILE_NOT_FOUND) &&
+        #endif
         compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
         compare_with_root.string() != compare_with_root.root_name().string() + "/" &&
         compare_with_root.string() != compare_with_root.root_name().string()) {
+        std::error_code ec;
         std::string tempStr(pathBuffer);
-        if (ghc::filesystem::exists(tempStr))
+        if (ghc::filesystem::exists(tempStr, ec))
           path = ghc::filesystem::path(tempStr); 
         ret = true;
       }
@@ -1434,6 +1438,9 @@ namespace ifd {
     ImGui::SameLine();
     ghc::filesystem::path compare_with_root = m_currentDirectory / m_inputTextbox;
     if (ImGui::InputTextEx("##file_input", IFD_FILE_NAME_WITHOUT_COLON, m_inputTextbox, 1024, ImVec2((m_type != IFD_DIALOG_DIRECTORY) ? -250.0f : -FLT_MIN, 0), ImGuiInputTextFlags_EnterReturnsTrue) && 
+      #if defined(_WIN32)
+      ((m_type == IFD_DIALOG_SAVE) || (INVALID_FILE_ATTRIBUTES != GetFileAttributesW(compare_with_root.wstring().c_str()) && GetLastError() != ERROR_FILE_NOT_FOUND)) &&
+      #endif
       compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
       compare_with_root.string() != compare_with_root.root_name().string() + "/" && 
       compare_with_root.string() != compare_with_root.root_name().string()) {
@@ -1470,6 +1477,9 @@ namespace ifd {
     float ok_cancel_width = GUI_ELEMENT_SIZE * 7;
     ImGui::SetCursorPosX(ImGui::GetWindowWidth() - ok_cancel_width);
     if (ImGui::Button(m_type == IFD_DIALOG_SAVE ? IFD_SAVE : IFD_OPEN, ImVec2(ok_cancel_width / 2 - ImGui::GetStyle().ItemSpacing.x, 0.0f)) &&
+      #if defined(_WIN32)
+      ((m_type == IFD_DIALOG_SAVE) || (INVALID_FILE_ATTRIBUTES != GetFileAttributesW(compare_with_root.wstring().c_str()) && GetLastError() != ERROR_FILE_NOT_FOUND)) &&
+      #endif
       compare_with_root.string() != compare_with_root.root_name().string() + "\\" &&
       compare_with_root.string() != compare_with_root.root_name().string() + "/" &&
       compare_with_root.string() != compare_with_root.root_name().string()) {
