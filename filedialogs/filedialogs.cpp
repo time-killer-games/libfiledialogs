@@ -333,10 +333,7 @@ namespace {
     SetWindowLongPtrW(hWnd, GWL_STYLE, GetWindowLongPtrW(hWnd, GWL_STYLE) & ~(WS_MAXIMIZEBOX | WS_MINIMIZEBOX));
     SetWindowLongPtrW(hWnd, GWL_EXSTYLE, GetWindowLongPtrW(hWnd, GWL_EXSTYLE) | WS_EX_TOPMOST);
     SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-    // prevents segmentation fault when run via wine on linux and other unix-likes.
-    if (ngs::fs::environment_get_variable("DISPLAY").empty() && ngs::fs::environment_get_variable("WAYLAND_DISPLAY").empty()) {
-      BOOL b = !is_light_theme(); DwmSetWindowAttribute(hWnd, 20, &b, sizeof(BOOL));
-    }
+    BOOL b = !is_light_theme(); DwmSetWindowAttribute(hWnd, 20, &b, sizeof(BOOL));
     #elif defined(__APPLE__) && defined(__MACH__)
     SDL_SysWMinfo system_info;
     SDL_VERSION(&system_info.version);
