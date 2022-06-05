@@ -30,6 +30,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 
     // setup favorites std::vector
     std::vector<std::string> favorites;
+    // use forward slashes as path separator to allow for cross-platform development
     favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
     favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
     favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
