@@ -1,4 +1,55 @@
-# filedialogs
+# filedialogs Command Line Interface and Client Library
+
+Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](https://github.com/dfranx), with many bugs/crashes fixed and overall improvements. 
+
+The 'Quick Access' sidebar actually remembers what favorites were previously saved to it from previous runs of your application now, by saving the settings to a text file in your home folder, ("%USERPROFILE%\.config\filedialogs\filedialogs.txt" on Windows, "$HOME/.config/filedialogs/filedialogs.txt" otherwise). The absolute file path of this text file may be overridden using two environment variables, ("IMGUI_CONFIG_PATH" for the recursive folder path to create, and "IMGUI_CONFIG_FILE" for the name of the text file to be stored in that folder path). Allows ocalization. To create your own default list of favorites for your application, here is an example:
+
+    /* setup home directory 
+    environment variable */
+    #if !defined(HOME_PATH)
+    #if defined(_WIN32)
+    #define HOME_PATH "USERPROFILE"
+    #else
+    #define HOME_PATH "HOME"
+    #endif
+    #endif
+    
+    #include <string> // std::string
+    #include <vector> // std::vector
+  
+    #include "libfiledialogs/filedialogs/ImFileDialogMacros.h" // Easy Localization
+    #include "libfiledialogs/filedialogs/filedialogs.h"        // NGS File Dialogs
+    #include "libfiledialogs/filedialogs/filesystem.h"         // NGS File System
+
+    // setup favorites std::vector
+    std::vector<std::string> favorites;
+    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
+    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
+    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
+    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
+    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
+    
+    // get favorites config text file absolute pathname
+    std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
+    std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
+    
+    // add custom favorites to config text file
+    int desc = ngs::fs::file_text_open_write(path + "/" + file);
+    for (std::size_t i = 0; i < favorites.size(); i++) {
+      ngs::fs::file_text_write_string(desc, favorites[i]);
+      ngs::fs::file_text_writeln(desc);
+    }
+    ngs::fs::file_text_close(desc);
+    
+    // example program
+    int main() {
+      std::cout << ngs::imgui::get_save_filename("Portable Network Graphic (*.png)|*.png|Graphic Interchange Format (*.gif)|*.gif", "Untitled.png") << std::endl;
+      reutnrn 0;
+    }
+
+# Platforms
+
+Supports Windows, macOS, Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD. Uses platform-specific code that is not-mandatory to get the executable path, which can easily be replaced with getting the working directory with `getcwd()` should you need more platforms supported quickly and easily in most cases. 
 
 ![win32](https://github.com/time-killer-games/filedialogs/blob/main/win32.png?raw=true)
 
