@@ -13,13 +13,20 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     #endif
     
     #include <iostream> // std::cout, std::endl
-    #include <string>   // std::string
+    #include <string>   // std::string, std::to_string
     #include <vector>   // std::vector
     #include <cstddef>  // std::size_t
   
     #include "libfiledialogs/filedialogs/ImFileDialogMacros.h" // Easy Localization
     #include "libfiledialogs/filedialogs/filedialogs.h"        // NGS File Dialogs
     #include "libfiledialogs/filedialogs/filesystem.h"         // NGS File System
+    
+    // set imgui file dialogs window width and height; default is 600x400 pixels
+    ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(800));
+    ngs::fs::environment_set_variable("IMGUI_DIALOG_HEIGHT", std::to_string(400));
+    
+    // load all *.ttf and *.otf fonts of varying languages and combine them into one font from directory
+    ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
 
     // setup favorites std::vector
     std::vector<std::string> favorites;
