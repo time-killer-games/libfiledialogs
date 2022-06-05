@@ -21,36 +21,40 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     #include "libfiledialogs/filedialogs/filedialogs.h"        // NGS File Dialogs
     #include "libfiledialogs/filedialogs/filesystem.h"         // NGS File System
     
-    // set imgui file dialogs window width and height; default is 600x400 pixels
-    ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(800));
-    ngs::fs::environment_set_variable("IMGUI_DIALOG_HEIGHT", std::to_string(400));
+    namespace {
+      void init() {
+        // set imgui file dialogs window width and height; default is 600x400 pixels
+        ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(800));
+        ngs::fs::environment_set_variable("IMGUI_DIALOG_HEIGHT", std::to_string(400));
+        
+        // load all *.ttf and *.otf fonts of varying languages and combine them into one font from directory
+        ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
+        
+        // setup favorites std::vector
+        std::vector<std::string> favorites;
+        // use forward slashes as path separator to allow for cross-platform development
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
+        
+        // get favorites config text file absolute pathname
+        std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
+        std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
+      
+        // add custom favorites to config text file
+        int desc = ngs::fs::file_text_open_write(path + "/" + file);
+        for (std::size_t i = 0; i < favorites.size(); i++) {
+          ngs::fs::file_text_write_string(desc, favorites[i]);
+          ngs::fs::file_text_writeln(desc);
+        }
+        ngs::fs::file_text_close(desc);
+      }
+    } // anonymous namespace
     
-    // load all *.ttf and *.otf fonts of varying languages and combine them into one font from directory
-    ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
-
-    // setup favorites std::vector
-    std::vector<std::string> favorites;
-    // use forward slashes as path separator to allow for cross-platform development
-    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
-    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
-    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
-    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
-    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
-    
-    // get favorites config text file absolute pathname
-    std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
-    std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
-    
-    // add custom favorites to config text file
-    int desc = ngs::fs::file_text_open_write(path + "/" + file);
-    for (std::size_t i = 0; i < favorites.size(); i++) {
-      ngs::fs::file_text_write_string(desc, favorites[i]);
-      ngs::fs::file_text_writeln(desc);
-    }
-    ngs::fs::file_text_close(desc);
-    
-    // example program
     int main() {
+      init(); // setup all initialization related settings
       std::cout << ngs::imgui::get_save_filename("Portable Network Graphic (*.png)|\
       *.png|Graphic Interchange Format (*.gif)|*.gif", "Untitled.png") << std::endl;
       reutnrn 0;
