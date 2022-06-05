@@ -47,6 +47,10 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
         ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
         ngs::fs::environment_set_variable("IMGUI_FONT_SIZE", std::to_string(24)); // font size for dialogbox
         
+        // setup imgui file dialog favorites config text file absolute pathname
+        std::string path = ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", ngs::fs::directory_get_temporary_path());
+        std::string file = ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "imfiledialog.tmp");
+        
         // setup favorites std::vector
         std::vector<std::string> favorites;
         // use forward slashes as path separator to allow for cross-platform development
