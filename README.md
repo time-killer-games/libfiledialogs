@@ -12,6 +12,11 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     #endif
     #endif
     
+    // because of SDL2
+    #if defined(_WIN32)
+    #undef main
+    #endif
+    
     #include <iostream> // std::cout, std::endl
     #include <string>   // std::string, std::to_string
     #include <vector>   // std::vector
