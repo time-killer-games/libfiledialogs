@@ -45,11 +45,13 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
         
         // add custom favorites to config text file
         int desc = ngs::fs::file_text_open_write(path + "/" + file);
-        for (std::size_t i = 0; i < favorites.size(); i++) {
-          ngs::fs::file_text_write_string(desc, favorites[i]);
-          ngs::fs::file_text_writeln(desc);
+        if (desc != -1) {
+          for (std::size_t i = 0; i < favorites.size(); i++) {
+            ngs::fs::file_text_write_string(desc, favorites[i]);
+            ngs::fs::file_text_writeln(desc);
+          }
+          ngs::fs::file_text_close(desc);
         }
-        ngs::fs::file_text_close(desc);
       }
     } // anonymous namespace
     
