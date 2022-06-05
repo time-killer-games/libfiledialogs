@@ -2,6 +2,12 @@
 
 Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](https://github.com/dfranx), with many bugs/crashes fixed and overall improvements. The 'Quick Access' sidebar actually remembers what favorites were previously saved to it from previous runs of your application now, by saving the settings to a text file in your home folder. The absolute file path of this text file may be overridden using two environment variables, ("IMGUI_CONFIG_PATH" for the recursive folder path to create, and "IMGUI_CONFIG_FILE" for the name of the text file to be stored in that folder path). Allows for full localization among many other good things you'll find useful. To create your own default list of favorites for your application, here is a minimal example program/application:
 
+    /* 
+    ** Alternative main.cpp - replace libfiledialogs/filedialogs/main.cpp with below contents
+    ** then if on Windows open the solution in Visual Studio and build with that otherwise run 
+    ** the shell script if you are on macOS, Linux, FreeBSD, DragonFly, NetBSD, or OpenBSD...
+    */
+    
     /* setup home directory 
     environment variable */
     #if !defined(HOME_PATH)
