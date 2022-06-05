@@ -8,6 +8,15 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     ** the build script if you are on macOS, Linux, FreeBSD, DragonFly, NetBSD, or OpenBSD...
     */
     
+    #include <iostream> // std::cout, std::endl
+    #include <string>   // std::string, std::to_string
+    #include <vector>   // std::vector
+    #include <cstddef>  // std::size_t
+  
+    #include "ImFileDialogMacros.h" // Easy Localization
+    #include "filedialogs.h"        // NGS File Dialogs
+    #include "filesystem.h"         // NGS File System
+    
     /* setup home directory 
     environment variable */
     #if !defined(HOME_PATH)
@@ -27,15 +36,6 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     #ifdef _MSC_VER
     #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
     #endif
-    
-    #include <iostream> // std::cout, std::endl
-    #include <string>   // std::string, std::to_string
-    #include <vector>   // std::vector
-    #include <cstddef>  // std::size_t
-  
-    #include "ImFileDialogMacros.h" // Easy Localization
-    #include "filedialogs.h"        // NGS File Dialogs
-    #include "filesystem.h"         // NGS File System
     
     namespace {
       void init() {
