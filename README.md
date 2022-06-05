@@ -42,7 +42,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
         // get favorites config text file absolute pathname
         std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
         std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
-      
+        
         // add custom favorites to config text file
         int desc = ngs::fs::file_text_open_write(path + "/" + file);
         for (std::size_t i = 0; i < favorites.size(); i++) {
