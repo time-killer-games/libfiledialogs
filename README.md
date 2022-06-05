@@ -12,9 +12,14 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     #endif
     #endif
     
-    // because of SDL2
+    // for SDL2
     #if defined(_WIN32)
     #undef main
+    #endif
+    
+    // for MSVC
+    #ifdef _MSC_VER
+    #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
     #endif
     
     #include <iostream> // std::cout, std::endl
