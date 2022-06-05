@@ -2,7 +2,7 @@
 
 Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](https://github.com/dfranx), with many bugs/crashes fixed and overall improvements. 
 
-The 'Quick Access' sidebar actually remembers what favorites were previously saved to it from previous runs of your application now, by saving the settings to a text file in your home folder, ("%USERPROFILE%\.config\filedialogs\filedialogs.txt" on Windows, "$HOME/.config/filedialogs/filedialogs.txt" otherwise). The absolute file path of this text file may be overridden using two environment variables, ("IMGUI_CONFIG_PATH" for the recursive folder path to create, and "IMGUI_CONFIG_FILE" for the name of the text file to be stored in that folder path). Allows ocalization. To create your own default list of favorites for your application, here is an example:
+The 'Quick Access' sidebar actually remembers what favorites were previously saved to it from previous runs of your application now, by saving the settings to a text file in your home folder. The absolute file path of this text file may be overridden using two environment variables, ("IMGUI_CONFIG_PATH" for the recursive folder path to create, and "IMGUI_CONFIG_FILE" for the name of the text file to be stored in that folder path). Allows ocalization. To create your own default list of favorites for your application, here is an example:
 
     /* setup home directory 
     environment variable */
