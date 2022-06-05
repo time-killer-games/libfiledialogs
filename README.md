@@ -61,7 +61,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
       init(); // setup all initialization related settings
       std::cout << ngs::imgui::get_save_filename("Portable Network Graphic (*.png)|\
       *.png|Graphic Interchange Format (*.gif)|*.gif", "Untitled.png") << std::endl;
-      reutnrn 0;
+      return 0;
     }
 
 # Platforms
