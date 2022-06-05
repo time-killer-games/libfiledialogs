@@ -5,7 +5,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     /* 
     ** Alternative main.cpp - replace libfiledialogs/filedialogs/main.cpp with below contents
     ** then if on Windows open the solution in Visual Studio and build with that otherwise run 
-    ** the build script if you are on macOS, Linux, FreeBSD, DragonFly, NetBSD, or OpenBSD...
+    ** the build.sh script if you are on macOS, Linux, FreeBSD, DragonFly, NetBSD, or OpenBSD
     */
     
     #include <iostream> // std::cout, std::endl
