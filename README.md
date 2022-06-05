@@ -15,6 +15,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     #include <iostream> // std::cout, std::endl
     #include <string>   // std::string
     #include <vector>   // std::vector
+    #include <cstddef>  // std::size_t
   
     #include "libfiledialogs/filedialogs/ImFileDialogMacros.h" // Easy Localization
     #include "libfiledialogs/filedialogs/filedialogs.h"        // NGS File Dialogs
