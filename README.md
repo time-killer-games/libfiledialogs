@@ -7,31 +7,31 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     ** then if on Windows open the solution in Visual Studio and build with that otherwise run 
     ** the build.sh script if you are on macOS, Linux, FreeBSD, DragonFly, NetBSD, or OpenBSD
     */
-    
+
     #include <iostream> // std::cout, std::endl
     #include <string>   // std::string, std::to_string
     #include <vector>   // std::vector
     #include <cstddef>  // std::size_t
-  
+    
     #include "ImFileDialogMacros.h" // Easy Localization
     #include "filedialogs.h"        // NGS File Dialogs
     #include "filesystem.h"         // NGS File System
-    
+
     /* setup home directory 
     environment variable */
     #if !defined(HOME_PATH)
-    #if defined(_WIN32)
+    #if defined(_WIN32) // Windows x86 and Window x86-64
     #define HOME_PATH "USERPROFILE"
-    #else
+    #else // macOS, Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
     #define HOME_PATH "HOME"
     #endif
     #endif
-    
+
     // for SDL2
     #if defined(_WIN32)
     #undef main
     #endif
-    
+
     // for MSVC
     #ifdef _MSC_VER
     #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
@@ -46,20 +46,36 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
         // load all *.ttf and *.otf fonts of varying languages and combine them into one font from directory
         ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
         ngs::fs::environment_set_variable("IMGUI_FONT_SIZE", std::to_string(24)); // font size for dialogbox
-        
+    
         // setup imgui file dialog favorites config text file absolute pathname
         ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", ngs::fs::directory_get_temporary_path());
         ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "imfiledialog.tmp");
         
         // setup favorites std::vector
         std::vector<std::string> favorites;
-        // use forward slashes as path separator to allow for cross-platform development
+        #if defined(_WIN32) // Windows x86 and Window x86-64
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Desktop");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Documents");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Downloads");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Pictures");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Music");
+	    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Videos");
+        #elif defined(__APPLE__) && defined(__MACH__) // macOS
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
+	    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Movies");
+        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
+	    #else // Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
         favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
         favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
         favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
         favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
         favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
-        
+	    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Videos");
+        #endif
+    
         // get favorites config text file absolute pathname
         std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
         std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
