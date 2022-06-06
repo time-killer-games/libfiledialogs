@@ -33,7 +33,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     #endif
 
     // for MSVC
-    #ifdef _MSC_VER
+    #if defined(_MSC_VER)
     #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
     #endif
     
