@@ -55,7 +55,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
         std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
         std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
         
-	// create quick access favorites text file
+        // create quick access favorites text file
         if (!ngs::fs::file_exists(path + "/" + file)) {
           // setup favorites std::vector
           std::vector<std::string> favorites;
