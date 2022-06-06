@@ -51,45 +51,48 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
         ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", ngs::fs::directory_get_temporary_path());
         ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "imfiledialog.tmp");
         
-        // setup favorites std::vector
-        std::vector<std::string> favorites;
-        #if defined(_WIN32) // Windows x86 and Window x86-64
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Desktop");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Documents");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Downloads");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Pictures");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Music");
-	    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Videos");
-        #elif defined(__APPLE__) && defined(__MACH__) // macOS
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
-	    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Movies");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
-	    #else // Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
-        favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
-	    favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Videos");
-        #endif
-    
         // get favorites config text file absolute pathname
         std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
         std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
         
-        // add custom favorites to config text file
-        int desc = ngs::fs::file_text_open_write(path + "/" + file);
-        if (desc != -1) { // success; file can now be written to
-          for (std::size_t i = 0; i < favorites.size(); i++) {
-            // write favorite from vector at current index "i"
-            ngs::fs::file_text_write_string(desc, favorites[i]);
-            ngs::fs::file_text_writeln(desc); // write new line
+	// create quick access favorites text file
+        if (!ngs::fs::file_exists(path + "/" + file)) {
+          // setup favorites std::vector
+          std::vector<std::string> favorites;
+          #if defined(_WIN32) // Windows x86 and Window x86-64
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Desktop");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Documents");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Downloads");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Pictures");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Music");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Videos");
+          #elif defined(__APPLE__) && defined(__MACH__) // macOS
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Movies");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
+          #else // Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
+          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Videos");
+          #endif
+        
+          // add custom favorites to config text file
+          int desc = ngs::fs::file_text_open_write(path + "/" + file);
+          if (desc != -1) { // success; file can now be written to
+            for (std::size_t i = 0; i < favorites.size(); i++) {
+              // write favorite from vector at current index "i"
+              ngs::fs::file_text_write_string(desc, favorites[i]);
+              ngs::fs::file_text_writeln(desc); // write new line
+            }
+            // close file descriptor
+            ngs::fs::file_text_close(desc);
           }
-          // close file descriptor
-          ngs::fs::file_text_close(desc);
         }
       }
     } // anonymous namespace
