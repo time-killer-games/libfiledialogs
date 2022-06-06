@@ -103,7 +103,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 
 # Platforms
 
-Supports Windows, macOS, Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD. Uses platform-specific code that is not-mandatory to get the executable path, which can easily be replaced with getting the working directory with `getcwd()` should you need more platforms supported quickly and easily in most cases. 
+Supports Windows, macOS, Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD. Uses platform-specific code that is not-mandatory to get the executable path, which can easily be replaced with getting the working directory with `getcwd()` should you need more platforms supported. 
 
 ![win32](https://github.com/time-killer-games/filedialogs/blob/main/win32.png?raw=true)
 
