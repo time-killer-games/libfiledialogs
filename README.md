@@ -82,7 +82,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
           #else // Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
           std::string conf = ngs::fs::environment_get_variable(HOME_PATH) + "/.config/user-dirs.dirs";
           if (ngs::fs::file_exists(conf)) {
-            int dirs = ngs::file_text_open_read(conf);
+            int dirs = ngs::fs::file_text_open_read(conf);
             if (dirs != -1) {
               while (!ngs::fs::file_text_eof(dirs)) {
                 std::vector<std::string> xdg;
