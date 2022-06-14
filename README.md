@@ -103,7 +103,7 @@ namespace {
             for (std::size_t i = 0; i < xdg.size(); i++) { // for each member of the vector
               std::size_t pos = line.find(xdg[i], 0); // look for a matching xdg key in line
               if (pos != std::string::npos) { // if a match was found out of the expected keys
-                // expand enviroment variables found in string using the echo command's output
+                // expand environment variables found in string using the echo command's output
                 FILE *fp = popen(("echo " + line.substr(pos + xdg[i].length())).c_str(), "r");
                 if (fp) { // if echo command was found and executed ok
                   char buf[PATH_MAX];
