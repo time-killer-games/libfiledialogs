@@ -16,6 +16,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 #include <cstddef> // std::size_t
 #if !defined(_WIN32) && !defined(__APPLE__) && !defined(__MACH__)
 // Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
+#include <cstring> // strlen
 #include <climits> // PATH_MAX
 #include <cstdio>  // FILE, popen, fgets, pclose
 #endif
@@ -109,7 +110,7 @@ namespace {
                   // read output and copy to buffer
                   if (fgets(buf, PATH_MAX, fp)) { // if output was read ok
                     std::string str = buf; // copy output to string
-                    size_t pos = str.find("\n", 0); // search string for line feed
+                    size_t pos = str.find("\n", strlen(buf)); // inspect string end for line feed
                     if (pos != std::string::npos) // if a line feed was found
                       str.replace(pos, 1, ""); // remove the line feed
                     // add favorite from output
