@@ -104,7 +104,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
                     if (pos != std::string::npos) {
                       FILE *fp = popen(("echo " + line.substr(pos + xdg[i].length())), "r");
                       if (fp) {
-                        buf[PATH_MAX];
+                        char buf[PATH_MAX];
                         if (fgets(buf, PATH_MAX, fp)) {
                           favorites.push_back(line);
                         }
