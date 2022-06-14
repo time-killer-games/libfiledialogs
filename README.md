@@ -74,12 +74,39 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
           favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Movies");
           favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
           #else // Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
-          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
-          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
-          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
-          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
-          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
-          favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Videos");
+          int dirs = ngs::file_text_open_read(ngs::fs::environment_get_variable(HOME_PATH) + "/.config/user-dirs.dirs");
+          if (dirs != -1) {
+            while (!ngs::fs::file_text_eof(dirs)) {
+              std::string<std::vector> xdg;
+              std::string line = ngs::fs::file_text_read_string(dirs);
+              ngs::fs::file_text_readln(dirs);
+              xdg.push_back("XDG_DESKTOP_DIR=");
+              xdg.push_back("XDG_DOWNLOAD_DIR=");
+              xdg.push_back("XDG_TEMPLATES_DIR=");
+              xdg.push_back("XDG_PUBLICSHARE_DIR=");
+              xdg.push_back("XDG_DOCUMENTS_DIR=");
+              xdg.push_back("XDG_MUSIC_DIR=");
+              xdg.push_back("XDG_PICTURES_DIR=");
+              xdg.push_back("XDG_VIDEOS_DIR=");
+              for (std::size_t i = 0; i < xdg.size(); i++) {
+                if (xdg[i].substr(0, 1) == "#") { 
+                  continue; 
+                } else {
+                  std::size_t pos = str.find(xdg[i], 0);
+                  if (pos != std::string::npos) {
+                    FILE *fp = popen(("echo " + line.substr(pos + xdg[i].length())), "r");
+                    if (fp) {
+                      buf[PATH_MAX];
+                      if (fgets(buf, PATH_MAX, fp)) {
+                        favorites.push_back(line);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            ngs::file_text_close(dirs);
+          }
           #endif
         
           // add custom favorites to config text file
