@@ -111,7 +111,7 @@ namespace {
                   if (fgets(buf, PATH_MAX, fp)) { // if output was read ok
                     std::string str = buf; // copy output to string
                     // inspect the string's end for a line feed character
-                    size_t pos = str.find("\n", strlen(buf) - 1);
+                    std::size_t pos = str.find("\n", strlen(buf) - 1);
                     if (pos != std::string::npos) // if a line feed was found
                       str.replace(pos, 1, ""); // remove the line feed
                     // add favorite from output
