@@ -12,6 +12,8 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
     #include <string>   // std::string, std::to_string
     #include <vector>   // std::vector
     #include <cstddef>  // std::size_t
+    #include <climits>  // PATH_MAX
+    #include <cstdio>   // FILE, popen, fgets, pclose
     
     #include "ImFileDialogMacros.h" // Easy Localization
     #include "filedialogs.h"        // NGS File Dialogs
@@ -102,6 +104,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
                         if (fgets(buf, PATH_MAX, fp)) {
                           favorites.push_back(line);
                         }
+                        pclose(fp);
                       }
                     }
                   }
