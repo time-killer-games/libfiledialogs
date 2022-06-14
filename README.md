@@ -81,36 +81,43 @@ namespace {
       favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Movies");
       favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
       #else // Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
+      // user directories on these platforms are set by a 
+      // text file named "${HOME}/.config/user-dirs.dirs"
       std::string conf = ngs::fs::environment_get_variable(HOME_PATH) + "/.config/user-dirs.dirs";
-      if (ngs::fs::file_exists(conf)) {
-        int dirs = ngs::fs::file_text_open_read(conf);
-        if (dirs != -1) {
-          std::vector<std::string> xdg;
-          xdg.push_back("XDG_DESKTOP_DIR=");
-          xdg.push_back("XDG_DOWNLOAD_DIR=");
-          xdg.push_back("XDG_TEMPLATES_DIR=");
-          xdg.push_back("XDG_PUBLICSHARE_DIR=");
-          xdg.push_back("XDG_DOCUMENTS_DIR=");
-          xdg.push_back("XDG_MUSIC_DIR=");
-          xdg.push_back("XDG_PICTURES_DIR=");
-          xdg.push_back("XDG_VIDEOS_DIR=");
-          while (!ngs::fs::file_text_eof(dirs)) {
-            std::string line = ngs::fs::file_text_read_string(dirs);
-            ngs::fs::file_text_readln(dirs);
-            for (std::size_t i = 0; i < xdg.size(); i++) {
-              std::size_t pos = line.find(xdg[i], 0);
-              if (pos != std::string::npos) {
+      if (ngs::fs::file_exists(conf)) { // if the file exists
+        int dirs = ngs::fs::file_text_open_read(conf); // open it for reading
+        if (dirs != -1) { // if opening the text file succeeded
+          std::vector<std::string> xdg; // vector of xdg keys
+          xdg.push_back("XDG_DESKTOP_DIR=");     // Desktop
+          xdg.push_back("XDG_DOWNLOAD_DIR=");    // Downloads
+          xdg.push_back("XDG_TEMPLATES_DIR=");   // Templates
+          xdg.push_back("XDG_PUBLICSHARE_DIR="); // Public
+          xdg.push_back("XDG_DOCUMENTS_DIR=");   // Documents
+          xdg.push_back("XDG_MUSIC_DIR=");       // Music
+          xdg.push_back("XDG_PICTURES_DIR=");    // Pictures
+          xdg.push_back("XDG_VIDEOS_DIR=");      // Videos
+          while (!ngs::fs::file_text_eof(dirs)) { // while not at end of file
+            std::string line = ngs::fs::file_text_read_string(dirs); // read line contents
+            ngs::fs::file_text_readln(dirs); // skip line feed character and go to next line
+            for (std::size_t i = 0; i < xdg.size(); i++) { // for each member of the vector
+              std::size_t pos = line.find(xdg[i], 0); // look for a matching xdg key in line
+              if (pos != std::string::npos) { // if a match was found out of the expected keys
+                // expand enviroment variables found in string using the echo command's output
                 FILE *fp = popen(("echo " + line.substr(pos + xdg[i].length())).c_str(), "r");
-                if (fp) {
+                if (fp) { // if echo command was found and executed ok
                   char buf[PATH_MAX];
+                  // read output and copy to buffer
                   if (fgets(buf, PATH_MAX, fp)) {
+                    // add favorite from output
                     favorites.push_back(buf);
                   }
+                  // close file
                   pclose(fp);
                 }
               }
             }
           }
+          // close file descriptor
           ngs::fs::file_text_close(dirs);
         }
       }
