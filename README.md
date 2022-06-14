@@ -85,7 +85,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
             int dirs = ngs::file_text_open_read(conf);
             if (dirs != -1) {
               while (!ngs::fs::file_text_eof(dirs)) {
-                std::string<std::vector> xdg;
+                std::vector<std::string> xdg;
                 std::string line = ngs::fs::file_text_read_string(dirs);
                 ngs::fs::file_text_readln(dirs);
                 xdg.push_back("XDG_DESKTOP_DIR=");
