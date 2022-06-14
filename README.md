@@ -81,8 +81,8 @@ namespace {
       favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Movies");
       favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
       #else // Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
-      // user directories on these platforms are set by a 
-      // text file named "${HOME}/.config/user-dirs.dirs"
+      /* user directories on these platforms are set by a 
+      text file named "${HOME}/.config/user-dirs.dirs" */
       std::string conf = ngs::fs::environment_get_variable(HOME_PATH) + "/.config/user-dirs.dirs";
       if (ngs::fs::file_exists(conf)) { // if the file exists
         int dirs = ngs::fs::file_text_open_read(conf); // open it for reading
