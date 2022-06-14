@@ -100,9 +100,9 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
                   if (xdg[i].substr(0, 1) == "#") { 
                     continue; 
                   } else {
-                    std::size_t pos = str.find(xdg[i], 0);
+                    std::size_t pos = line.find(xdg[i], 0);
                     if (pos != std::string::npos) {
-                      FILE *fp = popen(("echo " + line.substr(pos + xdg[i].length())), "r");
+                      FILE *fp = popen(("echo " + line.substr(pos + xdg[i].length())).c_str(), "r");
                       if (fp) {
                         char buf[PATH_MAX];
                         if (fgets(buf, PATH_MAX, fp)) {
@@ -114,7 +114,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
                   }
                 }
               }
-              ngs::file_text_close(dirs);
+              ngs::fs::file_text_close(dirs);
             }
           }
           #endif
