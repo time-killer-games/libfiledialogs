@@ -98,7 +98,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
                 xdg.push_back("XDG_VIDEOS_DIR=");
                 for (std::size_t i = 0; i < xdg.size(); i++) {
                   if (xdg[i].substr(0, 1) == "#") { 
-                    continue; 
+                    break; 
                   } else {
                     std::size_t pos = line.find(xdg[i], 0);
                     if (pos != std::string::npos) {
@@ -106,7 +106,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
                       if (fp) {
                         char buf[PATH_MAX];
                         if (fgets(buf, PATH_MAX, fp)) {
-                          favorites.push_back(line);
+                          favorites.push_back(buf);
                         }
                         pclose(fp);
                       }
