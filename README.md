@@ -107,9 +107,13 @@ namespace {
                 if (fp) { // if echo command was found and executed ok
                   char buf[PATH_MAX];
                   // read output and copy to buffer
-                  if (fgets(buf, PATH_MAX, fp)) {
+                  if (fgets(buf, PATH_MAX, fp)) { // if output was read ok
+                    std::string str = buf; // copy output to string
+                    size_t pos = str.find("\n", 0); // search string for line feed
+                    if (pos != std::string::npos) // if a line feed was found
+                      str.replace(pos, 1, ""); // remove the line feed
                     // add favorite from output
-                    favorites.push_back(buf);
+                    favorites.push_back(str);
                   }
                   // close file
                   pclose(fp);
