@@ -90,19 +90,21 @@ namespace {
       // get all system folders for macOS user folder mask
       char buf[PATH_MAX]; sysdir_search_path_enumeration_state state;
       state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DESKTOP, SYSDIR_DOMAIN_MASK_USER);
-      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
       state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DOWNLOADS, SYSDIR_DOMAIN_MASK_USER);
-      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_ALL_LIBRARIES, SYSDIR_DOMAIN_MASK_USER);
+      while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
       state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_SHARED_PUBLIC, SYSDIR_DOMAIN_MASK_USER);
-      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
       state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DOCUMENT, SYSDIR_DOMAIN_MASK_USER);
-      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
       state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_MUSIC, SYSDIR_DOMAIN_MASK_USER);
-      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
       state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_PICTURES, SYSDIR_DOMAIN_MASK_USER);
-      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
       state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_MOVIES, SYSDIR_DOMAIN_MASK_USER);
-      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
       for (std::size_t i = 0; i < favorites.size(); i++) {
         std::string str = favorites[i];
         if (str[0] == '~') { // if tilde is the first character in string
