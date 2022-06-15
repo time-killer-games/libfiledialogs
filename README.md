@@ -5,7 +5,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 ```
 /*
 ** Alternative main.cpp - replace libfiledialogs/filedialogs/main.cpp with below contents
-** then if on Windows open the solution in Visual Studio and build with that otherwise run 
+** then if on Windows open the solution in Visual Studio and build with that otherwise run
 ** the build.sh script if you are on macOS, Linux, FreeBSD, DragonFly, NetBSD, or OpenBSD
 */
 
@@ -25,7 +25,13 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 #include "filedialogs.h"        // NGS File Dialogs
 #include "filesystem.h"         // NGS File System
 
-/* setup home directory 
+#if defined(__APPLE__) && defined(__MACH__)
+// Compile with: -framework AppKit -ObjC++
+#include <AppKit/AppKit.h> // NSApplication
+#include <sysdir.h> // sysdir_* functions
+#endif
+
+/* setup home directory
 environment variable */
 #if !defined(HOME_PATH)
 #if defined(_WIN32) // Windows x86 and Window x86-64
@@ -47,6 +53,12 @@ environment variable */
 
 namespace {
   void init() {
+    #if defined(__APPLE__) && defined(__MACH__)
+    // hide icon from dock on macOS to match all the other platforms
+    [[NSApplication sharedApplication] setActivationPolicy:(NSApplicationActivationPolicy)1];
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+    #endif
+
     // set imgui file dialogs window width and height; default is 600x400 pixels
     ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(800));
     ngs::fs::environment_set_variable("IMGUI_DIALOG_HEIGHT", std::to_string(400));
@@ -75,14 +87,31 @@ namespace {
       favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Music");
       favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Videos");
       #elif defined(__APPLE__) && defined(__MACH__) // macOS
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Desktop");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Documents");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Downloads");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Pictures");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Movies");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "/Music");
+      // get all system folders for macOS user folder mask
+      char buf[PATH_MAX]; sysdir_search_path_enumeration_state state;
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DESKTOP, SYSDIR_DOMAIN_MASK_USER);
+      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DOWNLOADS, SYSDIR_DOMAIN_MASK_USER);
+      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_SHARED_PUBLIC, SYSDIR_DOMAIN_MASK_USER);
+      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DOCUMENT, SYSDIR_DOMAIN_MASK_USER);
+      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_MUSIC, SYSDIR_DOMAIN_MASK_USER);
+      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_PICTURES, SYSDIR_DOMAIN_MASK_USER);
+      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_MOVIES, SYSDIR_DOMAIN_MASK_USER);
+      if ((state = sysdir_get_next_search_path_enumeration(state, buf))) favorites.push_back(buf);
+      for (std::size_t i = 0; i < favorites.size(); i++) {
+        std::string str = favorites[i];
+        if (str[0] == '~') { // if tilde is the first character in string
+          // expand tilde to home folder for current user based on environment
+          favorites[i].replace(0, 1, ngs::fs::environment_get_variable(HOME_PATH));
+        }
+      }
       #else // Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
-      /* user directories on these platforms are set by a 
+      /* user directories on these platforms are set by a
       text file named "${HOME}/.config/user-dirs.dirs" */
       std::string conf = ngs::fs::environment_get_variable(HOME_PATH) + "/.config/user-dirs.dirs";
       if (ngs::fs::file_exists(conf)) { // if the file exists
