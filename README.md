@@ -93,12 +93,6 @@ namespace {
       if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Downloads, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
         favorites.push_back(ghc::filesystem::path(ptr).string()); // Downloads
       CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
-      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Templates, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
-        favorites.push_back(ghc::filesystem::path(ptr).string()); // Templates
-      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
-      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Public, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
-        favorites.push_back(ghc::filesystem::path(ptr).string()); // Public
-      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
       if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
         favorites.push_back(ghc::filesystem::path(ptr).string()); // Documents
       CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
