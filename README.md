@@ -21,11 +21,17 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 #include <cstdio>  // FILE, popen, fgets, pclose
 #endif
 
+#if defined(_WIN32)
+#include "filesystem.hpp" // GHC File System
+#endif
+
 #include "ImFileDialogMacros.h" // Easy Localization
 #include "filedialogs.h"        // NGS File Dialogs
 #include "filesystem.h"         // NGS File System
 
-#if defined(__APPLE__) && defined(__MACH__)
+#if defined(_WIN32)
+#include <Shlobj.h>
+#elif defined(__APPLE__) && defined(__MACH__)
 // Compile with: -framework AppKit -ObjC++
 #include <AppKit/AppKit.h> // NSApplication
 #include <sysdir.h> // sysdir_* functions
@@ -80,30 +86,49 @@ namespace {
       // setup favorites std::vector
       std::vector<std::string> favorites;
       #if defined(_WIN32) // Windows x86 and Window x86-64
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Desktop");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Documents");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Downloads");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Pictures");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Music");
-      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH) + "\\Videos");
+      wchar_t *ptr = nullptr; // get all system folders for Windows user profile folder
+      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Desktop, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
+        favorites.push_back(ghc::filesystem::path(ptr).string()); // Desktop
+      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
+      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Downloads, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
+        favorites.push_back(ghc::filesystem::path(ptr).string()); // Downloads
+      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
+      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Templates, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
+        favorites.push_back(ghc::filesystem::path(ptr).string()); // Templates
+      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
+      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Public, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
+        favorites.push_back(ghc::filesystem::path(ptr).string()); // Public
+      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
+      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
+        favorites.push_back(ghc::filesystem::path(ptr).string()); // Documents
+      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
+      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Music, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
+        favorites.push_back(ghc::filesystem::path(ptr).string()); // Music
+      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
+      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Pictures, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
+        favorites.push_back(ghc::filesystem::path(ptr).string()); // Pictures
+      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
+      if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Videos, KF_FLAG_CREATE | KF_FLAG_DONT_UNEXPAND, nullptr, &ptr)))
+        favorites.push_back(ghc::filesystem::path(ptr).string()); // Videos
+      CoTaskMemFree(ptr); ptr = nullptr; // free memory even on failure as Microsoft documentation specifies
       #elif defined(__APPLE__) && defined(__MACH__) // macOS
       // get all system folders for macOS user folder mask
       char buf[PATH_MAX]; sysdir_search_path_enumeration_state state;
-      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DESKTOP, SYSDIR_DOMAIN_MASK_USER);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DESKTOP, SYSDIR_DOMAIN_MASK_USER);       // Desktop
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
-      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DOWNLOADS, SYSDIR_DOMAIN_MASK_USER);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DOWNLOADS, SYSDIR_DOMAIN_MASK_USER);     // Downloads
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
-      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_ALL_LIBRARIES, SYSDIR_DOMAIN_MASK_USER);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_ALL_LIBRARIES, SYSDIR_DOMAIN_MASK_USER); // Library
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
-      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_SHARED_PUBLIC, SYSDIR_DOMAIN_MASK_USER);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_SHARED_PUBLIC, SYSDIR_DOMAIN_MASK_USER); // Public
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
-      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DOCUMENT, SYSDIR_DOMAIN_MASK_USER);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_DOCUMENT, SYSDIR_DOMAIN_MASK_USER);      // Documents
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
-      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_MUSIC, SYSDIR_DOMAIN_MASK_USER);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_MUSIC, SYSDIR_DOMAIN_MASK_USER);         // Music
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
-      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_PICTURES, SYSDIR_DOMAIN_MASK_USER);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_PICTURES, SYSDIR_DOMAIN_MASK_USER);      // Pictures
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
-      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_MOVIES, SYSDIR_DOMAIN_MASK_USER);
+      state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_MOVIES, SYSDIR_DOMAIN_MASK_USER);        // Movies
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
       for (std::size_t i = 0; i < favorites.size(); i++) {
         std::string str = favorites[i];
@@ -168,7 +193,7 @@ namespace {
           ngs::fs::file_text_write_string(desc, favorites[i]);
           ngs::fs::file_text_writeln(desc); // write new line
         }
-        // close file descriptor
+        // close file descriptor    
         ngs::fs::file_text_close(desc);
       }
     }
