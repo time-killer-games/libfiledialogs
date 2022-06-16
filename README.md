@@ -130,8 +130,8 @@ namespace {
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
       state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_MOVIES, SYSDIR_DOMAIN_MASK_USER);        // Movies
       while ((state = sysdir_get_next_search_path_enumeration(state, buf))) if (buf[0] == '~') favorites.push_back(buf);
-      for (std::size_t i = 0; i < favorites.size(); i++) {
-        std::string str = favorites[i];
+      for (std::size_t i = 0; i < favorites.size(); i++) { // loop through each favorite
+        std::string str = favorites[i]; // copy current favorite to string
         if (str[0] == '~') { // if tilde is the first character in string
           // expand tilde to home folder for current user based on environment
           favorites[i].replace(0, 1, ngs::fs::environment_get_variable(HOME_PATH));
