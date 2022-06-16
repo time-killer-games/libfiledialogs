@@ -211,3 +211,5 @@ Supports Windows, macOS, Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD. Uses pl
 ![macos](https://github.com/time-killer-games/filedialogs/blob/main/macos.png?raw=true)
 
 ![linux](https://github.com/time-killer-games/filedialogs/blob/main/linux.png?raw=true)
+
+![bsd's](https://github.com/time-killer-games/filedialogs/blob/main/bsd's.png?raw=true)
