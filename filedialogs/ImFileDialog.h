@@ -139,7 +139,7 @@ namespace ifd {
     unsigned int m_sortColumn;
     unsigned int m_sortDirection;
     std::vector<FileData> m_content;
-    void m_setDirectory(const ghc::filesystem::path& p, bool addHistory = true, bool clearFileName = true);
+    void m_setDirectory(ghc::filesystem::path p, bool addHistory = true, bool clearFileName = true);
     void m_sortContent(unsigned int column, unsigned int sortDirection);
     void m_renderContent();
 
