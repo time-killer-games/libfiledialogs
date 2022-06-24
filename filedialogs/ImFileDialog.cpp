@@ -623,6 +623,15 @@ namespace ifd {
   }
 
   void FileDialog::RemoveFavorite(std::string path) {
+    path = ngs::fs::filename_canonical(path);
+    #if defined(_WIN32)
+    while (!path.empty() && std::count(path.begin(), path.end(), '\\') > 1 && path.back() == '\\') {
+    #else
+    while (!path.empty() && std::count(path.begin(), path.end(), '/' ) > 1 && path.back() == '/' ) {
+    #endif
+      path.pop_back();
+    }
+
     auto itr = std::find(m_favorites.begin(), m_favorites.end(), m_currentDirectory.string());
 
     if (itr != m_favorites.end())
