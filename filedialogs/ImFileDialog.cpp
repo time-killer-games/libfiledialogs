@@ -443,6 +443,7 @@ namespace ifd {
           while (!fav.empty() && std::count(fav.begin(), fav.end(), '/' ) > 1 && fav.back() == '/' ) {
             fav.pop_back();
           }
+          FileDialog::AddFavorite(fav);
           ngs::fs::file_text_readln(fd);
         }
         ngs::fs::file_text_close(fd);
