@@ -405,11 +405,9 @@ namespace ifd {
       if (fd != -1) {
         while (!ngs::fs::file_text_eof(fd)) {
           std::string fav = ngs::fs::filename_canonical(ngs::fs::file_text_read_string(fd));
-          #if defined(_WIN32)
-          while (!fav.empty() && std::count(fav.begin(), fav.end(), '\\') > 1 && fav.back() == '\\') fav.pop_back();
-          #else
-          while (!fav.empty() && std::count(fav.begin(), fav.end(), '/' ) > 1 && fav.back() == '/' ) fav.pop_back();
-          #endif
+          while (!fav.empty() && std::count(fav.begin(), fav.end(), '\\') > 1 && fav.back() == '\\') {
+            fav.pop_back();
+          }
           FileDialog::AddFavorite(fav);
           ngs::fs::file_text_readln(fd);
         }
@@ -441,7 +439,10 @@ namespace ifd {
       int fd = ngs::fs::file_text_open_read(conf);
       if (fd != -1) {
         while (!ngs::fs::file_text_eof(fd)) {
-          FileDialog::AddFavorite(ngs::fs::file_text_read_string(fd));
+          std::string fav = ngs::fs::filename_canonical(ngs::fs::file_text_read_string(fd));
+          while (!fav.empty() && std::count(fav.begin(), fav.end(), '/' ) > 1 && fav.back() == '/' ) {
+            fav.pop_back();
+          }
           ngs::fs::file_text_readln(fd);
         }
         ngs::fs::file_text_close(fd);
