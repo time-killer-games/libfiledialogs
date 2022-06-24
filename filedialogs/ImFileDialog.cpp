@@ -448,8 +448,6 @@ namespace ifd {
       ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "/.config/filedialogs");
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "filedialogs.txt");
-    std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
-    std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
     if (!ngs::fs::file_exists(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
       ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE"))) {
       std::vector<std::string> favorites;
