@@ -1045,7 +1045,16 @@ namespace ifd {
     node = nullptr;
   }
 
-  void FileDialog::m_setDirectory(const ghc::filesystem::path& p, bool addHistory, bool clearFileName) {
+  void FileDialog::m_setDirectory(ghc::filesystem::path p, bool addHistory, bool clearFileName) {
+    std::string path = ngs::fs::filename_canonical(p.string());
+    #if defined(_WIN32)
+    while (!path.empty() && std::count(path.begin(), path.end(), '\\') > 1 && path.back() == '\\') {
+    #else
+    while (!path.empty() && std::count(path.begin(), path.end(), '/' ) > 1 && path.back() == '/' ) {
+    #endif
+      path.pop_back();
+    }
+    p = path;
     bool isSameDir = m_currentDirectory == p;
 
     if (addHistory && !isSameDir)
