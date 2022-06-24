@@ -408,7 +408,7 @@ namespace ifd {
       favorites.push_back(ngs::fs::directory_get_pictures_path());
       favorites.push_back(ngs::fs::directory_get_videos_path());
       int desc = ngs::fs::file_text_open_write(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
-        ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE")));
+        ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE"));
       if (desc != -1) {
         for (std::size_t i = 0; i < favorites.size(); i++) {
           ngs::fs::file_text_write_string(desc, favorites[i]);
@@ -459,7 +459,7 @@ namespace ifd {
       favorites.push_back(ngs::fs::directory_get_pictures_path());
       favorites.push_back(ngs::fs::directory_get_videos_path());
       int desc = ngs::fs::file_text_open_write(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
-        ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE")));
+        ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE"));
       if (desc != -1) {
         for (std::size_t i = 0; i < favorites.size(); i++) {
           ngs::fs::file_text_write_string(desc, favorites[i]);
