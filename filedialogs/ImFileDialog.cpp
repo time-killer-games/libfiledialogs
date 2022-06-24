@@ -384,6 +384,8 @@ namespace ifd {
     FileTreeNode* quickAccess = new FileTreeNode(IFD_QUICK_ACCESS);
     quickAccess->Read = true;
     m_treeCache.push_back(quickAccess);
+    if (!ngs::fs::directory_exists("${IMGUI_CONFIG_PATH}"))
+      ngs::fs::directory_create("${IMGUI_CONFIG_PATH}");
 
     #ifdef _WIN32
     std::error_code ec;
@@ -584,8 +586,6 @@ namespace ifd {
 
   void FileDialog::Close() {
     std::error_code ec;
-    if (!ngs::fs::directory_exists("${IMGUI_CONFIG_PATH}"))
-      ngs::fs::directory_create("${IMGUI_CONFIG_PATH}");
     #if defined(_WIN32)
     int fd = ngs::fs::file_text_open_write("${IMGUI_CONFIG_PATH}\\${IMGUI_CONFIG_FILE}");
     #else
