@@ -404,11 +404,7 @@ namespace ifd {
       int fd = ngs::fs::file_text_open_read(conf);
       if (fd != -1) {
         while (!ngs::fs::file_text_eof(fd)) {
-          std::string fav = ngs::fs::filename_canonical(ngs::fs::file_text_read_string(fd));
-          while (!fav.empty() && std::count(fav.begin(), fav.end(), '\\') > 1 && fav.back() == '\\') {
-            fav.pop_back();
-          }
-          FileDialog::AddFavorite(fav);
+          FileDialog::AddFavorite(ngs::fs::file_text_read_string(fd));
           ngs::fs::file_text_readln(fd);
         }
         ngs::fs::file_text_close(fd);
@@ -439,11 +435,7 @@ namespace ifd {
       int fd = ngs::fs::file_text_open_read(conf);
       if (fd != -1) {
         while (!ngs::fs::file_text_eof(fd)) {
-          std::string fav = ngs::fs::filename_canonical(ngs::fs::file_text_read_string(fd));
-          while (!fav.empty() && std::count(fav.begin(), fav.end(), '/' ) > 1 && fav.back() == '/' ) {
-            fav.pop_back();
-          }
-          FileDialog::AddFavorite(fav);
+          FileDialog::AddFavorite(ngs::fs::file_text_read_string(fd));
           ngs::fs::file_text_readln(fd);
         }
         ngs::fs::file_text_close(fd);
@@ -592,7 +584,7 @@ namespace ifd {
     m_clearIcons();
   }
 
-  void FileDialog::RemoveFavorite(const std::string& path) {
+  void FileDialog::RemoveFavorite(std::string path) {
     auto itr = std::find(m_favorites.begin(), m_favorites.end(), m_currentDirectory.string());
 
     if (itr != m_favorites.end())
@@ -610,7 +602,16 @@ namespace ifd {
       }
   }
 
-  void FileDialog::AddFavorite(const std::string& path) {
+  void FileDialog::AddFavorite(std::string path) {
+    path = ngs::fs::filename_canonical(path);
+    #if defined(_WIN32)
+    while (!path.empty() && std::count(path.begin(), path.end(), '\\') > 1 && path.back() == '\\') {
+    #else
+    while (!path.empty() && std::count(path.begin(), path.end(), '/' ) > 1 && path.back() == '/' ) {
+    #endif
+      path.pop_back();
+    }
+    
     if (std::count(m_favorites.begin(), m_favorites.end(), path) > 0)
       return;
 
