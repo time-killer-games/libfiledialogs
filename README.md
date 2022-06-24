@@ -21,10 +21,13 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 #include <cstdio>  // FILE, popen, fgets, pclose
 #endif
 
+#if defined(_WIN32)
+#include "filesystem.hpp" // GHC File System
+#endif
+
 #include "ImFileDialogMacros.h" // Easy Localization
 #include "filedialogs.h"        // NGS File Dialogs
 #include "filesystem.h"         // NGS File System
-#include "filesystem.hpp"       // GHC File System
 
 #if defined(_WIN32)
 #include <Shlobj.h>
@@ -55,26 +58,6 @@ environment variable */
 #endif
 
 namespace {
-
-  std::string directory_remove_trailing_slashes(std::string dname) {
-    std::error_code ec;
-    ghc::filesystem::path p = ghc::filesystem::path(dname);
-    p = ghc::filesystem::absolute(p, ec);
-    if (ec.value() != 0) return "";
-    dname = p.string();
-    #if defined(_WIN32)
-    while ((dname.back() == '\\' || dname.back() == '/') && 
-      (p.root_name().string() + "\\" != dname && p.root_name().string() + "/" != dname)) {
-      p = ghc::filesystem::path(dname); dname.pop_back();
-    }
-    #else
-    while (dname.back() == '/' && (!dname.empty() && dname[0] != '/' && dname.length() != 1)) {
-      dname.pop_back();
-    }
-    #endif
-    return dname;
-  }
-
   void init() {
     #if defined(__APPLE__) && defined(__MACH__)
     // hide icon from dock on macOS to match all the other platforms
@@ -102,12 +85,12 @@ namespace {
     if (!ngs::fs::file_exists(path + "/" + file)) {
       // setup favorites std::vector
       std::vector<std::string> favorites;
-      favorites.push_back(directory_remove_trailing_slashes(ngs::fs::directory_get_desktop_path()));
-      favorites.push_back(directory_remove_trailing_slashes(ngs::fs::directory_get_documents_path()));
-      favorites.push_back(directory_remove_trailing_slashes(ngs::fs::directory_get_downloads_path()));
-      favorites.push_back(directory_remove_trailing_slashes(ngs::fs::directory_get_music_path()));
-      favorites.push_back(directory_remove_trailing_slashes(ngs::fs::directory_get_pictures_path()));
-      favorites.push_back(directory_remove_trailing_slashes(ngs::fs::directory_get_videos_path()));
+      favorites.push_back(ngs::fs::directory_get_desktop_path());
+      favorites.push_back(ngs::fs::directory_get_documents_path());
+      favorites.push_back(ngs::fs::directory_get_downloads_path());
+      favorites.push_back(ngs::fs::directory_get_music_path());
+      favorites.push_back(ngs::fs::directory_get_pictures_path());
+      favorites.push_back(ngs::fs::directory_get_videos_path());
       // add custom favorites to config text file
       int desc = ngs::fs::file_text_open_write(path + "/" + file);
       if (desc != -1) { // success; file can now be written to
@@ -121,7 +104,6 @@ namespace {
       }
     }
   }
-
 } // anonymous namespace
 
 int main() {
