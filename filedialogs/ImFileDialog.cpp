@@ -393,6 +393,10 @@ namespace ifd {
     ghc::filesystem::path homePath;
     if (GetEnvironmentVariableW(L"USERPROFILE", userProfile, 32767))
       homePath = userProfile;
+    if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
+      ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "\\.config\\filedialogs");
+    if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
+      ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "filedialogs.txt");
     std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
     std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
     if (!ngs::fs::file_exists(path + "/" + file)) {
@@ -414,11 +418,7 @@ namespace ifd {
         ngs::fs::file_text_close(desc);
       }
     }
-    if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
-      ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "\\.config\\filedialogs");
-    if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
-      ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "filedialogs.txt");
-    std::string conf = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "\\" + ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
+    std::string conf = path + "\\" + file;
     if (ngs::fs::file_exists(conf)) {
       int fd = ngs::fs::file_text_open_read(conf);
       if (fd != -1) {
@@ -443,6 +443,10 @@ namespace ifd {
     
     // Quick Access
     ghc::filesystem::path homePath = getenv("HOME") ? getenv("HOME") : "";
+    if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
+      ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "/.config/filedialogs");
+    if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
+      ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "filedialogs.txt");
     std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
     std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
     if (!ngs::fs::file_exists(path + "/" + file)) {
@@ -464,11 +468,7 @@ namespace ifd {
         ngs::fs::file_text_close(desc);
       }
     }
-    if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
-      ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "/.config/filedialogs");
-    if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
-      ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "filedialogs.txt");
-    std::string conf = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
+    std::string conf = path + "/" + file;
     if (ngs::fs::file_exists(conf)) {
       int fd = ngs::fs::file_text_open_read(conf);
       if (fd != -1) {
