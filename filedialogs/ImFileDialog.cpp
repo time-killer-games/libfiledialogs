@@ -384,8 +384,6 @@ namespace ifd {
     FileTreeNode* quickAccess = new FileTreeNode(IFD_QUICK_ACCESS);
     quickAccess->Read = true;
     m_treeCache.push_back(quickAccess);
-    if (!ngs::fs::directory_exists("${IMGUI_CONFIG_PATH}"))
-      ngs::fs::directory_create("${IMGUI_CONFIG_PATH}");
 
     #ifdef _WIN32
     std::error_code ec;
@@ -397,6 +395,8 @@ namespace ifd {
       homePath = userProfile;
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "\\.config\\filedialogs");
+    if (!ngs::fs::directory_exists("${IMGUI_CONFIG_PATH}"))
+      ngs::fs::directory_create("${IMGUI_CONFIG_PATH}");
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "filedialogs.txt");
     if (!ngs::fs::file_exists(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
@@ -448,6 +448,8 @@ namespace ifd {
     ghc::filesystem::path homePath = getenv("HOME") ? getenv("HOME") : "";
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "/.config/filedialogs");
+    if (!ngs::fs::directory_exists("${IMGUI_CONFIG_PATH}"))
+      ngs::fs::directory_create("${IMGUI_CONFIG_PATH}");
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "filedialogs.txt");
     if (!ngs::fs::file_exists(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
