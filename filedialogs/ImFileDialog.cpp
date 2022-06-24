@@ -393,6 +393,11 @@ namespace ifd {
     ghc::filesystem::path homePath;
     if (GetEnvironmentVariableW(L"USERPROFILE", userProfile, 32767)) 
       homePath = userProfile;
+    while (!homePath.wstring().empty() &&
+      std::count(homePath.wstring().begin(), homePath.wstring().end(), L'\\') > 1 && 
+      homePath.wstring().back() == L'\\') {
+      homePath.wstring().pop_back();
+    }
     if (ghc::filesystem::exists(homePath, ec))
       quickAccess->Children.push_back(new FileTreeNode(homePath));
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
@@ -424,6 +429,11 @@ namespace ifd {
     
     // Quick Access
     ghc::filesystem::path homePath = getenv("HOME") ? getenv("HOME") : "";
+    while (!homePath.string().empty() &&
+      std::count(homePath.string().begin(), homePath.string().end(), '/') > 1 && 
+      homePath.string().back() == '/') {
+      homePath.string().pop_back();
+    }
     if (ghc::filesystem::exists(homePath, ec))
       quickAccess->Children.push_back(new FileTreeNode(homePath));
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
