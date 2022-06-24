@@ -391,17 +391,15 @@ namespace ifd {
     // Quick Access
     wchar_t userProfile[32767];
     ghc::filesystem::path homePath;
-    if (GetEnvironmentVariableW(L"USERPROFILE", userProfile, 32767)) 
+    if (GetEnvironmentVariableW(L"USERPROFILE", userProfile, 32767))
       homePath = userProfile;
-    std::string tmp = ngs::fs::filename_canonical(homePath.string());
-    while (!tmp.empty() &&
-      std::count(tmp.begin(), tmp.end(), '\\') > 1 && 
-      tmp.back() == '\\') {
-      tmp.pop_back();
-    }
-    homePath = tmp;
-    if (ghc::filesystem::exists(homePath, ec))
-      quickAccess->Children.push_back(new FileTreeNode(homePath));
+    FileDialog::AddFavorite(homePath.string());
+    FileDialog::AddFavorite(ngs::fs::directory_get_desktop_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_documents_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_downloads_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_music_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_pictures_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_videos_path());
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "\\.config\\filedialogs");
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
@@ -431,15 +429,13 @@ namespace ifd {
     
     // Quick Access
     ghc::filesystem::path homePath = getenv("HOME") ? getenv("HOME") : "";
-    std::string tmp = ngs::fs::filename_canonical(homePath.string());
-    while (!tmp.empty() &&
-      std::count(tmp.begin(), tmp.end(), '/') > 1 && 
-      tmp.back() == '/') {
-      tmp.pop_back();
-    }
-    homePath = tmp;
-    if (ghc::filesystem::exists(homePath, ec))
-      quickAccess->Children.push_back(new FileTreeNode(homePath));
+    FileDialog::AddFavorite(homePath.string());
+    FileDialog::AddFavorite(ngs::fs::directory_get_desktop_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_documents_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_downloads_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_music_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_pictures_path());
+    FileDialog::AddFavorite(ngs::fs::directory_get_videos_path());
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "/.config/filedialogs");
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
