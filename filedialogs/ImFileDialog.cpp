@@ -397,9 +397,8 @@ namespace ifd {
       ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "\\.config\\filedialogs");
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "filedialogs.txt");
-    std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
-    std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
-    if (!ngs::fs::file_exists(path + "/" + file)) {
+    if (!ngs::fs::file_exists(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
+      ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE"))) {
       std::vector<std::string> favorites;
       favorites.push_back(homePath.string());
       favorites.push_back(ngs::fs::directory_get_desktop_path());
@@ -408,7 +407,8 @@ namespace ifd {
       favorites.push_back(ngs::fs::directory_get_music_path());
       favorites.push_back(ngs::fs::directory_get_pictures_path());
       favorites.push_back(ngs::fs::directory_get_videos_path());
-      int desc = ngs::fs::file_text_open_write(path + "/" + file);
+      int desc = ngs::fs::file_text_open_write(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
+        ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE")));
       if (desc != -1) {
         for (std::size_t i = 0; i < favorites.size(); i++) {
           ngs::fs::file_text_write_string(desc, favorites[i]);
@@ -418,7 +418,8 @@ namespace ifd {
         ngs::fs::file_text_close(desc);
       }
     }
-    std::string conf = path + "\\" + file;
+    std::string conf = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
+      ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
     if (ngs::fs::file_exists(conf)) {
       int fd = ngs::fs::file_text_open_read(conf);
       if (fd != -1) {
@@ -449,7 +450,8 @@ namespace ifd {
       ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "filedialogs.txt");
     std::string path = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH");
     std::string file = ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
-    if (!ngs::fs::file_exists(path + "/" + file)) {
+    if (!ngs::fs::file_exists(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
+      ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE"))) {
       std::vector<std::string> favorites;
       favorites.push_back(homePath.string());
       favorites.push_back(ngs::fs::directory_get_desktop_path());
@@ -458,7 +460,8 @@ namespace ifd {
       favorites.push_back(ngs::fs::directory_get_music_path());
       favorites.push_back(ngs::fs::directory_get_pictures_path());
       favorites.push_back(ngs::fs::directory_get_videos_path());
-      int desc = ngs::fs::file_text_open_write(path + "/" + file);
+      int desc = ngs::fs::file_text_open_write(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
+        ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE")));
       if (desc != -1) {
         for (std::size_t i = 0; i < favorites.size(); i++) {
           ngs::fs::file_text_write_string(desc, favorites[i]);
@@ -468,7 +471,8 @@ namespace ifd {
         ngs::fs::file_text_close(desc);
       }
     }
-    std::string conf = path + "/" + file;
+    std::string conf = ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
+      ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE");
     if (ngs::fs::file_exists(conf)) {
       int fd = ngs::fs::file_text_open_read(conf);
       if (fd != -1) {
