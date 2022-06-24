@@ -402,7 +402,7 @@ namespace ifd {
     if (!ngs::fs::file_exists(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
       ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE"))) {
       std::vector<std::string> favorites;
-      favorites.push_back(homePath.string());
+      favorites.push_back(homePath.string() + "\\");
       favorites.push_back(ngs::fs::directory_get_desktop_path());
       favorites.push_back(ngs::fs::directory_get_documents_path());
       favorites.push_back(ngs::fs::directory_get_downloads_path());
@@ -455,7 +455,7 @@ namespace ifd {
     if (!ngs::fs::file_exists(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH") + "/" + 
       ngs::fs::environment_get_variable("IMGUI_CONFIG_FILE"))) {
       std::vector<std::string> favorites;
-      favorites.push_back(homePath.string());
+      favorites.push_back(homePath.string() + "/");
       favorites.push_back(ngs::fs::directory_get_desktop_path());
       favorites.push_back(ngs::fs::directory_get_documents_path());
       favorites.push_back(ngs::fs::directory_get_downloads_path());
