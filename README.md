@@ -85,6 +85,7 @@ namespace {
     if (!ngs::fs::file_exists(path + "/" + file)) {
       // setup favorites std::vector
       std::vector<std::string> favorites;
+      favorites.push_back(ngs::fs::environment_get_variable(HOME_PATH));
       favorites.push_back(ngs::fs::directory_get_desktop_path());
       favorites.push_back(ngs::fs::directory_get_documents_path());
       favorites.push_back(ngs::fs::directory_get_downloads_path());
