@@ -625,15 +625,16 @@ namespace ngs::fs {
     }
     #elif defined(__OpenBSD__)
     std::string arg; 
+    char *pwd = nullptr;
     char **buffer = nullptr;
-    int mib1[4]; std::size_t s = 0;
-    mib1[0] = CTL_KERN;
-    mib1[1] = KERN_PROC_ARGS;
-    mib1[2] = getpid();
-    mib1[3] = KERN_PROC_ARGV; 
-    if (sysctl(mib1, 4, nullptr, &s, nullptr, 0) == 0) {
+    int mib[4]; std::size_t s = 0;
+    mib[0] = CTL_KERN;
+    mib[1] = KERN_PROC_ARGS;
+    mib[2] = getpid();
+    mib[3] = KERN_PROC_ARGV; 
+    if (sysctl(mib, 4, nullptr, &s, nullptr, 0) == 0) {
       if ((buffer = (char **)malloc(s))) {
-        if (sysctl(mib1, 4, buffer, &s, nullptr, 0) == 0) {
+        if (sysctl(mib, 4, buffer, &s, nullptr, 0) == 0) {
           arg = string(buffer[0]) + "\0";
         }
         free(buffer);
@@ -644,35 +645,27 @@ namespace ngs::fs {
         char buffer[PATH_MAX];
         if (realpath(arg.c_str(), buffer)) {
           path = buffer;
+          goto finish;
         }
-      } else {
+      } else if (arg.find('/') == string::npos) {
         vector<string> env = string_split(environ_from_proc_id_ex(getppid(), "PATH"), ':');
         struct stat st = { 0 }; for (std::size_t i = 0; i < env.size(); i++) {
           char buffer[PATH_MAX];
-          if (realpath((std::string(env[i]) + "/" + std::string(arg).data()).c_str(), buffer)) {
+          if (realpath((std::string(env[i]) + "/" + arg).c_str(), buffer)) {
             path = buffer;
-            break;
+            goto finish;
           }
         }
       }
-      std::vector<char> str; 
-      int mib2[3]; std::size_t s = 0;
-      char *cwd = nullptr;
-      mib2[0] = CTL_KERN;
-      mib2[1] = KERN_PROC_CWD;
-      mib2[2] = getppid();
-      if (sysctl(mib2, 3, nullptr, &s, nullptr, 0) == 0) {
-        str.resize(s, '\0'); cwd = str.data();
-        if (sysctl(mib2, 3, cwd, &s, nullptr, 0) == 0) {
-          if (arg[0] == '.' && arg.find('/') != string::npos) {
-            char buffer[PATH_MAX];
-            if (realpath((std::string(cwd) + "/" + std::string(arg).data()).c_str(), buffer)) {
-              path = buffer;
-            }
-          }
+      pwd = getenv("PWD");
+      if (pwd) {
+        char buffer[PATH_MAX];
+        if (realpath((std::string(pwd) + "/" + arg).c_str(), buffer)) {
+          path = buffer; 
         }
       }
     }
+    finish:
     #endif
     return path;
   }
