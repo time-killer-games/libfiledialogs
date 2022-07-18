@@ -12,14 +12,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 #include <iostream> // std::cout, std::endl
 #include <string>   // std::string, std::to_string
 #include <vector>   // std::vector
-
-#include <cstddef> // std::size_t
-#if !defined(_WIN32) && !defined(__APPLE__) && !defined(__MACH__)
-// Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
-#include <cstring> // strlen
-#include <climits> // PATH_MAX
-#include <cstdio>  // FILE, popen, fgets, pclose
-#endif
+#include <cstddef>  // std::size_t
 
 #if defined(_WIN32)
 #include "filesystem.hpp" // GHC File System
@@ -29,12 +22,9 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 #include "filedialogs.h"        // NGS File Dialogs
 #include "filesystem.h"         // NGS File System
 
-#if defined(_WIN32)
-#include <Shlobj.h>
-#elif defined(__APPLE__) && defined(__MACH__)
+#if defined(__APPLE__) && defined(__MACH__)
 // Compile with: -framework AppKit -ObjC++
 #include <AppKit/AppKit.h> // NSApplication
-#include <sysdir.h> // sysdir_* functions
 #endif
 
 /* setup home directory
