@@ -79,8 +79,8 @@ namespace {
       favorites.push_back(ngs::fs::directory_get_music_path());
       favorites.push_back(ngs::fs::directory_get_pictures_path());
       favorites.push_back(ngs::fs::directory_get_videos_path());
-      // add custom favorites to config text file
-      int desc = ngs::fs::file_text_open_write(path + "/" + file);
+      // add custom favorites to config text file; this file is not encrypted and may be easily edited by any software
+      int desc = ngs::fs::file_text_open_write("${IMGUI_CONFIG_HOME}/.config/${IMGUI_CONFIG_FOLDER}/${IMGUI_CONFIG_FILE}");
       if (desc != -1) { // success; file can now be written to
         for (std::size_t i = 0; i < favorites.size(); i++) {
           // write favorite from vector at current index "i"
