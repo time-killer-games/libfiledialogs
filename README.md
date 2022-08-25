@@ -68,7 +68,7 @@ namespace {
     ngs::fs::environment_set_variable("IMGUI_CONFIG_FOLDER", "imfiledialogs");
     ngs::fs::environment_set_variable("IMGUI_CONFIG_FILE", "fdfavorites.txt");
     
-    // if favorites config text file ("${}") does not exist
+    // if imgui file dialog favorites config file absolute pathname does not exist, then create one
     if (!ngs::fs::file_exists("${IMGUI_CONFIG_HOME}/.config/${IMGUI_CONFIG_FOLDER}/${IMGUI_CONFIG_FILE}")) {
       // setup favorites std::vector
       std::vector<std::string> favorites;
