@@ -388,10 +388,8 @@ namespace ifd {
     std::error_code ec;
 
     // Quick Access
-    wchar_t userProfile[32767];
-    ghc::filesystem::path homePath;
-    if (GetEnvironmentVariableW(L"USERPROFILE", userProfile, 32767))
-      homePath = userProfile;
+    ghc::filesystem::path homePath = ((!ngs::fs::environment_get_variable("USERPROFILE").empty()) ? 
+      ngs::fs::environment_get_variable("USERPROFILE") : "");
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "\\.config\\filedialogs");
     if (!ngs::fs::directory_exists(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH")))
@@ -443,7 +441,8 @@ namespace ifd {
     std::error_code ec;
     
     // Quick Access
-    ghc::filesystem::path homePath = getenv("HOME") ? getenv("HOME") : "";
+    ghc::filesystem::path homePath = ((!ngs::fs::environment_get_variable("HOME").empty()) ? 
+      ngs::fs::environment_get_variable("HOME") : "");
     if (ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH").empty())
       ngs::fs::environment_set_variable("IMGUI_CONFIG_PATH", homePath.string() + "/.config/filedialogs");
     if (!ngs::fs::directory_exists(ngs::fs::environment_get_variable("IMGUI_CONFIG_PATH")))
@@ -1378,8 +1377,8 @@ namespace ifd {
       ImGui::OpenPopup((IFD_ENTER_FILE_NAME + std::string("##newfile")).c_str());
     if (openNewDirectoryDlg)
       ImGui::OpenPopup((IFD_ENTER_DIRECTORY_NAME + std::string("##newdir")).c_str());
-    ImGui::SetNextWindowSize(ImVec2((float)((GImGui->FontSize * strlen(IFD_ARE_YOU_SURE_YOU_WANT_TO_DELETE)) / 2.85), (float)(GImGui->FontSize * 6)), ImGuiCond_FirstUseEver);
-    if (ImGui::BeginPopupModal((IFD_ARE_YOU_SURE + std::string("##delete")).c_str())) {
+    ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize(IFD_ARE_YOU_SURE_YOU_WANT_TO_DELETE).x, 0.0f), 0);
+    if (ImGui::BeginPopupModal((IFD_ARE_YOU_SURE + std::string("##delete")).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
       if (m_selectedFileItem >= static_cast<int>(m_content.size()) || m_content.size() == 0)
         ImGui::CloseCurrentPopup();
       else {
@@ -1397,8 +1396,8 @@ namespace ifd {
       }
       ImGui::EndPopup();
     }
-    ImGui::SetNextWindowSize(ImVec2((float)((GImGui->FontSize * strlen(IFD_ARE_YOU_SURE_YOU_WANT_TO_OVERWRITE)) / 2.85), (float)(GImGui->FontSize * 6)), ImGuiCond_FirstUseEver);
-    if (ImGui::BeginPopupModal((IFD_OVERWRITE_FILE + std::string("##overwrite")).c_str())) {
+    ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize(IFD_ARE_YOU_SURE_YOU_WANT_TO_OVERWRITE).x, 0.0f), 0);
+    if (ImGui::BeginPopupModal((IFD_OVERWRITE_FILE + std::string("##overwrite")).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
       if (m_selectedFileItem >= static_cast<int>(m_content.size()) || m_content.size() == 0)
         ImGui::CloseCurrentPopup();
       else {
@@ -1417,7 +1416,7 @@ namespace ifd {
       ImGui::EndPopup();
     }
     if (ImGui::BeginPopupModal((IFD_ENTER_FILE_NAME + std::string("##newfile")).c_str())) {
-      ImGui::PushItemWidth(250.0f);
+      ImGui::PushItemWidth(ImGui::CalcTextSize((IFD_ENTER_FILE_NAME + std::string("##newfile")).c_str()).x);
       ImGui::InputText("##newfilename", m_newEntryBuffer, 1024); // TODO: remove hardcoded literals
       ImGui::PopItemWidth();
 
@@ -1439,7 +1438,7 @@ namespace ifd {
       ImGui::EndPopup();
     }
     if (ImGui::BeginPopupModal((IFD_ENTER_DIRECTORY_NAME + std::string("##newdir")).c_str())) {
-      ImGui::PushItemWidth(250.0f);
+      ImGui::PushItemWidth(ImGui::CalcTextSize((IFD_ENTER_DIRECTORY_NAME + std::string("##newdir")).c_str()).x);
       ImGui::InputText("##newfilename", m_newEntryBuffer, 1024); // TODO: remove hardcoded literals
       ImGui::PopItemWidth();
 
