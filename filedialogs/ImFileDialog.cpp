@@ -147,7 +147,7 @@ namespace ifd {
       ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, ImGui::GetStyle().ItemSpacing.y));
       ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
       bool isFirstElement = true;
-      for (size_t i = 0; i < btnList.size(); i++) {
+      for (std::size_t i = 0; i < btnList.size(); i++) {
         if (totalWidth > size.x - 30 && i != btnList.size() - 1) { // trim some buttons if there's not enough space
           float elSize = ImGui::CalcTextSize(btnList[i].c_str()).x + style.FramePadding.x * 2.0f + GUI_ELEMENT_SIZE;
           totalWidth -= elSize;
@@ -166,7 +166,7 @@ namespace ifd {
           #else
           std::string newPath = "/";
           #endif
-          for (size_t j = 0; j <= i; j++) {
+          for (std::size_t j = 0; j <= i; j++) {
             newPath += btnList[j];
             #ifdef _WIN32
             if (j != i)
@@ -347,7 +347,8 @@ namespace ifd {
     std::error_code ec;
     Path = path;
     IsDirectory = ghc::filesystem::is_directory(path, ec);
-    Size = (size_t)ghc::filesystem::file_size(path, ec);
+    if (IsDirectory) Size = (std::size_t)-1;
+    else Size = (std::size_t)ghc::filesystem::file_size(path, ec);
 
     struct stat attr;
     stat(path.string().c_str(), &attr);
@@ -593,7 +594,7 @@ namespace ifd {
     if (fd != -1) {
       for (auto& p : m_treeCache) {
         if (p->Path == IFD_QUICK_ACCESS) {
-          for (size_t i = 0; i < p->Children.size(); i++) {
+          for (std::size_t i = 0; i < p->Children.size(); i++) {
             if (ghc::filesystem::exists(p->Children[i]->Path.string(), ec)) {
               ngs::fs::file_text_write_string(fd, p->Children[i]->Path.string());
               ngs::fs::file_text_writeln(fd);
@@ -641,7 +642,7 @@ namespace ifd {
     // remove from sidebar
     for (auto& p : m_treeCache)
       if (p->Path == IFD_QUICK_ACCESS) {
-        for (size_t i = 0; i < p->Children.size(); i++)
+        for (std::size_t i = 0; i < p->Children.size(); i++)
           if (p->Children[i]->Path == path) {
             p->Children.erase(p->Children.begin() + i);
             break;
@@ -778,9 +779,9 @@ namespace ifd {
 
     std::vector<std::string> exts;
 
-    size_t lastSplit = 0, lastExt = 0;
+    std::size_t lastSplit = 0, lastExt = 0;
     bool inExtList = false;
-    for (size_t i = 0; i < filter.size(); i++) {
+    for (std::size_t i = 0; i < filter.size(); i++) {
       if (filter[i] == ',') {
         if (!inExtList)
           lastSplit = i + 1;
@@ -993,7 +994,7 @@ namespace ifd {
   }
 
   void FileDialog::m_loadPreview() {
-    for (size_t i = 0; m_previewLoaderRunning && i < m_content.size(); i++) {
+    for (std::size_t i = 0; m_previewLoaderRunning && i < m_content.size(); i++) {
       auto& data = m_content[i];
 
       if (data.HasIconPreview)
@@ -1152,7 +1153,7 @@ namespace ifd {
 
     if (m_content.size() > 0) {
       // find where the file list starts
-      size_t fileIndex = 0;
+      std::size_t fileIndex = 0;
       for (; fileIndex < m_content.size(); fileIndex++)
         if (!m_content[fileIndex].IsDirectory)
           break;
@@ -1302,7 +1303,9 @@ namespace ifd {
 
           // size
           ImGui::TableSetColumnIndex(2);
-          ImGui::Text("%.3f KiB", entry.Size/1024.0f);
+          if (!entry.IsDirectory)
+            ImGui::Text("%.3f KiB", entry.Size / 1024.0f);
+          else ImGui::Text("---");
         }
 
         ImGui::EndTable();
@@ -1576,7 +1579,7 @@ namespace ifd {
       ImGui::SetNextItemWidth(-FLT_MIN);
       int sel = static_cast<int>(m_filterSelection);
       if (ImGui::Combo("##ext_combo", &sel, m_filter.c_str())) {
-        m_filterSelection = static_cast<size_t>(sel);
+        m_filterSelection = static_cast<std::size_t>(sel);
         m_setDirectory(m_currentDirectory, false); // refresh
       }
     }
