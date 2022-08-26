@@ -104,7 +104,7 @@ int main() {
 
 # Platforms
 
-Supports Windows, macOS, Linux, FreeBSD, DragonFly, NetBSD, OpenBSD, and SunOS. 
+Supports Windows, macOS, Linux, FreeBSD, DragonFly BSD, NetBSD, OpenBSD, and SunOS. 
 
 ![win32](https://github.com/time-killer-games/filedialogs/blob/main/win32.png?raw=true)
 
