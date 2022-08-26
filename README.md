@@ -104,7 +104,7 @@ int main() {
 
 # Platforms
 
-Supports Windows, macOS, Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD. Uses platform-specific code that is not-mandatory to get the executable path, which can easily be replaced with getting the working directory with `getcwd()` should you need more platforms supported. 
+Supports Windows, macOS, Linux, FreeBSD, DragonFly, NetBSD, OpenBSD, and SunOS. 
 
 ![win32](https://github.com/time-killer-games/filedialogs/blob/main/win32.png?raw=true)
 
