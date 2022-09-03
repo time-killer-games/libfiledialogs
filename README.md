@@ -4,9 +4,9 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 
 ```
 /*
-** Alternative main.cpp - replace libfiledialogs/filedialogs/main.cpp with below contents
+** Alternative main.cpp - replace libfiledialogs/filedialogs/main.cpp with this exact code
 ** then if on Windows open the solution in Visual Studio and build with that otherwise run
-** the build.sh script if you are on macOS, Linux, FreeBSD, DragonFly, NetBSD, or OpenBSD
+** the build.sh script if you are building with g++ or clang++, depending on the target OS
 */
 
 #include <iostream> // std::cout, std::endl
@@ -30,9 +30,9 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 /* setup home directory
 environment variable */
 #if !defined(HOME_PATH)
-#if defined(_WIN32) // Windows x86 and Window x86-64
+#if defined(_WIN32) // Windows
 #define HOME_PATH "USERPROFILE"
-#else // macOS, Linux, FreeBSD, DragonFly, NetBSD, and OpenBSD
+#else // Unix-likes
 #define HOME_PATH "HOME"
 #endif
 #endif
