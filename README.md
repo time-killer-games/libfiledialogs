@@ -1,6 +1,6 @@
 # ImGui File Dialogs - CLI and Client Library
 
-Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](https://github.com/dfranx), with many bugs/crashes fixed and overall improvements. The 'Quick Access' sidebar actually remembers what favorites were previously saved to it from previous runs of your application now, by saving the settings to a text file in your home folder. Allows for full localization among many other good things you'll find useful. To create your own default list of favorites for your application, here is a minimal example program for easy testing purposes:
+Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](https://github.com/dfranx), with many bugs/crashes fixed and overall improvements. The 'Quick Access' sidebar actually remembers what favorites were previously saved to it from previous runs of your application now, by saving the settings to a text file in a hidden ".config" subfolder of your home folder. Allows for full localization among many other good things you'll find useful. To create your own default list of favorites for your application, here is a minimal example program for easy testing purposes:
 
 ```
 /*
