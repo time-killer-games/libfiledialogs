@@ -951,6 +951,7 @@ namespace ifd {
     m_icons[pathU8] = this->CreateTexture(invData, width, height, 0);
 
     free(rawData);
+    free(invData);
 
     return m_icons[pathU8];
     #else
