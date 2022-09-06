@@ -923,35 +923,34 @@ namespace ifd {
     NSUInteger height = CGImageGetHeight(imageRef);
 
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-
     unsigned char *rawData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
 
-    NSUInteger bytesPerPixel = 4;
-    NSUInteger bytesPerRow = bytesPerPixel * width;
-    NSUInteger bitsPerComponent = 8;
-    CGContextRef context = CGBitmapContextCreate(rawData, width, height,
-    bitsPerComponent, bytesPerRow, colorSpace,
-    kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
-    CGColorSpaceRelease(colorSpace);
-
-    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
-    CGContextRelease(context);
-
-    unsigned char *invData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        int index = (y * width + x) * 4;
-        invData[index + 2] = rawData[index + 0];
-        invData[index + 1] = rawData[index + 1];
-        invData[index + 0] = rawData[index + 2];
-        invData[index + 3] = rawData[index + 3];
+    if (rawData) {
+      NSUInteger bytesPerPixel = 4;
+      NSUInteger bytesPerRow = bytesPerPixel * width;
+      NSUInteger bitsPerComponent = 8;
+      CGContextRef context = CGBitmapContextCreate(rawData, width, height,
+      bitsPerComponent, bytesPerRow, colorSpace,
+      kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+      CGColorSpaceRelease(colorSpace);
+      CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+      CGContextRelease(context);
+      unsigned char *invData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
+      if (invData) {
+        for (int y = 0; y < height; y++) {
+          for (int x = 0; x < width; x++) {
+            int index = (y * width + x) * 4;
+            invData[index + 2] = rawData[index + 0];
+            invData[index + 1] = rawData[index + 1];
+            invData[index + 0] = rawData[index + 2];
+            invData[index + 3] = rawData[index + 3];
+          }
+        }
+        m_icons[pathU8] = this->CreateTexture(invData, width, height, 0);
+        free(invData);
       }
+      free(rawData);
     }
-
-    m_icons[pathU8] = this->CreateTexture(invData, width, height, 0);
-
-    free(rawData);
-    free(invData);
 
     return m_icons[pathU8];
     #else
@@ -1081,7 +1080,26 @@ namespace ifd {
           int width, height, nrChannels;
           unsigned char* image = stbi_load(data.Path.string().c_str(), &width, &height, &nrChannels, STBI_rgb_alpha);
 
-          if (image == nullptr || width == 0 || height == 0)
+          #if defined(__APPLE__) && defined(__MACH__)
+          if (image) {
+            unsigned char *invData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
+            if (invData) {
+              for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                  int index = (y * width + x) * 4;
+                  invData[index + 2] = image[index + 0];
+                  invData[index + 1] = image[index + 1];
+                  invData[index + 0] = image[index + 2];
+                  invData[index + 3] = image[index + 3];
+                }
+              }
+              free(image);
+              image = invData;
+            }
+          }
+          #endif
+
+          if (image == nullptr || width == 0 || height == 0) 
             continue;
 
           data.HasIconPreview = true;
