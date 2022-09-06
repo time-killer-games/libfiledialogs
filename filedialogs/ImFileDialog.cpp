@@ -821,7 +821,7 @@ namespace ifd {
   }
 
   void* FileDialog::m_getIcon(const ghc::filesystem::path& path) {
-#ifdef _WIN32
+    #ifdef _WIN32
     if (m_icons.count(path.string()) > 0)
       return m_icons[path.string()];
 
@@ -877,6 +877,80 @@ namespace ifd {
     m_icons[pathU8] = this->CreateTexture(data, ds.dsBm.bmWidth, ds.dsBm.bmHeight, 0);
 
     free(data);
+
+    return m_icons[pathU8];
+    #elif defined(__APPLE__) && defined(__MACH__)
+    if (m_icons.count(path.string()) > 0)
+      return m_icons[path.string()];
+
+    std::string pathU8 = path.string();
+
+    std::error_code ec;
+    m_icons[pathU8] = nullptr;
+    
+    std::string apath = ghc::filesystem::absolute(path, ec).string();
+    NSImage *icon = nullptr;
+    struct stat fileInfo;
+
+    if (ghc::filesystem::exists(apath, ec)) {
+      if (stat(path.string().c_str(), &fileInfo) == -1) return nullptr;
+      icon = [[NSWorkspace sharedWorkspace] iconForFile:[NSString stringWithUTF8String:apath.c_str()]];
+    } else {
+      if (stat("/dev", &fileInfo) == -1) return nullptr;
+      icon = [[NSWorkspace sharedWorkspace] iconForFile:@"/dev"];
+    }
+    
+    if (icon == nullptr)
+      return nullptr;
+
+    // check if icon is already loaded
+    auto itr = std::find(m_iconIndices.begin(), m_iconIndices.end(), (int)fileInfo.st_ino);
+    if (itr != m_iconIndices.end()) {
+      const std::string& existingIconFilepath = m_iconFilepaths[itr - m_iconIndices.begin()];
+      m_icons[pathU8] = m_icons[existingIconFilepath];
+      return m_icons[pathU8];
+    }
+
+    m_iconIndices.push_back(fileInfo.st_ino);
+    m_iconFilepaths.push_back(pathU8);
+
+    [icon setSize:NSMakeSize(DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE)];
+
+    CGImageSourceRef source = CGImageSourceCreateWithData((CFDataRef)[icon TIFFRepresentation], nullptr);
+    CGImageRef imageRef =  CGImageSourceCreateImageAtIndex(source, 0, nullptr);
+
+    NSUInteger width = CGImageGetWidth(imageRef);
+    NSUInteger height = CGImageGetHeight(imageRef);
+
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+    unsigned char *rawData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
+
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
+    NSUInteger bitsPerComponent = 8;
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height,
+    bitsPerComponent, bytesPerRow, colorSpace,
+    kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+    CGContextRelease(context);
+
+    unsigned char *invData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        int index = (y * width + x) * 4;
+        invData[index + 2] = rawData[index + 0];
+        invData[index + 1] = rawData[index + 1];
+        invData[index + 0] = rawData[index + 2];
+        invData[index + 3] = rawData[index + 3];
+      }
+    }
+
+    m_icons[pathU8] = this->CreateTexture(invData, width, height, 0);
+
+    free(rawData);
 
     return m_icons[pathU8];
     #else
