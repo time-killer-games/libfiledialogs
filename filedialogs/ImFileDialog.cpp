@@ -25,18 +25,21 @@
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 #endif
+
+#include "stb_image.h"
 
 #ifndef NANOSVG_IMPLEMENTATION
 #define NANOSVG_IMPLEMENTATION
-#include "nanosvg.h"
 #endif
+
+#include "nanosvg.h"
 
 #ifndef NANOSVGRAST_IMPLEMENTATION
 #define NANOSVGRAST_IMPLEMENTATION
-#include "nanosvgrast.h"
 #endif
+
+#include "nanosvgrast.h"
 
 #ifdef _WIN32
 #include <windows.h>
