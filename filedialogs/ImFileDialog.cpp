@@ -16,6 +16,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#if defined(__linux__) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__sun)
+#define NANOSVG_IMPLEMENTATION
+#include "nanosvg.h"
+#define NANOSVGRAST_IMPLEMENTATION
+#include "nanosvgrast.h"
+#endif
+
 #ifdef _WIN32
 #include <windows.h>
 #include <shellapi.h>
@@ -26,6 +33,9 @@
 #else
 #if (defined(__MACH__) && defined(__APPLE__))
 #include <AppKit/AppKit.h>
+#elif defined(__linux__) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__sun)
+#include <gio/gio.h>
+#include <gtk/gtk.h>
 #endif
 #include <unistd.h>
 #endif
@@ -879,7 +889,7 @@ namespace ifd {
     free(data);
 
     return m_icons[pathU8];
-    #elif defined(__APPLE__) && defined(__MACH__)
+    #elif (defined(__APPLE__) && defined(__MACH__))
     if (m_icons.count(path.string()) > 0)
       return m_icons[path.string()];
 
@@ -953,61 +963,104 @@ namespace ifd {
     }
 
     return m_icons[pathU8];
-    #else
+    #elif defined(__linux__) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__sun)
     if (m_icons.count(path.string()) > 0)
       return m_icons[path.string()];
 
     std::string pathU8 = path.string();
 
-    m_icons[pathU8] = nullptr;
-
     std::error_code ec;
-    int iconID = 1;
-    if (ghc::filesystem::is_directory(path, ec))
-      iconID = 0;
+    m_icons[pathU8] = nullptr;
+    
+    std::string apath = ghc::filesystem::absolute(path, ec).string();
+    struct stat fileInfo;
+    GFile *file = nullptr;
+
+    if (ghc::filesystem::exists(apath, ec)) {
+      if (stat(path.string().c_str(), &fileInfo) == -1) return nullptr;
+      file = g_file_new_for_path(apath.c_str());
+    } else {
+      if (stat("/bin", &fileInfo) == -1) return nullptr;
+      file = g_file_new_for_path("/bin");
+    }
+
+    if (!file) return nullptr;
+    GFileInfo *file_info = g_file_query_info(file, "standard::*", G_FILE_QUERY_INFO_NONE, nullptr, nullptr);
+    if (!file_info) { 
+      g_object_unref(file); 
+      return nullptr;
+    }
+    GIcon *icon = g_file_info_get_icon(file_info);
+    if (!icon) { 
+      g_object_unref(file_info); 
+      g_object_unref(file); 
+      return nullptr; 
+    }
 
     // check if icon is already loaded
-    auto itr = std::find(m_iconIndices.begin(), m_iconIndices.end(), iconID);
+    auto itr = std::find(m_iconIndices.begin(), m_iconIndices.end(), (int)fileInfo.st_ino);
     if (itr != m_iconIndices.end()) {
       const std::string& existingIconFilepath = m_iconFilepaths[itr - m_iconIndices.begin()];
       m_icons[pathU8] = m_icons[existingIconFilepath];
       return m_icons[pathU8];
     }
 
-    m_iconIndices.push_back(iconID);
+    m_iconIndices.push_back(fileInfo.st_ino);
     m_iconFilepaths.push_back(pathU8);
+    
+    if (!G_IS_THEMED_ICON(icon)) return nullptr;   
 
-    ImVec4 wndBg = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
+    const char * const *fnames = g_themed_icon_get_names(G_THEMED_ICON(icon));
+    GtkIconInfo *gtkicon_info = nullptr;
 
-    // light theme - load default icons
-    if ((wndBg.x + wndBg.y + wndBg.z) / 3.0f > 0.5f) {
-      uint8_t* data = (uint8_t*)ifd::GetDefaultFileIcon();
-      if (iconID == 0)
-        data = (uint8_t*)ifd::GetDefaultFolderIcon();
-      m_icons[pathU8] = this->CreateTexture(data, DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE, 0);
-    }
-    // dark theme - invert the colors
-    else {
-      uint8_t* data = (uint8_t*)ifd::GetDefaultFileIcon();
-      if (iconID == 0)
-        data = (uint8_t*)ifd::GetDefaultFolderIcon();
+    static bool gtkinit;
+    if (!gtkinit) gtk_init(nullptr, nullptr);
+    gtkinit = true;
 
-      uint8_t* invData = (uint8_t*)malloc(DEFAULT_ICON_SIZE * DEFAULT_ICON_SIZE * 4);
-      for (int y = 0; y < 32; y++) {
-        for (int x = 0; x < 32; x++) {
-          int index = (y* DEFAULT_ICON_SIZE + x) * 4;
-          invData[index + 0] = 255 - data[index + 0];
-          invData[index + 1] = 255 - data[index + 1];
-          invData[index + 2] = 255 - data[index + 2];
-          invData[index + 3] = data[index + 3];
-        }
+    gtkicon_info = gtk_icon_theme_choose_icon(gtk_icon_theme_get_default(), (const char **)fnames, 32, (GtkIconLookupFlags)0);
+    if (gtkicon_info) {
+      const char *fname = gtk_icon_info_get_filename(gtkicon_info);
+      int width, height, nrChannels;
+      unsigned char *image = nullptr;
+      std::string ext = ghc::filesystem::path(fname).extension().string();
+      if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp" || ext == ".tga") {
+        image = stbi_load(fname, &width, &height, &nrChannels, STBI_rgb_alpha);
+        if (!image) return nullptr;
+      } else if (ext == ".svg") {
+        NSVGimage *svg_image = nsvgParseFromFile(fname, "px", 96.0);
+        image = (unsigned char *)calloc(width * height * 4, sizeof(unsigned char));
+        if (!image) return nullptr;
+        NSVGrasterizer *rasterizer = nsvgCreateRasterizer();
+        nsvgRasterize(rasterizer, svg_image, 0, 0, 1, image, width, height, width * 4);
       }
-      m_icons[pathU8] = this->CreateTexture(invData, DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE, 0);
-
-      free(invData);
+      g_object_unref(gtkicon_info);
+      g_object_unref(file_info); 
+      g_object_unref(file);
+      if (image) {
+        unsigned char *invData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
+        if (invData) {
+          for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+              int index = (y * width + x) * 4;
+              invData[index + 2] = image[index + 0];
+              invData[index + 1] = image[index + 1];
+              invData[index + 0] = image[index + 2];
+              invData[index + 3] = image[index + 3];
+            }
+          }
+          free(image);
+          image = invData;
+        }
+        m_icons[pathU8] = this->CreateTexture(image, width, height, 0);
+        return m_icons[pathU8];
+      }
+      return nullptr;
     }
-
-    return m_icons[pathU8];
+    
+    g_object_unref(gtkicon_info);
+    g_object_unref(file_info); 
+    g_object_unref(file);
+    return nullptr;
     #endif
   }
 
@@ -1080,7 +1133,7 @@ namespace ifd {
           int width, height, nrChannels;
           unsigned char* image = stbi_load(data.Path.string().c_str(), &width, &height, &nrChannels, STBI_rgb_alpha);
 
-          #if defined(__APPLE__) && defined(__MACH__)
+          #if (defined(__APPLE__) && defined(__MACH__))
           if (image) {
             unsigned char *invData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
             if (invData) {
