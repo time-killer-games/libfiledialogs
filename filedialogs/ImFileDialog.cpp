@@ -1114,7 +1114,7 @@ namespace ifd {
       g_object_unref(file_info); 
       g_object_unref(file);
       if (image) {
-        if (ext != ".svg")
+        if (ext != ".svg") {
           unsigned char *invData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
           if (invData) {
             for (int y = 0; y < height; y++) {
