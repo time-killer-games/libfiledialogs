@@ -853,8 +853,8 @@ namespace ifd {
       return m_icons[path.u8string()];
 
     std::string pathU8 = path.u8string();
-
     m_icons[pathU8] = nullptr;
+    m_iconIndices.clear();
 
     std::error_code ec;
     int iconID = 1;
@@ -876,14 +876,14 @@ namespace ifd {
 
     // light theme - load default icons
     if ((wndBg.x + wndBg.y + wndBg.z) / 3.0f > 0.5f) {
-      uint8_t* data = (uint8_t*)ifd::GetDefaultFileIcon();
+      uint8_t *data = (uint8_t*)ifd::GetDefaultFileIcon();
       if (iconID == 0)
         data = (uint8_t*)ifd::GetDefaultFolderIcon();
       m_icons[pathU8] = this->CreateTexture(data, DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE, 0);
     }
     // dark theme - invert the colors
     else {
-      uint8_t* data = (uint8_t *)ifd::GetDefaultFileIcon();
+      uint8_t *data = (uint8_t *)ifd::GetDefaultFileIcon();
       if (iconID == 0)
         data = (uint8_t *)ifd::GetDefaultFolderIcon();
 
@@ -956,12 +956,12 @@ namespace ifd {
     if (byteSize == 0)
       return nullptr;
 
-    uint8_t* data = (uint8_t*)malloc(byteSize);
-    GetBitmapBits(iconInfo.hbmColor, byteSize, data);
-
-    m_icons[pathU8] = this->CreateTexture(data, ds.dsBm.bmWidth, ds.dsBm.bmHeight, 0);
-
-    free(data);
+    uint8_t *data = (uint8_t *)malloc(byteSize);
+    if (data) {
+      GetBitmapBits(iconInfo.hbmColor, byteSize, data);
+      m_icons[pathU8] = this->CreateTexture(data, ds.dsBm.bmWidth, ds.dsBm.bmHeight, 0);
+      free(data);
+    }
 
     return m_icons[pathU8];
     #elif (defined(__APPLE__) && defined(__MACH__))
@@ -985,9 +985,7 @@ namespace ifd {
       icon = [[NSWorkspace sharedWorkspace] iconForFile:@"/dev"];
     }
     
-    if (icon == nullptr)
-      return nullptr;
-
+    if (icon == nullptr) return nullptr;
     // check if icon is already loaded
     auto itr = std::find(m_iconIndices.begin(), m_iconIndices.end(), (int)fileInfo.st_ino);
     if (itr != m_iconIndices.end()) {
@@ -1059,17 +1057,18 @@ namespace ifd {
       file = g_file_new_for_path("/bin");
     }
 
-    if (!file) return nullptr;
+    if (!G_IS_OBJECT(file)) return nullptr;
     GFileInfo *file_info = g_file_query_info(file, "standard::*", G_FILE_QUERY_INFO_NONE, nullptr, nullptr);
-    if (!file_info) { 
-      g_object_unref(file); 
+    if (!G_IS_OBJECT(file_info)) {
+      if (G_IS_OBJECT(file)) g_object_unref(file);
       return nullptr;
     }
+
     GIcon *icon = g_file_info_get_icon(file_info);
-    if (!icon) { 
-      g_object_unref(file_info); 
-      g_object_unref(file); 
-      return nullptr; 
+    if (!G_IS_OBJECT(icon)) {
+      if (G_IS_OBJECT(file_info)) g_object_unref(file_info);
+      if (G_IS_OBJECT(file)) g_object_unref(file);
+      return nullptr;
     }
 
     // check if icon is already loaded
@@ -1082,9 +1081,11 @@ namespace ifd {
 
     m_iconIndices.push_back(fileInfo.st_ino);
     m_iconFilepaths.push_back(pathU8);
-    
-    if (!G_IS_THEMED_ICON(icon)) return nullptr;   
-
+    if (!G_IS_OBJECT(icon) || !G_IS_THEMED_ICON(icon)) {
+      if (G_IS_OBJECT(file_info)) g_object_unref(file_info);
+      if (G_IS_OBJECT(file)) g_object_unref(file);
+      return nullptr;
+    }
     const char * const *fnames = g_themed_icon_get_names(G_THEMED_ICON(icon));
     GtkIconInfo *gtkicon_info = nullptr;
 
@@ -1100,13 +1101,13 @@ namespace ifd {
       std::string ext = ghc::filesystem::path(fname).extension().string();
       if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp" || ext == ".tga") {
         image = stbi_load(fname, &width, &height, &nrChannels, STBI_rgb_alpha);
-        if (!image) return nullptr;
+        if (image == nullptr) goto finish;
       } else if (ext == ".svg") {
         NSVGimage *svg_image = nsvgParseFromFile(fname, "px", 96.0);
         width = svg_image->width;
         height = svg_image->height;
         image = (unsigned char *)calloc(width * height * 4, sizeof(unsigned char));
-        if (!image) return nullptr;
+        if (image == nullptr) goto finish;
         NSVGrasterizer *rasterizer = nsvgCreateRasterizer();
         nsvgRasterize(rasterizer, svg_image, 0, 0, 1, image, width, height, width * 4);
       }
@@ -1129,15 +1130,15 @@ namespace ifd {
           image = invData;
         }
         m_icons[pathU8] = this->CreateTexture(image, width, height, 0);
-        return m_icons[pathU8];
       }
-      return nullptr;
+      free(image);
     }
     
-    g_object_unref(gtkicon_info);
-    g_object_unref(file_info); 
-    g_object_unref(file);
-    return nullptr;
+    finish:
+    if (G_IS_OBJECT(gtkicon_info)) g_object_unref(gtkicon_info);
+    if (G_IS_OBJECT(file_info)) g_object_unref(file_info); 
+    if (G_IS_OBJECT(file)) g_object_unref(file);
+    return m_icons[pathU8];
     #endif
   }
 
