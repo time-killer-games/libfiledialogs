@@ -1158,7 +1158,7 @@ namespace ifd {
           int width, height, nrChannels;
           unsigned char *image = stbi_load(data.Path.string().c_str(), &width, &height, &nrChannels, STBI_rgb_alpha);
           
-          if (image == nullptr || width == 0 || height == 0) 
+          if (image == nullptr) 
             continue;
 
           #if (defined(__APPLE__) && defined(__MACH__))
@@ -1199,7 +1199,7 @@ namespace ifd {
           nsvgDeleteRasterizer(rasterizer);
 	  nsvgDelete(svg_image);
 
-          if (image == nullptr || width == 0 || height == 0) 
+          if (image == nullptr) 
             continue;
 
           #if (defined(__APPLE__) && defined(__MACH__))
