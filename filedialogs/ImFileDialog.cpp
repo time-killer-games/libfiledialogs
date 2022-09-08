@@ -192,7 +192,9 @@ namespace ifd {
           #ifdef _WIN32
           std::string newPath = "";
           #else
-          std::string newPath = "/";
+          std::string newPath;
+          if (btnList[0] != IFD_QUICK_ACCESS && btnList[0] != IFD_THIS_PC)
+            newPath += "/";
           #endif
           for (std::size_t j = 0; j <= i; j++) {
             newPath += btnList[j];
