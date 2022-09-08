@@ -22,10 +22,10 @@
  *
  */
 
+ /* This source was modified and is not the original software; UTF-8 support on Windows. */
+
 #ifndef NANOSVGRAST_H
 #define NANOSVGRAST_H
-
-#include "nanosvg.h"
 
 #ifndef NANOSVGRAST_CPLUSPLUS
 #ifdef __cplusplus
@@ -1329,7 +1329,7 @@ static void dumpEdges(NSVGrasterizer* r, const char* name)
 	NSVGedge *e = NULL;
 	int i;
 	if (r->nedges == 0) return;
-	FILE* fp = fopen(name, "w");
+	FILE* fp = uft8_fopen(name, "w");
 	if (fp == NULL) return;
 
 	xmin = xmax = r->edges[0].x0;

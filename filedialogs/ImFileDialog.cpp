@@ -1,5 +1,12 @@
+#if defined(_WIN32)
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+#ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
+#endif
+#endif
+#ifndef STBI_WINDOWS_UTF8
+#define STBI_WINDOWS_UTF8
+#endif
 #endif
 
 #include <fstream>
@@ -9,16 +16,27 @@
 #include "ImFileDialogMacros.h"
 #include "filedialogs.h"
 
+#ifndef IMGUI_DEFINE_MATH_OPERATORS
 #define IMGUI_DEFINE_MATH_OPERATORS
+#endif
+
 #include "imgui.h"
 #include "imgui_internal.h"
 
+#ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#endif
+
+#ifndef NANOSVG_IMPLEMENTATION
 #define NANOSVG_IMPLEMENTATION
 #include "nanosvg.h"
+#endif
+
+#ifndef NANOSVGRAST_IMPLEMENTATION
 #define NANOSVGRAST_IMPLEMENTATION
 #include "nanosvgrast.h"
+#endif
 
 #ifdef _WIN32
 #include <windows.h>

@@ -33,6 +33,8 @@
     <ClInclude Include="..\filedialogs\imstb_textedit.h" />
     <ClInclude Include="..\filedialogs\imstb_truetype.h" />
     <ClInclude Include="..\filedialogs\stb_image.h" />
+    <ClInclude Include="nanosvg.h" />
+    <ClInclude Include="nanosvgrast.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\filedialogs\filedialogs.cpp" />
