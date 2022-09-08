@@ -847,63 +847,6 @@ namespace ifd {
         m_filter += std::string((filterName + "\0").c_str(), filterName.size() + 1);
     }
   }
-  
-  void *FileDialog::m_getIconFallback(const ghc::filesystem::path& path) {
-    if (m_icons.count(path.u8string()) > 0)
-      return m_icons[path.u8string()];
-
-    std::string pathU8 = path.u8string();
-    m_icons[pathU8] = nullptr;
-    m_iconIndices.clear();
-
-    std::error_code ec;
-    int iconID = 1;
-    if (ghc::filesystem::is_directory(path, ec))
-      iconID = 0;
-
-    // check if icon is already loaded
-    auto itr = std::find(m_iconIndices.begin(), m_iconIndices.end(), iconID);
-    if (itr != m_iconIndices.end()) {
-      const std::string& existingIconFilepath = m_iconFilepaths[itr - m_iconIndices.begin()];
-      m_icons[pathU8] = m_icons[existingIconFilepath];
-      return m_icons[pathU8];
-    }
-
-    m_iconIndices.push_back(iconID);
-    m_iconFilepaths.push_back(pathU8);
-
-    ImVec4 wndBg = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
-
-    // light theme - load default icons
-    if ((wndBg.x + wndBg.y + wndBg.z) / 3.0f > 0.5f) {
-      uint8_t *data = (uint8_t*)ifd::GetDefaultFileIcon();
-      if (iconID == 0)
-        data = (uint8_t*)ifd::GetDefaultFolderIcon();
-      m_icons[pathU8] = this->CreateTexture(data, DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE, 0);
-    }
-    // dark theme - invert the colors
-    else {
-      uint8_t *data = (uint8_t *)ifd::GetDefaultFileIcon();
-      if (iconID == 0)
-        data = (uint8_t *)ifd::GetDefaultFolderIcon();
-
-      uint8_t *invData = (uint8_t*)malloc(DEFAULT_ICON_SIZE * DEFAULT_ICON_SIZE * 4);
-      for (int y = 0; y < 32; y++) {
-        for (int x = 0; x < 32; x++) {
-          int index = (y* DEFAULT_ICON_SIZE + x) * 4;
-          invData[index + 0] = 255 - data[index + 0];
-          invData[index + 1] = 255 - data[index + 1];
-          invData[index + 2] = 255 - data[index + 2];
-          invData[index + 3] = data[index + 3];
-        }
-      }
-      m_icons[pathU8] = this->CreateTexture(invData, DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE, 0);
-
-      free(invData);
-    }
-
-    return m_icons[pathU8];
-  }
 
   void *FileDialog::m_getIcon(const ghc::filesystem::path& path) {
     #ifdef _WIN32
@@ -1471,7 +1414,7 @@ namespace ifd {
     std::string displayName = node->Path.stem().string();
     if (displayName.size() == 0)
       displayName = node->Path.string();
-    if (FolderNode(displayName.c_str(), (ImTextureID)((m_getIcon(node->Path)) ? m_getIcon(node->Path) : m_getIconFallback(node->Path)), isClicked)) {
+    if (FolderNode(displayName.c_str(), (ImTextureID)m_getIcon(node->Path), isClicked)) {
       if (!node->Read) {
         // cache children if it's not already cached
         if (ghc::filesystem::exists(node->Path, ec))
@@ -1536,7 +1479,7 @@ namespace ifd {
 
           // file name
           ImGui::TableSetColumnIndex(0);
-          ImGui::Image((ImTextureID)((m_getIcon(entry.Path)) ? m_getIcon(entry.Path) : m_getIconFallback(entry.Path)), ImVec2(ICON_SIZE, ICON_SIZE));
+          ImGui::Image((ImTextureID)m_getIcon(entry.Path), ImVec2(ICON_SIZE, ICON_SIZE));
           ImGui::SameLine();
           if (ImGui::Selectable(filename.c_str(), isSelected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowDoubleClick)) {
             std::error_code ec;
@@ -1592,8 +1535,7 @@ namespace ifd {
         bool isSelected = std::count(m_selections.begin(), m_selections.end(), entry.Path);
 
         std::error_code ec;
-        if (FileIcon(filename.c_str(), isSelected, entry.HasIconPreview ? entry.IconPreview : 
-        (ImTextureID)((m_getIcon(entry.Path)) ? m_getIcon(entry.Path) : m_getIconFallback(entry.Path)), 
+        if (FileIcon(filename.c_str(), isSelected, entry.HasIconPreview ? entry.IconPreview : (ImTextureID)m_getIcon(entry.Path), 
         ImVec2(32 + 16 * m_zoom, 32 + 16 * m_zoom), entry.HasIconPreview, entry.IconPreviewWidth, entry.IconPreviewHeight)) {
           bool isDir = ghc::filesystem::is_directory(entry.Path, ec);
 
