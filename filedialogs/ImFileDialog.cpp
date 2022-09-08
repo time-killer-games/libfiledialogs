@@ -1055,10 +1055,10 @@ namespace ifd {
         if (image == nullptr) goto finish;
         NSVGrasterizer *rasterizer = nsvgCreateRasterizer();
         nsvgRasterize(rasterizer, svg_image, 0, 0, 1, image, width, height, width * 4);
+        nsvgDeleteRasterizer(rasterizer);
+	nsvgDelete(svg_image);
       }
-      g_object_unref(gtkicon_info);
-      g_object_unref(file_info); 
-      g_object_unref(file);
+
       if (image) {
         unsigned char *invData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
         if (invData) {
@@ -1073,10 +1073,11 @@ namespace ifd {
           }
           free(image);
           image = invData;
+        } else {
+          free(image);
         }
         m_icons[pathU8] = this->CreateTexture(image, width, height, 0);
       }
-      free(image);
     }
     
     finish:
@@ -1125,7 +1126,7 @@ namespace ifd {
       this->DeleteTexture(data.IconPreview);
 
       if (data.IconPreviewData != nullptr) {
-        stbi_image_free(data.IconPreviewData);
+        free(data.IconPreviewData);
         data.IconPreviewData = nullptr;
       }
     }
@@ -1174,6 +1175,8 @@ namespace ifd {
               }
               free(image);
               image = invData;
+            } else {
+              free(image);
             }
           }
           #endif
@@ -1194,6 +1197,8 @@ namespace ifd {
 
           NSVGrasterizer *rasterizer = nsvgCreateRasterizer();
           nsvgRasterize(rasterizer, svg_image, 0, 0, 1, image, width, height, width * 4);
+          nsvgDeleteRasterizer(rasterizer);
+	  nsvgDelete(svg_image);
 
           if (image == nullptr || width == 0 || height == 0) 
             continue;
@@ -1213,6 +1218,8 @@ namespace ifd {
               }
               free(image);
               image = invData;
+            } else {
+              free(image);
             }
           }
           #endif
@@ -1526,7 +1533,7 @@ namespace ifd {
       for (auto& entry : m_content) {
         if (entry.HasIconPreview && entry.IconPreviewData != nullptr) {
           entry.IconPreview = this->CreateTexture(entry.IconPreviewData, entry.IconPreviewWidth, entry.IconPreviewHeight, 1);
-          stbi_image_free(entry.IconPreviewData);
+          free(entry.IconPreviewData);
           entry.IconPreviewData = nullptr;
         }
 
