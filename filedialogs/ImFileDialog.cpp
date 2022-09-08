@@ -1073,10 +1073,12 @@ namespace ifd {
           }
           free(image);
           image = invData;
+          m_icons[pathU8] = this->CreateTexture(image, width, height, 0);
+          free(image);
         } else {
+          m_icons[pathU8] = this->CreateTexture(image, width, height, 0);
           free(image);
         }
-        m_icons[pathU8] = this->CreateTexture(image, width, height, 0);
       }
     }
     
@@ -1175,8 +1177,6 @@ namespace ifd {
               }
               free(image);
               image = invData;
-            } else {
-              free(image);
             }
           }
           #endif
@@ -1218,8 +1218,6 @@ namespace ifd {
               }
               free(image);
               image = invData;
-            } else {
-              free(image);
             }
           }
           #endif
