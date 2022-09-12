@@ -112,4 +112,4 @@ Supports Windows, macOS, Linux, FreeBSD, DragonFly BSD, NetBSD, OpenBSD, and Sun
 
 ![linux](https://github.com/time-killer-games/filedialogs/blob/main/linux.png?raw=true)
 
-![sunos](https://github.com/time-killer-games/filedialogs/blob/main/sunos.png?raw=true)
+![freebsd](https://github.com/time-killer-games/filedialogs/blob/main/freebsd.png?raw=true)
