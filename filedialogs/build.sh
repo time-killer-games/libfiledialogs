@@ -1,5 +1,5 @@
 #!/bin/sh
-cd "${0%/*}/lunasvg" && make clean && cmake . && make && cd ..;
+cd "${0%/*}/lunasvg" && cmake . && make && cd ..;
 
 # build command line executable
 if [ `uname` = "Darwin" ]; then
