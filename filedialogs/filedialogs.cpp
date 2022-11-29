@@ -296,9 +296,9 @@ namespace {
     SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN);
     #endif
     if (ngs::fs::environment_get_variable("IMGUI_DIALOG_WIDTH").empty())
-    ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(400));
+    ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(640));
     if (ngs::fs::environment_get_variable("IMGUI_DIALOG_HEIGHT").empty())
-    ngs::fs::environment_set_variable("IMGUI_DIALOG_HEIGHT", std::to_string(200));
+    ngs::fs::environment_set_variable("IMGUI_DIALOG_HEIGHT", std::to_string(360));
     window = SDL_CreateWindow(title.c_str(), 
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, IFD_DIALOG_WIDTH, IFD_DIALOG_HEIGHT, windowFlags);
     if (window == nullptr) return "";
