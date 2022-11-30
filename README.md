@@ -55,7 +55,7 @@ namespace {
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
     #endif
 
-    // set imgui file dialogs window width and height; default is 600x400 pixels
+    // set imgui file dialogs window width and height; default is 640x360 pixels
     ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(800));
     ngs::fs::environment_set_variable("IMGUI_DIALOG_HEIGHT", std::to_string(400));
     
