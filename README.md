@@ -61,7 +61,7 @@ namespace {
     
     // load all *.ttf and *.otf fonts of varying languages and combine them into one font from directory
     ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
-    ngs::fs::environment_set_variable("IMGUI_FONT_SIZE", std::to_string(24)); // font size for dialogbox
+    ngs::fs::environment_set_variable("IMGUI_FONT_SIZE", std::to_string(20)); // font size for dialogbox
 
     // setup imgui file dialog favorites config file absolute pathname
     ngs::fs::environment_set_variable("IMGUI_CONFIG_HOME", HOME_PATH);
