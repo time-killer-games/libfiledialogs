@@ -56,8 +56,8 @@ namespace {
     #endif
 
     // set imgui file dialogs window width and height; default is 640x360 pixels
-    ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(800));
-    ngs::fs::environment_set_variable("IMGUI_DIALOG_HEIGHT", std::to_string(400));
+    ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(640));
+    ngs::fs::environment_set_variable("IMGUI_DIALOG_HEIGHT", std::to_string(360));
     
     // load all *.ttf and *.otf fonts of varying languages and combine them into one font from directory
     ngs::fs::environment_set_variable("IMGUI_FONT_PATH", ngs::fs::executable_get_directory() + "fonts");
@@ -105,6 +105,3 @@ int main() {
 # Platforms
 
 Supports Windows, macOS, Linux, FreeBSD, DragonFly BSD, NetBSD, OpenBSD, and SunOS. 
-
-![screenshot.png](https://github.com/time-killer-games/filedialogs/blob/main/screenshot.png?raw=true)
-
