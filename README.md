@@ -106,4 +106,4 @@ int main() {
 
 Supports Windows, macOS, Linux, FreeBSD, DragonFly BSD, NetBSD, OpenBSD, and SunOS. 
 
-![preview.gif](https://github.com/time-killer-games/filedialogs/blob/main/preview.gif?raw=true)
+![screenshot.png](https://github.com/time-killer-games/filedialogs/blob/main/screenshot.png?raw=true)
