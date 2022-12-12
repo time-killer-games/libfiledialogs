@@ -494,7 +494,7 @@ namespace ngs::imgui {
       if (!fonts.empty()) fonts.pop_back();
       ngs::fs::directory_contents_close();
     } else if (!ngs::fs::environment_get_variable("IMGUI_FONT_FILES").empty()) {
-      fonts = string_split(string_replace_all(ngs::fs::environment_get_variable("IMGUI_FONT_FILES"), '\n'), "\r", "");
+      fonts = string_split(string_replace_all(ngs::fs::environment_get_variable("IMGUI_FONT_FILES"), "\n"), "\r", "");
       while (!fonts.empty() && fonts[fonts.size() - 1].empty()) {
         message_pump();
         fonts.pop_back();
