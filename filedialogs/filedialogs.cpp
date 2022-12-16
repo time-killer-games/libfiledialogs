@@ -166,7 +166,8 @@ namespace {
     #if defined(_WIN32)
     while ((dname.back() == '\\' || dname.back() == '/') && 
       (p.root_name().string() + "\\" != dname && p.root_name().string() + "/" != dname)) {
-      message_pump(); p = ghc::filesystem::path(dname); dname.pop_back();
+      message_pump(); 
+      p = ghc::filesystem::path(dname); dname.pop_back();
     }
     #else
     while (dname.back() == '/' && (!dname.empty() && dname[0] != '/' && dname.length() != 1)) {
