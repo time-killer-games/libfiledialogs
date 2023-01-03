@@ -975,6 +975,7 @@ namespace ifd {
         free(invData);
       }
     }
+    [imageRep release];
 
     return m_icons[pathU8];
     #elif defined(__linux__) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__sun)
