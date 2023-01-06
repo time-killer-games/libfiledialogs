@@ -14,13 +14,10 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 #include <vector>   // std::vector
 #include <cstddef>  // std::size_t
 
-#if defined(_WIN32)
-#include "filesystem.hpp" // GHC File System
-#endif
-
 #include "ImFileDialogMacros.h" // Easy Localization
 #include "filedialogs.h"        // NGS File Dialogs
 #include "filesystem.h"         // NGS File System
+#include "filesystem.hpp"       // GHC File System
 
 #if defined(__APPLE__) && defined(__MACH__)
 // Compile with: -framework AppKit -ObjC++
