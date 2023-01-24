@@ -253,7 +253,7 @@ namespace {
     SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
     SetWindowLongPtrW(hWnd, GWLP_HWNDPARENT, (LONG_PTR)(std::uintptr_t)strtoull(
-    ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT"), nullptr, 10));
+    ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10));
     #elif defined(__APPLE__) && defined(__MACH__)
     SDL_SysWMinfo system_info;
     SDL_VERSION(&system_info.version);
@@ -267,7 +267,7 @@ namespace {
     [[nsWnd standardWindowButton:NSWindowZoomButton] setEnabled:NO];
     if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
     [(NSWindow *)(void *)(std::uintptr_t)strtoull(
-    ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT"), nullptr, 10);
+    ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10);
     addChildWindow:nsWnd ordered:NSWindowAbove];
     #else
     SDL_SysWMinfo system_info;
@@ -278,7 +278,7 @@ namespace {
       Window xWnd = system_info.info.x11.window;
       if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
       XSetTransientForHint(display, (Window)(std::uintptr_t)strtoull(
-      ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT"), nullptr, 10), xWnd);
+      ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), xWnd);
     }
     #endif
     #if (!defined(__MACH__) && !defined(__APPLE__))
