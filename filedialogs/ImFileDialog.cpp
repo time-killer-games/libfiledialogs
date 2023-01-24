@@ -739,6 +739,14 @@ namespace ifd {
   bool FileDialog::m_finalize(const std::string& filename) {
     bool hasResult = (!filename.empty() && m_type != IFD_DIALOG_DIRECTORY) || m_type == IFD_DIALOG_DIRECTORY;
     std::error_code ec;
+    auto exists = [](ghc::filesystem::path path) {
+      #if defined(_WIN32)
+      return (INVALID_FILE_ATTRIBUTES != GetFileAttributesW(path.wstring().c_str()) && GetLastError() != ERROR_FILE_NOT_FOUND);
+      #else
+      std::error_code ec;
+      return ghc::filesystem::exists(path, ec);
+      #endif
+    };
     
     if (hasResult) {
       if (!m_isMultiselect || m_selections.size() <= 1) {
@@ -746,7 +754,7 @@ namespace ifd {
         if (path.is_absolute()) m_result.push_back(path);
         else m_result.push_back(m_currentDirectory / path);
         if (m_type == IFD_DIALOG_DIRECTORY || m_type == IFD_DIALOG_FILE) {
-          if (!ghc::filesystem::exists(m_result.back())) {
+          if (!exists(m_result.back())) {
             m_result.clear();
             goto failure;
           }
@@ -756,7 +764,7 @@ namespace ifd {
           if (sel.is_absolute()) m_result.push_back(sel);
           else m_result.push_back(m_currentDirectory / sel);
           if (m_type == IFD_DIALOG_DIRECTORY || m_type == IFD_DIALOG_FILE) {
-            if (!ghc::filesystem::exists(m_result.back())) {
+            if (!exists(m_result.back())) {
               m_result.clear();
               goto failure;
             }
@@ -776,18 +784,18 @@ namespace ifd {
     }
 
     if (!m_result.empty() && m_type == IFD_DIALOG_SAVE &&
-      !ghc::filesystem::exists(m_result.back(), ec) && !ghc::filesystem::is_directory(m_result.back(), ec)) {
+      !exists(m_result.back()) && !ghc::filesystem::is_directory(m_result.back(), ec)) {
       m_isOpen = false;
       return true;
     } else if (!m_result.empty() && m_type == IFD_DIALOG_SAVE && filename.empty()) {
       m_isOpen = false;
       return true;
     } else if (!m_result.empty() && m_type == IFD_DIALOG_FILE &&
-      ghc::filesystem::exists(m_result.back(), ec) && !ghc::filesystem::is_directory(m_result.back(), ec)) {
+      exists(m_result.back()) && !ghc::filesystem::is_directory(m_result.back(), ec)) {
       m_isOpen = false;
       return true;
     } else if (!m_result.empty() && m_type == IFD_DIALOG_DIRECTORY &&
-      ghc::filesystem::exists(m_result.back(), ec) && ghc::filesystem::is_directory(m_result.back(), ec)) {
+      exists(m_result.back()) && ghc::filesystem::is_directory(m_result.back(), ec)) {
       m_isOpen = false;
       return true;
     }
@@ -798,7 +806,6 @@ namespace ifd {
     #elif (defined(__MACH__) && defined(__APPLE__))
     NSBeep();
     #else
-    system("echo -e \"\007\" > /dev/tty10");
     #endif
     return false;
   }
