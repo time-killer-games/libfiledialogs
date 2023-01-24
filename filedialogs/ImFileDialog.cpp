@@ -798,6 +798,7 @@ namespace ifd {
     #elif (defined(__MACH__) && defined(__APPLE__))
     NSBeep();
     #else
+    system("echo -e \"\007\" > /dev/tty10");
     #endif
     return false;
   }
