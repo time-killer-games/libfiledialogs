@@ -262,11 +262,11 @@ namespace {
       ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), &parentFrame);
       int parentFrameWidth = parentFrame.right - parentFrame.left; 
       int parentFrameHeight = parentFrame.bottom - parentFrame.top;
+      RECT childFrame; GetWindowRect(hWnd, &childFrame);
       int childFrameWidth = childFrame.right - childFrame.left; 
       int childFrameHeight = childFrame.bottom - childFrame.top;
-      RECT childFrame; GetWindowRect(hWnd, &childFrame);
       MoveWindow(hWnd, (parentFrame.left + (parentFrameWidth / 2)) - (childFrameWidth / 2),
-      (parentFrame.top + (parentFrameHeight / 2)) - (childFrameHeight / 2), TRUE);
+      (parentFrame.top + (parentFrameHeight / 2)) - (childFrameHeight / 2), childFrameWidth, childFrameHeight, TRUE);
     }
     #elif defined(__APPLE__) && defined(__MACH__)
     SDL_SysWMinfo system_info;
