@@ -217,9 +217,11 @@ namespace {
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     #if (!defined(__MACH__) && !defined(__APPLE__))
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL |
-    SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN);
+    ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ? SDL_WINDOW_ALWAYS_ON_TOP : 0) | 
+    SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN);
     #else
-    SDL_WindowFlags windowFlags = (SDL_WindowFlags)(SDL_WINDOW_ALWAYS_ON_TOP |
+    SDL_WindowFlags windowFlags = (SDL_WindowFlags)(
+    ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ? SDL_WINDOW_ALWAYS_ON_TOP : 0) |
     SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN);
     #endif
     if (ngs::fs::environment_get_variable("IMGUI_DIALOG_WIDTH").empty())
@@ -249,8 +251,10 @@ namespace {
     if (!SDL_GetWindowWMInfo(window, &system_info)) return "";
     HWND hWnd = system_info.info.win.window;
     SetWindowLongPtrW(hWnd, GWL_STYLE, GetWindowLongPtrW(hWnd, GWL_STYLE) & ~(WS_MAXIMIZEBOX | WS_MINIMIZEBOX));
-    SetWindowLongPtrW(hWnd, GWL_EXSTYLE, GetWindowLongPtrW(hWnd, GWL_EXSTYLE) | WS_EX_TOPMOST);
-    SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    SetWindowLongPtrW(hWnd, GWL_EXSTYLE, GetWindowLongPtrW(hWnd, GWL_EXSTYLE) | 
+    ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ? WS_EX_TOPMOST : 0));
+    SetWindowPos(hWnd, ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ?  HWND_TOPMOST : HWND_TOP), 
+    0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
     SetWindowLongPtrW(hWnd, GWLP_HWNDPARENT, (LONG_PTR)(std::uintptr_t)strtoull(
     ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10));
@@ -277,8 +281,8 @@ namespace {
     if (display) {
       Window xWnd = system_info.info.x11.window;
       if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
-      XSetTransientForHint(display, (Window)(std::uintptr_t)strtoull(
-      ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), xWnd);
+      XSetTransientForHint(display, xWnd, (Window)(std::uintptr_t)strtoull(
+      ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10));
     }
     #endif
     #if (!defined(__MACH__) && !defined(__APPLE__))
