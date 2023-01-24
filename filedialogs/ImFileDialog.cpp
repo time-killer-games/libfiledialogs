@@ -11,6 +11,7 @@
 
 #include <fstream>
 #include <algorithm>
+#include <iostream>
 
 #include "ImFileDialog.h"
 #include "ImFileDialogMacros.h"
@@ -806,7 +807,7 @@ namespace ifd {
     #elif (defined(__MACH__) && defined(__APPLE__))
     NSBeep();
     #else
-    system("echo -e \"\007\" > /dev/tty10");
+    std::cout << '\a';
     #endif
     return false;
   }
