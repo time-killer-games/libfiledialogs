@@ -52,13 +52,14 @@
 #include <sys/stat.h>
 #if defined(_WIN32) 
 #include <windows.h>
-#include <dwmapi.h>
 #define STR_SLASH "\\"
 #define CHR_SLASH '\\'
 #define HOME_PATH "USERPROFILE"
 #else
 #if defined(__APPLE__) && defined(__MACH__)
 #include <AppKit/AppKit.h>
+#else
+#include <X11/Xlib.h>
 #endif
 #include <unistd.h>
 #define STR_SLASH "/"
@@ -250,6 +251,9 @@ namespace {
     SetWindowLongPtrW(hWnd, GWL_STYLE, GetWindowLongPtrW(hWnd, GWL_STYLE) & ~(WS_MAXIMIZEBOX | WS_MINIMIZEBOX));
     SetWindowLongPtrW(hWnd, GWL_EXSTYLE, GetWindowLongPtrW(hWnd, GWL_EXSTYLE) | WS_EX_TOPMOST);
     SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
+    SetWindowLongPtrW(hWnd, GWLP_HWNDPARENT, (LONG_PTR)(std::uintptr_t)strtoull(
+    ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT"), nullptr, 10));
     #elif defined(__APPLE__) && defined(__MACH__)
     SDL_SysWMinfo system_info;
     SDL_VERSION(&system_info.version);
@@ -261,6 +265,21 @@ namespace {
     [[nsWnd standardWindowButton:NSWindowCloseButton] setEnabled:YES];
     [[nsWnd standardWindowButton:NSWindowMiniaturizeButton] setEnabled:NO];
     [[nsWnd standardWindowButton:NSWindowZoomButton] setEnabled:NO];
+    if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
+    [(NSWindow *)(void *)(std::uintptr_t)strtoull(
+    ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT"), nullptr, 10);
+    addChildWindow:nsWnd ordered:NSWindowAbove];
+    #else
+    SDL_SysWMinfo system_info;
+    SDL_VERSION(&system_info.version);
+    if (!SDL_GetWindowWMInfo(window, &system_info)) return "";
+    Display *display = system_info.info.x11.display;
+    if (display) {
+      Window xWnd = system_info.info.x11.window;
+      if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
+      XSetTransientForHint(display, (Window)(std::uintptr_t)strtoull(
+      ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT"), nullptr, 10), xWnd);
+    }
     #endif
     #if (!defined(__MACH__) && !defined(__APPLE__))
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
