@@ -217,7 +217,7 @@ namespace {
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     #if (!defined(__MACH__) && !defined(__APPLE__))
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL |
-    ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ? SDL_WINDOW_ALWAYS_ON_TOP : 0) | 
+    ((ngs::fs::environment_get_variable("IMGUI_DIALOG_f").empty()) ? SDL_WINDOW_ALWAYS_ON_TOP : 0) | 
     SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN);
     #else
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(
@@ -290,6 +290,17 @@ namespace {
       if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
       XSetTransientForHint(display, xWnd, (Window)(std::uintptr_t)strtoull(
       ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10));
+      Window parentFrameRoot = 0; int parentFrameX = 0, parentFrameY = 0;
+      unsigned parentFrameWidth = 0, parentFrameHeight = 0, parentFrameBorder = 0, parentFrameDepth = 0;
+      XGetGeometry(display, (Window)(std::uintptr_t)strtoull(ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), 
+      &parentFrameRoot, &parentFrameX, &parentFrameY, &parentFrameWidth, &parentFrameHeight, 
+      &parentFrameBorder, &parentFrameDepth);
+      Window childFrameRoot = 0; int childFrameX = 0, childFrameY = 0;
+      unsigned childFrameWidth = 0, childFrameHeight = 0, childFrameBorder = 0, childFrameDepth = 0;
+      XGetGeometry(display, xWnd, &childFrameRoot, &childFrameX, &childFrameY, 
+      &childFrameWidth, &childFrameHeight, &childFrameBorder, &childFrameDepth);
+      XMoveWindow(display, xWnd, (parentFrameX + (parentFrameWidth / 2)) - (childFrameWidth / 2),
+      (parentFrameY + (parentFrameHeight / 2)) - (childFrameHeight / 2));
     }
     #endif
     #if (!defined(__MACH__) && !defined(__APPLE__))
