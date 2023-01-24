@@ -217,7 +217,7 @@ namespace {
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     #if (!defined(__MACH__) && !defined(__APPLE__))
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL |
-    ((ngs::fs::environment_get_variable("IMGUI_DIALOG_f").empty()) ? SDL_WINDOW_ALWAYS_ON_TOP : 0) | 
+    ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ? SDL_WINDOW_ALWAYS_ON_TOP : 0) | 
     SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN);
     #else
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(
