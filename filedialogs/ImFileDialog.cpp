@@ -738,6 +738,7 @@ namespace ifd {
 
   bool FileDialog::m_finalize(const std::string& filename) {
     bool hasResult = (!filename.empty() && m_type != IFD_DIALOG_DIRECTORY) || m_type == IFD_DIALOG_DIRECTORY;
+    std::error_code ec;
     
     if (hasResult) {
       if (!m_isMultiselect || m_selections.size() <= 1) {
@@ -747,7 +748,7 @@ namespace ifd {
         if (m_type == IFD_DIALOG_DIRECTORY || m_type == IFD_DIALOG_FILE) {
           if (!ghc::filesystem::exists(m_result.back())) {
             m_result.clear();
-            return false;
+            goto failure;
           }
         }
       } else {
@@ -757,7 +758,7 @@ namespace ifd {
           if (m_type == IFD_DIALOG_DIRECTORY || m_type == IFD_DIALOG_FILE) {
             if (!ghc::filesystem::exists(m_result.back())) {
               m_result.clear();
-              return false;
+              goto failure;
             }
           }
         }
@@ -774,24 +775,30 @@ namespace ifd {
       }
     }
 
-    std::error_code ec;
     if (!m_result.empty() && m_type == IFD_DIALOG_SAVE &&
       !ghc::filesystem::exists(m_result.back(), ec) && !ghc::filesystem::is_directory(m_result.back(), ec)) {
       m_isOpen = false;
       return true;
-    } else if (!m_result.size() && m_type == IFD_DIALOG_SAVE && filename.empty()) {
+    } else if (!m_result.empty() && m_type == IFD_DIALOG_SAVE && filename.empty()) {
       m_isOpen = false;
       return true;
-    } else if (m_result.size() && m_type == IFD_DIALOG_FILE &&
+    } else if (!m_result.empty() && m_type == IFD_DIALOG_FILE &&
       ghc::filesystem::exists(m_result.back(), ec) && !ghc::filesystem::is_directory(m_result.back(), ec)) {
       m_isOpen = false;
       return true;
-    } else if (m_result.size() && m_type == IFD_DIALOG_DIRECTORY &&
+    } else if (!m_result.empty() && m_type == IFD_DIALOG_DIRECTORY &&
       ghc::filesystem::exists(m_result.back(), ec) && ghc::filesystem::is_directory(m_result.back(), ec)) {
       m_isOpen = false;
       return true;
     }
 
+    failure:
+    #ifdef _WIN32
+    MessageBeep(MB_ICONERROR);
+    #elif (defined(__MACH__) && defined(__APPLE__))
+    NSBeep();
+    #else
+    #endif
     return false;
   }
 
@@ -1453,8 +1460,9 @@ namespace ifd {
               if (isDir) {
                 m_setDirectory(entry.Path);
                 break;
-              } else
+              } else {
                 m_finalize(filename);
+              }
             } else {
               if ((isDir && m_type == IFD_DIALOG_DIRECTORY) || !isDir)
                 m_select(entry.Path, ImGui::GetIO().KeyCtrl);
@@ -1507,11 +1515,10 @@ namespace ifd {
             if (isDir) {
               m_setDirectory(entry.Path);
               break;
-            }
-            else
+            } else {
               m_finalize(filename);
-          }
-          else {
+            }
+          } else {
             if ((isDir && m_type == IFD_DIALOG_DIRECTORY) || !isDir)
               m_select(entry.Path, ImGui::GetIO().KeyCtrl);
           }
@@ -1720,30 +1727,10 @@ namespace ifd {
     ImGui::Text(IFD_FILE_NAME_WITH_COLON);
     ImGui::SameLine();
     ghc::filesystem::path pathToCheckExistenceFor = m_currentDirectory / m_inputTextbox;
-    if (ImGui::InputTextEx("##file_input", IFD_FILE_NAME_WITHOUT_COLON, m_inputTextbox, 1024, ImVec2((m_type != IFD_DIALOG_DIRECTORY) ? -250.0f : -FLT_MIN, 0), ImGuiInputTextFlags_EnterReturnsTrue) &&
-      #if defined(_WIN32)
-      ((m_type == IFD_DIALOG_SAVE) || (m_isMultiselect && m_selections.size() > 1) || (INVALID_FILE_ATTRIBUTES != GetFileAttributesW(pathToCheckExistenceFor.wstring().c_str()) && GetLastError() != ERROR_FILE_NOT_FOUND))) {
-      #else
-      ((m_type == IFD_DIALOG_SAVE) || (m_isMultiselect && m_selections.size() > 1) || ghc::filesystem::exists(pathToCheckExistenceFor))) {
-      #endif
+    if (ImGui::InputTextEx("##file_input", IFD_FILE_NAME_WITHOUT_COLON, m_inputTextbox, 1024,
+      ImVec2((m_type != IFD_DIALOG_DIRECTORY) ? -250.0f : -FLT_MIN, 0), ImGuiInputTextFlags_EnterReturnsTrue)) {
       std::string filename(m_inputTextbox);
-      bool success = false;
-
-      std::error_code ec;
-      if (!filename.empty() && m_type == IFD_DIALOG_SAVE &&
-        !ghc::filesystem::exists(m_currentDirectory / filename, ec) && !ghc::filesystem::is_directory(m_currentDirectory / filename, ec))
-        success = m_finalize(filename);
-      else if (!filename.empty() || m_type == IFD_DIALOG_DIRECTORY)
-        success = m_finalize(filename);
-      #ifdef _WIN32
-      if (!success)
-        MessageBeep(MB_ICONERROR);
-      #elif (defined(__MACH__) && defined(__APPLE__))
-      if (!success)
-        NSBeep();
-      #else
-      (void)success;
-      #endif
+      m_finalize(filename);
     }
     if (m_type != IFD_DIALOG_DIRECTORY) {
       ImGui::SameLine();
@@ -1758,39 +1745,14 @@ namespace ifd {
     // buttons
     float ok_cancel_width = GUI_ELEMENT_SIZE * 7;
     ImGui::SetCursorPosX(ImGui::GetWindowWidth() - ok_cancel_width);
-    if (ImGui::Button(m_type == IFD_DIALOG_SAVE ? IFD_SAVE : IFD_OPEN, ImVec2(ok_cancel_width / 2 - ImGui::GetStyle().ItemSpacing.x, 0.0f)) &&
-      #if defined(_WIN32)
-      ((m_type == IFD_DIALOG_SAVE) || (m_isMultiselect && m_selections.size() > 1) || (INVALID_FILE_ATTRIBUTES != GetFileAttributesW(pathToCheckExistenceFor.wstring().c_str()) && GetLastError() != ERROR_FILE_NOT_FOUND))) {
-      #else
-      ((m_type == IFD_DIALOG_SAVE) || (m_isMultiselect && m_selections.size() > 1) || ghc::filesystem::exists(pathToCheckExistenceFor))) {
-      #endif
+    if (ImGui::Button(m_type == IFD_DIALOG_SAVE ? IFD_SAVE : IFD_OPEN,
+    ImVec2(ok_cancel_width / 2 - ImGui::GetStyle().ItemSpacing.x, 0.0f))) {
       std::string filename(m_inputTextbox);
-      bool success = false;
-
-      std::error_code ec;
-      if (!filename.empty() && m_type == IFD_DIALOG_SAVE &&
-        !ghc::filesystem::exists(m_currentDirectory / filename, ec) && !ghc::filesystem::is_directory(m_currentDirectory / filename, ec))
-        success = m_finalize(filename);
-      else if (!filename.empty() || m_type == IFD_DIALOG_DIRECTORY)
-        success = m_finalize(filename);
-      #ifdef _WIN32
-      if (!success)
-        MessageBeep(MB_ICONERROR);
-      #elif (defined(__MACH__) && defined(__APPLE__))
-      if (!success)
-        NSBeep();
-      #else
-      (void)success;
-      #endif
+      m_finalize(filename);
     }
     ImGui::SameLine();
     if (ImGui::Button(IFD_CANCEL, ImVec2(-FLT_MIN, 0.0f))) {
-      if (m_type == IFD_DIALOG_DIRECTORY)
-        m_isOpen = false;
-      else {
-        m_finalize();
-        m_isOpen = false;
-      }
+      m_isOpen = false;
     }
 
     int escapeKey = ImGui::GetIO().KeyMap[ImGuiKey_Escape];
