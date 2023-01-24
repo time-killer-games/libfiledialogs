@@ -255,9 +255,19 @@ namespace {
     ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ? WS_EX_TOPMOST : 0));
     SetWindowPos(hWnd, ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ?  HWND_TOPMOST : HWND_TOP), 
     0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-    if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
-    SetWindowLongPtrW(hWnd, GWLP_HWNDPARENT, (LONG_PTR)(std::uintptr_t)strtoull(
-    ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10));
+    if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) {
+      SetWindowLongPtrW(hWnd, GWLP_HWNDPARENT, (LONG_PTR)(std::uintptr_t)strtoull(
+      ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10));
+      RECT parentFrame; GetWindowRect((HWND)(void *)(std::uintptr_t)strtoull(
+      ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), &parentFrame);
+      int parentFrameWidth = parentFrame.right - parentFrame.left; 
+      int parentFrameHeight = parentFrame.bottom - parentFrame.top;
+      int childFrameWidth = childFrame.right - childFrame.left; 
+      int childFrameHeight = childFrame.bottom - childFrame.top;
+      RECT childFrame; GetWindowRect(hWnd, &childFrame);
+      MoveWindow(hWnd, (parentFrame.left + (parentFrameWidth / 2)) - (childFrameWidth / 2),
+      (parentFrame.top + (parentFrameHeight / 2)) - (childFrameHeight / 2), TRUE);
+    }
     #elif defined(__APPLE__) && defined(__MACH__)
     SDL_SysWMinfo system_info;
     SDL_VERSION(&system_info.version);
@@ -287,20 +297,21 @@ namespace {
     Display *display = system_info.info.x11.display;
     if (display) {
       Window xWnd = system_info.info.x11.window;
-      if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
-      XSetTransientForHint(display, xWnd, (Window)(std::uintptr_t)strtoull(
-      ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10));
-      Window parentFrameRoot = 0; int parentFrameX = 0, parentFrameY = 0;
-      unsigned parentFrameWidth = 0, parentFrameHeight = 0, parentFrameBorder = 0, parentFrameDepth = 0;
-      XGetGeometry(display, (Window)(std::uintptr_t)strtoull(ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), 
-      &parentFrameRoot, &parentFrameX, &parentFrameY, &parentFrameWidth, &parentFrameHeight, 
-      &parentFrameBorder, &parentFrameDepth);
-      Window childFrameRoot = 0; int childFrameX = 0, childFrameY = 0;
-      unsigned childFrameWidth = 0, childFrameHeight = 0, childFrameBorder = 0, childFrameDepth = 0;
-      XGetGeometry(display, xWnd, &childFrameRoot, &childFrameX, &childFrameY, 
-      &childFrameWidth, &childFrameHeight, &childFrameBorder, &childFrameDepth);
-      XMoveWindow(display, xWnd, (parentFrameX + (parentFrameWidth / 2)) - (childFrameWidth / 2),
-      (parentFrameY + (parentFrameHeight / 2)) - (childFrameHeight / 2));
+      if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) {
+        XSetTransientForHint(display, xWnd, (Window)(std::uintptr_t)strtoull(
+        ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10));
+        Window parentFrameRoot = 0; int parentFrameX = 0, parentFrameY = 0;
+        unsigned parentFrameWidth = 0, parentFrameHeight = 0, parentFrameBorder = 0, parentFrameDepth = 0;
+        XGetGeometry(display, (Window)(std::uintptr_t)strtoull(ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), 
+        &parentFrameRoot, &parentFrameX, &parentFrameY, &parentFrameWidth, &parentFrameHeight, 
+        &parentFrameBorder, &parentFrameDepth);
+        Window childFrameRoot = 0; int childFrameX = 0, childFrameY = 0;
+        unsigned childFrameWidth = 0, childFrameHeight = 0, childFrameBorder = 0, childFrameDepth = 0;
+        XGetGeometry(display, xWnd, &childFrameRoot, &childFrameX, &childFrameY, 
+        &childFrameWidth, &childFrameHeight, &childFrameBorder, &childFrameDepth);
+        XMoveWindow(display, xWnd, (parentFrameX + (parentFrameWidth / 2)) - (childFrameWidth / 2),
+        (parentFrameY + (parentFrameHeight / 2)) - (childFrameHeight / 2));
+      }
     }
     #endif
     #if (!defined(__MACH__) && !defined(__APPLE__))
