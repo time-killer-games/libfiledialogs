@@ -301,16 +301,19 @@ namespace {
         XSetTransientForHint(display, xWnd, (Window)(std::uintptr_t)strtoull(
         ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10));
         Window parentFrameRoot = 0; int parentFrameX = 0, parentFrameY = 0;
+        XWindowAttributes parentWA; XGetWindowAttributes(display, (Window)(std::uintptr_t)strtoull(
+        ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), &parentWA);
         unsigned parentFrameWidth = 0, parentFrameHeight = 0, parentFrameBorder = 0, parentFrameDepth = 0;
-        XGetGeometry(display, (Window)(std::uintptr_t)strtoull(ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), 
+        XGetGeometry(display, (Window)(std::uintptr_t)strtoull(
+        ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10), 
         &parentFrameRoot, &parentFrameX, &parentFrameY, &parentFrameWidth, &parentFrameHeight, 
         &parentFrameBorder, &parentFrameDepth);
         Window childFrameRoot = 0; int childFrameX = 0, childFrameY = 0;
         unsigned childFrameWidth = 0, childFrameHeight = 0, childFrameBorder = 0, childFrameDepth = 0;
         XGetGeometry(display, xWnd, &childFrameRoot, &childFrameX, &childFrameY, 
         &childFrameWidth, &childFrameHeight, &childFrameBorder, &childFrameDepth);
-        XMoveWindow(display, xWnd, (parentFrameX + (parentFrameWidth / 2)) - (childFrameWidth / 2),
-        (parentFrameY + (parentFrameHeight / 2)) - (childFrameHeight / 2));
+        XMoveWindow(display, xWnd, (parentWA.x + (parentFrameWidth / 2)) - (childFrameWidth / 2),
+        (parentWA.y + (parentFrameHeight / 2)) - (childFrameHeight / 2));
       }
     }
     #endif

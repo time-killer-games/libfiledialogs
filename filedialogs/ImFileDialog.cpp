@@ -806,7 +806,7 @@ namespace ifd {
     #elif (defined(__MACH__) && defined(__APPLE__))
     NSBeep();
     #else
-    system("printf '\007'");
+    system("printf '\007' 2> /dev/null");
     #endif
     return false;
   }
