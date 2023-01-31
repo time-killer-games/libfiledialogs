@@ -295,7 +295,7 @@ namespace {
     SDL_VERSION(&system_info.version);
     if (!SDL_GetWindowWMInfo(window, &system_info)) return "";
     Display *display = system_info.info.x11.display;
-    if (display) {f
+    if (display) {
       Window xWnd = system_info.info.x11.window;
       if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) {
         Window window = (Window)(std::uintptr_t)strtoull(
