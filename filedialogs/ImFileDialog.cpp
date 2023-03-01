@@ -70,7 +70,7 @@ struct HumanReadable {
     double mantissa = hr.size;
     for (; mantissa >= 1024.; mantissa /= 1024., ++i) { }
     mantissa = std::ceil(mantissa * 10.) / 10.;
-    os << mantissa << "BKMGTPE"[i];
+    os << mantissa << " " << "BKMGTPE"[i];
     return i == 0 ? os : os << "B";
   }
 };
