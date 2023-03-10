@@ -304,7 +304,6 @@ namespace {
         for (int i = 0; i < num_fonts; i++) {
           fonts.push_back(fontlist[i]);
         }
-        ifd_load_fonts();
       }
       XFreeFontNames(fontlist);
       Window xWnd = system_info.info.x11.window;
