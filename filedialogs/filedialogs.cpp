@@ -298,22 +298,6 @@ namespace {
     if (!SDL_GetWindowWMInfo(window, &system_info)) return "";
     Display *display = system_info.info.x11.display;
     if (display) {
-      if (fonts.empty()) {
-        int num_fonts = 0;
-        char **fontlist = XListFonts(display, "*Noto*-Regular.*", 1000, &num_fonts);
-        if (fontlist) {
-          for (int i = 0; i < num_fonts; i++)
-            fonts.push_back(fontlist[i]);
-          string sfonts;
-          for (int i = 0; i < num_fonts; i++) {
-            sfonts += fontlist[i];
-            sfonts += "\n"; 
-          }
-          if (!sfonts.empty())
-            sfonts.pop_back();
-          XFreeFontNames(fontlist);
-        }
-      }
       Window xWnd = system_info.info.x11.window;
       if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) {
         Window window = (Window)(std::uintptr_t)strtoull(
