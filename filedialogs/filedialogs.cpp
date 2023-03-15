@@ -333,7 +333,7 @@ namespace {
     SDL_GL_SetSwapInterval(1);
     #endif
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext(); ifd_load_fonts();
+    ImGui::CreateContext(); ngs::imgui::ifd_load_fonts();
     if (ngs::fs::environment_get_variable("IMGUI_FONT_SIZE").empty())
     ngs::fs::environment_set_variable("IMGUI_FONT_SIZE", std::to_string(20));
     ImGuiIO& io = ImGui::GetIO(); (void)io; ImFontConfig config; io.IniFilename = nullptr;
@@ -675,4 +675,3 @@ const char *show_question_ext(const char *message) {
 }
 
 #endif
-
