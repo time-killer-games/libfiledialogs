@@ -189,10 +189,6 @@ namespace {
   SDL_Surface *surf = nullptr;
   #endif
 
-  void ifd_load_fonts() {
-    ngs::imgui::ifd_load_fonts();
-  }
-
   string file_dialog_helper(string filter, string fname, string dir, string title, int type, string message = "") {
     SDL_Window *window = nullptr;
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER);
@@ -541,7 +537,7 @@ namespace ngs::imgui {
   void ifd_load_fonts() {
     if (!fonts.empty()) fonts.clear();
     if (ngs::fs::environment_get_variable("IMGUI_FONT_PATH").empty() && ngs::fs::environment_get_variable("IMGUI_FONT_FILES").empty()) {
-      fonts.push_back(ngs::fs::directory_contents_first(ngs::fs::environment_get_variable("IMGUI_FONT_PATH"), "*.ttf;*.otf", false, false));
+      fonts.push_back(ngs::fs::directory_contents_first(ngs::fs::environment_get_variable("IMGUI_FONT_PATH"), "*.ttf;*.otf;*.ttc", false, false));
       while (!fonts[fonts.size() - 1].empty()) {
         message_pump();
         fonts.push_back(ngs::fs::directory_contents_next());
