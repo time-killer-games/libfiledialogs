@@ -46,6 +46,8 @@
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "ImFileDialog.h"
+#include "msgbox/imguial_msgbox.h"
+#include "ImFileDialogMacros.h"
 #include "filesystem.hpp"
 #include "filesystem.h"
 
@@ -154,7 +156,10 @@ namespace {
     openFile,
     openFiles,
     saveFile,
-    selectFolder
+    selectFolder,
+    oneButton,
+    twoButtons,
+    threeButtons
   };
 
   string expand_without_trailing_slash(string dname) {
@@ -188,11 +193,9 @@ namespace {
     ngs::imgui::ifd_load_fonts();
   }
 
-  string file_dialog_helper(string filter, string fname, string dir, string title, int type) {
-    SDL_Window *window;
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
-      return "";
-    }
+  string file_dialog_helper(string filter, string fname, string dir, string title, int type, string message = "") {
+    SDL_Window *window = nullptr;
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER);
     #if (!defined(__MACH__) && !defined(__APPLE__))
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -204,12 +207,14 @@ namespace {
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL |
     ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ? SDL_WINDOW_ALWAYS_ON_TOP : 0) | 
     SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN | ((ngs::fs::environment_get_variable("IMGUI_DIALOG_RESIZE") ==
-    std::to_string(1)) ? SDL_WINDOW_RESIZABLE : 0));
+    std::to_string(1)) ? SDL_WINDOW_RESIZABLE : 0) | ((ngs::fs::environment_get_variable("IMGUI_DIALOG_NOBORDER") ==
+    std::to_string(1)) ? SDL_WINDOW_BORDERLESS : 0));
     #else
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(
     ((ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) ? SDL_WINDOW_ALWAYS_ON_TOP : 0) |
     SDL_WINDOW_SKIP_TASKBAR | SDL_WINDOW_HIDDEN | ((ngs::fs::environment_get_variable("IMGUI_DIALOG_RESIZE") ==
-    std::to_string(1)) ? SDL_WINDOW_RESIZABLE : 0));
+    std::to_string(1)) ? SDL_WINDOW_RESIZABLE : 0) | ((ngs::fs::environment_get_variable("IMGUI_DIALOG_NOBORDER") ==
+    std::to_string(1)) ? SDL_WINDOW_BORDERLESS : 0));
     #endif
     if (ngs::fs::environment_get_variable("IMGUI_DIALOG_WIDTH").empty())
     ngs::fs::environment_set_variable("IMGUI_DIALOG_WIDTH", std::to_string(640));
@@ -407,14 +412,70 @@ namespace {
       if (type == openFiles) ifd::FileDialog::Instance().Open("GetOpenFileNames", "Open", filterNew.c_str(), true, fname.c_str(), dir.c_str());
       if (type == selectFolder) ifd::FileDialog::Instance().Open("GetDirectory", "Select Directory", "", false, fname.c_str(), dir.c_str());
       if (type == saveFile) ifd::FileDialog::Instance().Save("GetSaveFileName", "Save As", filterNew.c_str(), fname.c_str(), dir.c_str());
-      if (ifd::FileDialog::Instance().IsDone("GetOpenFileName")) {
+      if (type == oneButton) {
+        vector<string> buttons;
+        buttons.push_back(IFD_OK); 
+        vector<ImGuiAl::MsgBox *> msgbox;
+        msgbox.push_back(new ImGuiAl::MsgBox());
+        ImGui::PushID(msgbox[0]);
+        msgbox[0]->Init("##msgbox1", nullptr, message.c_str(), buttons, false);
+        msgbox[0]->Open();
+        int selected = msgbox[0]->Draw();
+        switch (selected) {
+          case 0: result = "(null)"; break;
+          case 1: result = IFD_OK; break;
+        }
+        ImGui::PopID();
+        delete msgbox[0];
+        msgbox.pop_back();
+        if (result != "(null)") goto finish;
+      } else if (type == twoButtons) {
+        vector<string> buttons;
+        buttons.push_back(IFD_YES);
+        buttons.push_back(IFD_NO); 
+        vector<ImGuiAl::MsgBox *> msgbox;
+        msgbox.push_back(new ImGuiAl::MsgBox());
+        ImGui::PushID(msgbox[0]);
+        msgbox[0]->Init("##msgbox2", nullptr, message.c_str(), buttons, false);
+        msgbox[0]->Open();
+        int selected = msgbox[0]->Draw();
+        switch (selected) {
+          case 0: result = "(null)"; break;
+          case 1: result = IFD_YES; break;
+          case 2: result = IFD_NO; break;
+        }
+        ImGui::PopID();
+        delete msgbox[0];
+        msgbox.pop_back();
+        if (result != "(null)") goto finish;
+      } else if (type == threeButtons) {
+        vector<string> buttons;
+        buttons.push_back(IFD_YES);
+        buttons.push_back(IFD_NO); 
+        buttons.push_back(IFD_CANCEL);
+        vector<ImGuiAl::MsgBox *> msgbox;
+        msgbox.push_back(new ImGuiAl::MsgBox());
+        ImGui::PushID(msgbox[0]);
+        msgbox[0]->Init("##msgbox3", nullptr, message.c_str(), buttons, false);
+        msgbox[0]->Open();
+        int selected = msgbox[0]->Draw();
+        switch (selected) {
+          case 0: result = "(null)"; break;
+          case 1: result = IFD_YES; break;
+          case 2: result = IFD_NO; break;
+          case 3: result = IFD_CANCEL; break;
+        }
+        ImGui::PopID();
+        delete msgbox[0];
+        msgbox.pop_back();
+        if (result != "(null)") goto finish;
+      } else if (ifd::FileDialog::Instance().IsDone("GetOpenFileName")) {
         if (ifd::FileDialog::Instance().HasResult()) {
           result = ifd::FileDialog::Instance().GetResult().string();
         }
         ifd::FileDialog::Instance().Close();
         goto finish;
-      }
-      if (ifd::FileDialog::Instance().IsDone("GetOpenFileNames")) {
+      } else if (ifd::FileDialog::Instance().IsDone("GetOpenFileNames")) {
         if (ifd::FileDialog::Instance().HasResult()) {
           const std::vector<ghc::filesystem::path>& res = ifd::FileDialog::Instance().GetResults();
           for (const auto& r : res) result += r.string() + "\n";
@@ -422,16 +483,14 @@ namespace {
         }
         ifd::FileDialog::Instance().Close();
         goto finish;
-      }
-      if (ifd::FileDialog::Instance().IsDone("GetDirectory")) {
+      } else if (ifd::FileDialog::Instance().IsDone("GetDirectory")) {
         if (ifd::FileDialog::Instance().HasResult()) {
           result = ifd::FileDialog::Instance().GetResult().string();
           if (!result.empty() && result.back() != CHR_SLASH) result.push_back(CHR_SLASH);
         }
         ifd::FileDialog::Instance().Close();
         goto finish;
-      }
-      if (ifd::FileDialog::Instance().IsDone("GetSaveFileName")) {
+      } else if (ifd::FileDialog::Instance().IsDone("GetSaveFileName")) {
         if (ifd::FileDialog::Instance().HasResult()) {
           result = ifd::FileDialog::Instance().GetResult().string();
         }
@@ -467,7 +526,7 @@ namespace {
     SDL_GL_DeleteContext(gl_context);
     #endif
     SDL_DestroyWindow(window);
-    SDL_Quit();
+    //SDL_Quit();
     return result;
   }
 
@@ -525,6 +584,18 @@ namespace ngs::imgui {
   string get_directory_alt(string capt, string root) {
     return file_dialog_helper("", "", ((root.empty()) ? ngs::fs::environment_get_variable(HOME_PATH) : root), capt, selectFolder);
   }
+  
+  string show_message(string message) {
+    return file_dialog_helper("", "", "", ngs::fs::environment_get_variable("IMGUI_DIALOG_CAPTION"), oneButton, message);
+  }
+
+  string show_question(string message) {
+    return file_dialog_helper("", "", "", ngs::fs::environment_get_variable("IMGUI_DIALOG_CAPTION"), twoButtons, message);
+  }
+
+  string show_question_ext(string message) {
+    return file_dialog_helper("", "", "", ngs::fs::environment_get_variable("IMGUI_DIALOG_CAPTION"), threeButtons, message);
+  }
 
 } // namespace ngs::imgui
 
@@ -580,4 +651,24 @@ const char *get_directory_alt(const char *capt, const char *root) {
   result = ngs::imgui::get_directory_alt(capt, root);
   return result.c_str();
 }
+
+const char *show_message(const char *message) {
+  static string result;
+  result = ngs::imgui::show_message(message);
+  return result.c_str();
+}
+
+const char *show_question(const char *message) {
+  static string result;
+  result = ngs::imgui::show_question(message);
+  return result.c_str();
+}
+
+const char *show_question_ext(const char *message) {
+  static string result;
+  result = ngs::imgui::show_question_ext(message);
+  return result.c_str();
+}
+
 #endif
+
