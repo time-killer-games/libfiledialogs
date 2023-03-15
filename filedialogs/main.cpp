@@ -49,35 +49,44 @@ int main(int argc, const char **argv) {
   #endif
   if (argc <= 2) {
     if (argc == 1 || (argc == 2 && strcmp(argv[1], "--help") == 0)) {
-      std::cout << "usage: filedialogs [options]                       " << std::endl;
-      std::cout << "  options:                                         " << std::endl;
-      std::cout << "    --help                                         " << std::endl;
-      std::cout << "    --get-open-filename      filter fname          " << std::endl;
-      std::cout << "    --get-open-filename-ext  filter fname dir title" << std::endl;
-      std::cout << "    --get-open-filenames     filter fname          " << std::endl;
-      std::cout << "    --get-open-filenames-ext filter fname dir title" << std::endl;
-      std::cout << "    --get-save-filename      filter fname          " << std::endl;
-      std::cout << "    --get-save-filename-ext  filter fname dir title" << std::endl;
-      std::cout << "    --get-directory          dname                 " << std::endl;
-      std::cout << "    --get-directory-alt      capt   root           " << std::endl;
+      std::cout << "usage: filedialogs [options]                       " << "\n";
+      std::cout << "  options:                                         " << "\n";
+      std::cout << "    --help                                         " << "\n";
+      std::cout << "    --show-message           msg                   " << "\n";
+      std::cout << "    --show-question          msg                   " << "\n";
+      std::cout << "    --show-question-ext      msg                   " << "\n";
+      std::cout << "    --get-open-filename      filter fname          " << "\n";
+      std::cout << "    --get-open-filename-ext  filter fname dir title" << "\n";
+      std::cout << "    --get-open-filenames     filter fname          " << "\n";
+      std::cout << "    --get-open-filenames-ext filter fname dir title" << "\n";
+      std::cout << "    --get-save-filename      filter fname          " << "\n";
+      std::cout << "    --get-save-filename-ext  filter fname dir title" << "\n";
+      std::cout << "    --get-directory          dname                 " << "\n";
+      std::cout << "    --get-directory-alt      capt   root           " << "\n";
     }
     return 0;
+  } else if (argc == 3 && strcmp(argv[1], "--show-message") == 0) {
+    std::cout << show_message(argv[2]) << "\n";
+  } else if (argc == 3 && strcmp(argv[1], "--show-question") == 0) {
+    std::cout << show_question(argv[2]) << "\n";
+  } else if (argc == 3 && strcmp(argv[1], "--show-question-ext") == 0) {
+    std::cout << show_question_ext(argv[2]) << "\n";
   } else if (argc == 4 && strcmp(argv[1], "--get-open-filename") == 0) {
-    std::cout << get_open_filename(argv[2], argv[3]) << std::endl;
+    std::cout << get_open_filename(argv[2], argv[3]) << "\n";
   } else if (argc == 6 && strcmp(argv[1], "--get-open-filename-ext") == 0) {
-    std::cout << get_open_filename_ext(argv[2], argv[3], argv[4], argv[5]) << std::endl;
+    std::cout << get_open_filename_ext(argv[2], argv[3], argv[4], argv[5]) << "\n";
   } else if (argc == 4 && strcmp(argv[1], "--get-open-filenames") == 0) {
-    std::cout << get_open_filenames(argv[2], argv[3]) << std::endl;
+    std::cout << get_open_filenames(argv[2], argv[3]) << "\n";
   } else if (argc == 6 && strcmp(argv[1], "--get-open-filenames-ext") == 0) {
-    std::cout << get_open_filenames_ext(argv[2], argv[3], argv[4], argv[5]) << std::endl;
+    std::cout << get_open_filenames_ext(argv[2], argv[3], argv[4], argv[5]) << "\n";
   } else if (argc == 4 && strcmp(argv[1], "--get-save-filename") == 0) {
-    std::cout << get_save_filename(argv[2], argv[3]) << std::endl;
+    std::cout << get_save_filename(argv[2], argv[3]) << "\n";
   } else if (argc == 6 && strcmp(argv[1], "--get-save-filename-ext") == 0) {
-    std::cout << get_save_filename_ext(argv[2], argv[3], argv[4], argv[5]) << std::endl;
-  } else if (argc == 3 && strcmp(argv[1], "--get-directory") == 0) {
-    std::cout << get_directory(argv[2]) << std::endl;
+    std::cout << get_save_filename_ext(argv[2], argv[3], argv[4], argv[5]) << "\n";
+  } else if (argc == 4 && strcmp(argv[1], "--get-directory") == 0) {
+    std::cout << get_directory(argv[2]) << "\n";
   } else if (argc == 4 && strcmp(argv[1], "--get-directory-alt") == 0) {
-    std::cout << get_directory_alt(argv[2], argv[3]) << std::endl;
+    std::cout << get_directory_alt(argv[2], argv[3]) << "\n";
   }
   return 0;
 }
