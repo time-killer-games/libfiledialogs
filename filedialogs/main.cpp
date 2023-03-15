@@ -83,7 +83,7 @@ int main(int argc, const char **argv) {
     std::cout << get_save_filename(argv[2], argv[3]) << "\n";
   } else if (argc == 6 && strcmp(argv[1], "--get-save-filename-ext") == 0) {
     std::cout << get_save_filename_ext(argv[2], argv[3], argv[4], argv[5]) << "\n";
-  } else if (argc == 4 && strcmp(argv[1], "--get-directory") == 0) {
+  } else if (argc == 3 && strcmp(argv[1], "--get-directory") == 0) {
     std::cout << get_directory(argv[2]) << "\n";
   } else if (argc == 4 && strcmp(argv[1], "--get-directory-alt") == 0) {
     std::cout << get_directory_alt(argv[2], argv[3]) << "\n";
