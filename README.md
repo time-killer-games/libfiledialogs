@@ -40,7 +40,7 @@ environment variable */
 #endif
 
 // for MSVC
-#if defined(_MSC_VER)
+#if (defined(_WIN32) && defined(_MSC_VER))
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
