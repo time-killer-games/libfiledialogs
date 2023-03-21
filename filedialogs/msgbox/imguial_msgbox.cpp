@@ -39,15 +39,12 @@ void AlignForWidth(float width, float alignment = 0.5f)
   ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - (ImGui::GetFontSize() + (ImGui::GetFontSize() / 2)));
 }
 
-bool ImGuiAl::MsgBox::Init( const char* title, const char* icon, const char* text, std::vector<std::string> captions, bool show_checkbox )
+bool ImGuiAl::MsgBox::Init( const char* title, const char* icon, const char* text, std::vector<std::string> captions )
 {
   m_Title = title;
   m_Icon = icon;
   m_Text = text;
   m_Captions = captions;
-  m_ShowCheckbox = show_checkbox;
-  m_DontAskAgain = false;
-  m_Selected = 0;
   return true;
 }
 
@@ -56,75 +53,57 @@ int ImGuiAl::MsgBox::Draw()
   int index = 0;
   if ( ImGui::BeginPopupModal( m_Title, nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove ) )
   {
-    if ( m_DontAskAgain && m_Selected != 0 )
+    if ( m_Icon != nullptr )
     {
-      ImGui::CloseCurrentPopup();
-      index = m_Selected;
+      ImVec2 size = ImGui::CalcTextSize( m_Icon );
+      ImVec2 pos = ImGui::GetCursorPos();
+      float save_y = pos.y;
+      pos.y += size.y;
+        
+      ImGui::SetCursorPos( pos );
+      ImGui::Text( "%s", m_Icon );
+        
+      pos.x += size.x + pos.x;
+      pos.y = save_y;
+        
+      ImGui::SetCursorPos( pos );
+      ImGui::TextWrapped( "%s", m_Text );
     }
     else
     {
-      if ( m_Icon != nullptr )
-      {
-        ImVec2 size = ImGui::CalcTextSize( m_Icon );
-        ImVec2 pos = ImGui::GetCursorPos();
-        float save_y = pos.y;
-        pos.y += size.y;
-        
-        ImGui::SetCursorPos( pos );
-        ImGui::Text( "%s", m_Icon );
-        
-        pos.x += size.x + pos.x;
-        pos.y = save_y;
-        
-        ImGui::SetCursorPos( pos );
-        ImGui::TextWrapped( "%s", m_Text );
-      }
-      else
-      {
-        ImGui::TextWrapped( "%s", m_Text );
-      }
-      
-      ImGui::Separator();
-      
-      if ( m_ShowCheckbox )
-      {
-        ImGui::Checkbox( "Don't ask me again", &m_DontAskAgain );
-      }
-      
-      ImVec2 size = ImVec2( 2.5f * ImGui::GetFontSize(), 0.0f );
-      int count;
-
-      ImGuiStyle& style = ImGui::GetStyle();
-      float width = 0.0f;
-      for ( count = 0; count < m_Captions.size(); count++ )
-      {
-        width += size.x;
-        width += style.ItemSpacing.x;
-      }
-      width -= style.ItemSpacing.x;
-      AlignForWidth(width);
-      for ( count = 0; count < m_Captions.size(); count++ )
-      {
-        ImGui::PushID(count);
-        if ( ImGui::Button( m_Captions[ count ].c_str(), size ) )
-        {
-          index = count + 1;
-          ImGui::CloseCurrentPopup();
-          ImGui::PopID();
-          break;
-        }
-        ImGui::SameLine();
-        ImGui::PopID();
-      }
-      
-      size = ImVec2( ( 4 - count ) * 2.5f * ImGui::GetFontSize(), ImGui::GetFontSize() );
-      ImGui::Dummy( size );
-      
-      if ( m_DontAskAgain )
-      {
-        m_Selected = index;
-      }
+      ImGui::TextWrapped( "%s", m_Text );
     }
+      
+    ImGui::Separator();
+
+    m ImVec2 size = ImVec2( 2.5f * ImGui::GetFontSize(), 0.0f );
+    int count;
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    float width = 0.0f;
+    for ( count = 0; count < m_Captions.size(); count++ )
+    {
+      width += size.x;
+      width += style.ItemSpacing.x;
+    }
+    width -= style.ItemSpacing.x;
+    AlignForWidth(width);
+    for ( count = 0; count < m_Captions.size(); count++ )
+    {
+      ImGui::PushID(count);
+      if ( ImGui::Button( m_Captions[ count ].c_str(), size ) )
+      {
+        index = count + 1;
+        ImGui::CloseCurrentPopup();
+        ImGui::PopID();
+        break;
+      }
+      ImGui::SameLine();
+      ImGui::PopID();
+    }
+      
+    size = ImVec2( ( 4 - count ) * 2.5f * ImGui::GetFontSize(), ImGui::GetFontSize() );
+    ImGui::Dummy( size );
     
     ImGui::EndPopup();
   }
