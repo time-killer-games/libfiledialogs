@@ -36,7 +36,7 @@
     <ClInclude Include="..\filedialogs\imgui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\filedialogs\imgui_impl_opengl2.h">
+    <ClInclude Include="..\filedialogs\imgui_impl_sdlrenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\filedialogs\imgui_impl_sdl.h">
@@ -80,7 +80,7 @@
     <ClCompile Include="..\filedialogs\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\filedialogs\imgui_impl_opengl2.cpp">
+    <ClCompile Include="..\filedialogs\imgui_impl_sdlrenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\filedialogs\imgui_impl_sdl.cpp">
