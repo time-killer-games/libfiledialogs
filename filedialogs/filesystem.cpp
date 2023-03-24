@@ -578,10 +578,12 @@ namespace ngs::fs {
           if ((kif = kvm_getfiles(kd, KERN_FILE_BYPID, getpid(), sizeof(struct kinfo_file), &cntp))) {
             for (int i = 0; i < cntp; i++) {
               if (kif[i].fd_fd == KERN_FILE_TEXT) {
-                if (st.st_dev == (dev_t)kif[i].va_fsid || st.st_ino == (ino_t)kif[i].va_fileid) {
-                  *out = executable;
-                  success = true;
-                  break;
+                if (st.st_nlink == 1) {
+                  if (st.st_dev == (dev_t)kif[i].va_fsid || st.st_ino == (ino_t)kif[i].va_fileid) {
+                    *out = executable;
+                    success = true;
+                    break;
+                  }
                 }
               }
             }
