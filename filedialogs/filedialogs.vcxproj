@@ -29,6 +29,7 @@
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="msgbox\imguial_msgbox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="filedialogs.h" />
@@ -44,6 +45,7 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="msgbox\imguial_msgbox.h" />
     <ClInclude Include="nanosvg.h" />
     <ClInclude Include="nanosvgrast.h" />
     <ClInclude Include="stb_image.h" />
