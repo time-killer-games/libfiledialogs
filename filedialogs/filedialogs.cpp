@@ -359,7 +359,7 @@ namespace {
         buttons.push_back(IFD_OK); 
         ImGuiAl::MsgBox msgbox;
         msgbox.push_back(new ImGuiAl::MsgBox());
-        ImGui::PushID(msgbox);
+        ImGui::PushID("##msgbox");
         msgbox.Init("##msgbox", message.c_str(), buttons);
         msgbox.Open();
         int selected = msgbox.Draw();
@@ -374,7 +374,7 @@ namespace {
         buttons.push_back(IFD_YES);
         buttons.push_back(IFD_NO); 
         ImGuiAl::MsgBox msgbox;
-        ImGui::PushID(msgbox);
+        ImGui::PushID("##msgbox");
         msgbox.Init("##msgbox", message.c_str(), buttons);
         msgbox.Open();
         int selected = msgbox.Draw();
@@ -391,7 +391,7 @@ namespace {
         buttons.push_back(IFD_NO); 
         buttons.push_back(IFD_CANCEL);
         ImGuiAl::MsgBox msgbox;
-        ImGui::PushID(msgbox);
+        ImGui::PushID("##msgbox");
         msgbox.Init("##msgbox", message.c_str(), buttons);
         msgbox.Open();
         int selected = msgbox.Draw();
