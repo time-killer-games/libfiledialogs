@@ -358,7 +358,6 @@ namespace {
         vector<string> buttons;
         buttons.push_back(IFD_OK); 
         ImGuiAl::MsgBox msgbox;
-        msgbox.push_back(new ImGuiAl::MsgBox());
         ImGui::PushID("##msgbox");
         msgbox.Init("##msgbox", message.c_str(), buttons);
         msgbox.Open();
