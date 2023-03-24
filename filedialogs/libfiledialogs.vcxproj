@@ -19,33 +19,35 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\filedialogs\filedialogs.h" />
-    <ClInclude Include="..\filedialogs\filesystem.h" />
-    <ClInclude Include="..\filedialogs\filesystem.hpp" />
-    <ClInclude Include="..\filedialogs\imconfig.h" />
-    <ClInclude Include="..\filedialogs\ImFileDialog.h" />
-    <ClInclude Include="..\filedialogs\ImFileDialogMacros.h" />
-    <ClInclude Include="..\filedialogs\imgui.h" />
-    <ClInclude Include="..\filedialogs\imgui_impl_sdlrenderer.h" />
-    <ClInclude Include="..\filedialogs\imgui_impl_sdl.h" />
-    <ClInclude Include="..\filedialogs\imgui_internal.h" />
-    <ClInclude Include="..\filedialogs\imstb_rectpack.h" />
-    <ClInclude Include="..\filedialogs\imstb_textedit.h" />
-    <ClInclude Include="..\filedialogs\imstb_truetype.h" />
-    <ClInclude Include="..\filedialogs\stb_image.h" />
+    <ClInclude Include="filedialogs.h" />
+    <ClInclude Include="filesystem.h" />
+    <ClInclude Include="filesystem.hpp" />
+    <ClInclude Include="imconfig.h" />
+    <ClInclude Include="ImFileDialog.h" />
+    <ClInclude Include="ImFileDialogMacros.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imgui_impl_sdlrenderer.h" />
+    <ClInclude Include="imgui_impl_sdl.h" />
+    <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imstb_rectpack.h" />
+    <ClInclude Include="imstb_textedit.h" />
+    <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="msgbox\imguial_msgbox.h" />
     <ClInclude Include="nanosvg.h" />
     <ClInclude Include="nanosvgrast.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\filedialogs\filedialogs.cpp" />
-    <ClCompile Include="..\filedialogs\filesystem.cpp" />
-    <ClCompile Include="..\filedialogs\ImFileDialog.cpp" />
-    <ClCompile Include="..\filedialogs\imgui.cpp" />
-    <ClCompile Include="..\filedialogs\imgui_draw.cpp" />
-    <ClCompile Include="..\filedialogs\imgui_impl_sdlrenderer.cpp" />
-    <ClCompile Include="..\filedialogs\imgui_impl_sdl.cpp" />
-    <ClCompile Include="..\filedialogs\imgui_tables.cpp" />
-    <ClCompile Include="..\filedialogs\imgui_widgets.cpp" />
+    <ClCompile Include="filedialogs.cpp" />
+    <ClCompile Include="filesystem.cpp" />
+    <ClCompile Include="ImFileDialog.cpp" />
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="imgui_draw.cpp" />
+    <ClCompile Include="imgui_impl_sdlrenderer.cpp" />
+    <ClCompile Include="imgui_impl_sdl.cpp" />
+    <ClCompile Include="imgui_tables.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="msgbox\imguial_msgbox.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
