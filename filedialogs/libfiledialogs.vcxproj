@@ -26,7 +26,7 @@
     <ClInclude Include="..\filedialogs\ImFileDialog.h" />
     <ClInclude Include="..\filedialogs\ImFileDialogMacros.h" />
     <ClInclude Include="..\filedialogs\imgui.h" />
-    <ClInclude Include="..\filedialogs\imgui_impl_opengl2.h" />
+    <ClInclude Include="..\filedialogs\imgui_impl_sdlrenderer.h" />
     <ClInclude Include="..\filedialogs\imgui_impl_sdl.h" />
     <ClInclude Include="..\filedialogs\imgui_internal.h" />
     <ClInclude Include="..\filedialogs\imstb_rectpack.h" />
@@ -42,7 +42,7 @@
     <ClCompile Include="..\filedialogs\ImFileDialog.cpp" />
     <ClCompile Include="..\filedialogs\imgui.cpp" />
     <ClCompile Include="..\filedialogs\imgui_draw.cpp" />
-    <ClCompile Include="..\filedialogs\imgui_impl_opengl2.cpp" />
+    <ClCompile Include="..\filedialogs\imgui_impl_sdlrenderer.cpp" />
     <ClCompile Include="..\filedialogs\imgui_impl_sdl.cpp" />
     <ClCompile Include="..\filedialogs\imgui_tables.cpp" />
     <ClCompile Include="..\filedialogs\imgui_widgets.cpp" />
