@@ -95,7 +95,7 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClInclude Include="msgbox\imguial_msgbox.cpp">
+    <ClCompile Include="msgbox\imguial_msgbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
