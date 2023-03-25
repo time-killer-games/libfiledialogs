@@ -30,13 +30,13 @@
 #include <AppKit/AppKit.h>
 #endif
 
-#include "filedialogs.h"
+#include "filedialogs.hpp"
 
 #if defined(_WIN32)
 #undef main
 #endif
 
-#ifdef _MSC_VER
+#if (defined(_WIN32) && defined(_MSC_VER))
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
 
