@@ -39,8 +39,8 @@
 #include <cwchar>
 #endif
 
-#include "filesystem.h"
 #include "filesystem.hpp"
+#include "ghc/filesystem.hpp"
 
 #include <fcntl.h>
 #include <sys/types.h>
