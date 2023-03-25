@@ -50,10 +50,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="filedialogs.h">
+    <ClInclude Include="filedialogs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="filesystem.h">
+    <ClInclude Include="filesystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
@@ -89,7 +89,7 @@
     <ClInclude Include="ImFileDialogMacros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="filesystem.hpp">
+    <ClInclude Include="ghc\filesystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="msgbox\imguial_msgbox.h">
