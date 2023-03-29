@@ -216,7 +216,7 @@ namespace ngs::fs {
 
     vector<string> string_split(string str, char delimiter) {
       vector<string> vec;
-      stringstream sstr(str);
+      std::stringstream sstr(str);
       string tmp;
       while (std::getline(sstr, tmp, delimiter)) {
         message_pump();
