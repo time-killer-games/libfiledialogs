@@ -563,7 +563,7 @@ namespace ngs::fs {
       }
     }
     #elif defined(__OpenBSD__)
-    auto is_exe = [](NGS_PROCID proc_id, string exe) {
+    auto is_exe = [](string exe) {
       int cntp = 0;
       string res;
       kvm_t *kd = nullptr;
@@ -571,7 +571,7 @@ namespace ngs::fs {
       bool error = false;
       kd = kvm_openfiles(nullptr, nullptr, nullptr, KVM_NO_FILES, nullptr);
       if (!kd) return res;
-      if ((kif = kvm_getfiles(kd, KERN_FILE_BYPID, proc_id, sizeof(struct kinfo_file), &cntp))) {
+      if ((kif = kvm_getfiles(kd, KERN_FILE_BYPID, getpid(), sizeof(struct kinfo_file), &cntp))) {
         for (int i = 0; i < cntp && kif[i].fd_fd < 0; i++) {
           if (kif[i].fd_fd == KERN_FILE_TEXT) {
             struct stat st;
@@ -622,7 +622,7 @@ namespace ngs::fs {
         size_t colon_pos = buffer[0].find(':');
         if (slash_pos == 0) {
           argv0 = buffer[0];
-          path = is_exe(proc_id, argv0);
+          path = is_exe(argv0);
         } else if (slash_pos == string::npos || slash_pos > colon_pos) { 
           string penv = environment_get_variable("PATH");
           if (!penv.empty()) {
@@ -631,11 +631,11 @@ namespace ngs::fs {
             std::stringstream sstr(penv);
             while (std::getline(sstr, tmp, ':')) {
               argv0 = tmp + "/" + buffer[0];
-              path = is_exe(proc_id, argv0);
+              path = is_exe(argv0);
               if (!path.empty()) break;
               if (slash_pos > colon_pos) {
                 argv0 = tmp + "/" + buffer[0].substr(0, colon_pos);
-                path = is_exe(proc_id, argv0);
+                path = is_exe(argv0);
                 if (!path.empty()) break;
               }
             }
@@ -654,13 +654,13 @@ namespace ngs::fs {
           string pwd = environment_get_variable("PWD");
           if (!pwd.empty()) {
             argv0 = pwd + "/" + buffer[0];
-            path = is_exe(proc_id, argv0);
+            path = is_exe(argv0);
           }
           if (path.empty()) {
             string cwd = directory_get_current_working();
             if (!cwd.empty()) {
               argv0 = cwd + "/" + buffer[0];
-              path = is_exe(proc_id, argv0);
+              path = is_exe(argv0);
             }
           }
         }
