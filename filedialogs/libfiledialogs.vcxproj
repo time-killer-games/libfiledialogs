@@ -34,8 +34,6 @@
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="msgbox\imguial_msgbox.h" />
-    <ClInclude Include="nanosvg.h" />
-    <ClInclude Include="nanosvgrast.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="filedialogs.cpp" />

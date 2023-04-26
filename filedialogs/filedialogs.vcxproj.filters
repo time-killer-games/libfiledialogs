@@ -95,11 +95,5 @@
     <ClInclude Include="msgbox\imguial_msgbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="nanosvg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="nanosvgrast.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
