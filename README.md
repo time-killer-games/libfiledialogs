@@ -19,7 +19,7 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 #include "ghc/filesystem.hpp"   // GHC File System
 #include "filesystem.hpp"       // NGS File System
 
-#if defined(__APPLE__) && defined(__MACH__)
+#if (defined(__APPLE__) && defined(__MACH__))
 // Compile with: -framework AppKit -ObjC++
 #include <AppKit/AppKit.h> // NSApplication
 #endif
@@ -46,7 +46,7 @@ environment variable */
 
 namespace {
   void init() {
-    #if defined(__APPLE__) && defined(__MACH__)
+    #if (defined(__APPLE__) && defined(__MACH__))
     // hide icon from dock on macOS to match all the other platforms
     [[NSApplication sharedApplication] setActivationPolicy:(NSApplicationActivationPolicy)1];
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
