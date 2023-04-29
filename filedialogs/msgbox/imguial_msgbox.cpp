@@ -59,9 +59,9 @@ int ImGuiAl::MsgBox::Draw()
     ImGui::TextWrapped( m_Text );
 
     int sw = 0, sh = 0;
-    int dw = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 640 * (0.1 * ImGui::GetFontSize()) ).x;
+    int dw = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 640 * (0.01 * ImGui::GetFontSize()) ).x;
     if (dw < 320) dw = 320;
-    int dh = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 640 * (0.1 * ImGui::GetFontSize()) ).y + (4.875f * ImGui::GetFontSize());
+    int dh = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 640 * (0.01 * ImGui::GetFontSize()) ).y + (4.875f * ImGui::GetFontSize());
     if (window) {
       SDL_GetWindowSize(window, &sw, &sh);
       if ((sw != dw || sh != dh) && ngs::fs::environment_get_variable("IMGUI_DIALOG_RESIZE").empty()) {
