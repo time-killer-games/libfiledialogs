@@ -354,6 +354,7 @@ namespace {
       else if (type == selectFolder) ifd::FileDialog::Instance().Open("GetDirectory", "Select Directory", "", false, fname.c_str(), dir.c_str());
       else if (type == saveFile) ifd::FileDialog::Instance().Save("GetSaveFileName", "Save As", filterNew.c_str(), fname.c_str(), dir.c_str());
       else if (type == oneButton) {
+        if (message.empty()) goto finish;
         vector<string> buttons;
         buttons.push_back(IFD_OK); 
         ImGuiAl::MsgBox msgbox;
@@ -368,6 +369,7 @@ namespace {
         ImGui::PopID();
         if (result != "(null)") goto finish;
       } else if (type == twoButtons) {
+        if (message.empty()) goto finish;
         vector<string> buttons;
         buttons.push_back(IFD_YES);
         buttons.push_back(IFD_NO); 
@@ -384,6 +386,7 @@ namespace {
         ImGui::PopID();
         if (result != "(null)") goto finish;
       } else if (type == threeButtons) {
+        if (message.empty()) goto finish;
         vector<string> buttons;
         buttons.push_back(IFD_YES);
         buttons.push_back(IFD_NO); 
