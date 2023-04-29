@@ -33,6 +33,8 @@ extern SDL_Window *window;
 
 ImGuiAl::MsgBox::~MsgBox() {}
 
+bool init = false;
+
 void AlignForWidth(float width, float alignment = 0.5f)
 {
   ImGuiStyle& style = ImGui::GetStyle();
@@ -45,6 +47,7 @@ void AlignForWidth(float width, float alignment = 0.5f)
 
 bool ImGuiAl::MsgBox::Init( const char* title, const char* text, std::vector<std::string> captions )
 {
+  init = false;
   m_Title = title;
   m_Text = text;
   m_Captions = captions;
@@ -64,9 +67,10 @@ int ImGuiAl::MsgBox::Draw()
     int dh = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 100 * (0.25 * ImGui::GetFontSize()) ).y + (4.875f * ImGui::GetFontSize());
     if (window) {
       SDL_GetWindowSize(window, &sw, &sh);
-      if ((sw != dw || sh != dh) && ngs::fs::environment_get_variable("IMGUI_DIALOG_RESIZE") != std::to_string(1)) {
+      if ((sw != dw || sh != dh) && !init) {
         SDL_SetWindowSize(window, dw, dh);
         SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+        init = true;
       }
     }
       
