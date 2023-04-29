@@ -243,7 +243,7 @@ namespace {
     [[nsWnd standardWindowButton:NSWindowMiniaturizeButton] setEnabled:NO];
     [[nsWnd standardWindowButton:NSWindowZoomButton] setEnabled:NO];
     if (!ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty()) {
-      if (![nsWnd parentWindow]) [(NSWindow *)(void *)(std::uintptr_t)strtoull(
+      [(NSWindow *)(void *)(std::uintptr_t)strtoull(
       ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").c_str(), nullptr, 10)
       addChildWindow:nsWnd ordered:NSWindowAbove];
       NSRect parentFrame = [(NSWindow *)(void *)(std::uintptr_t)strtoull(
