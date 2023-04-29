@@ -60,6 +60,7 @@ int ImGuiAl::MsgBox::Draw()
 
     int sw = 0, sh = 0;
     int dw = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 480 ).x;
+    if (dw < 320) dw = 320;
     int dh = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 480 ).y + (4 * ImGui::GetFontSize());
     if (window) {
       SDL_GetWindowSize(window, &sw, &sh);
