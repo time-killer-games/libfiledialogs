@@ -64,7 +64,7 @@ int ImGuiAl::MsgBox::Draw()
     int dh = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 100 * (0.25 * ImGui::GetFontSize()) ).y + (4.875f * ImGui::GetFontSize());
     if (window) {
       SDL_GetWindowSize(window, &sw, &sh);
-      if ((sw != dw || sh != dh) && ngs::fs::environment_get_variable("IMGUI_DIALOG_RESIZE").empty()) {
+      if ((sw != dw || sh != dh) && ngs::fs::environment_get_variable("IMGUI_DIALOG_RESIZE") != std::to_string(1)) {
         SDL_SetWindowSize(window, dw, dh);
         SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
       }
