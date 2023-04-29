@@ -29,11 +29,9 @@ SOFTWARE.
 #include "../filesystem.hpp"
 #include "../imgui.h"
 
-extern SDL_Window *window;
+extern SDL_Window *dialog;
 
 ImGuiAl::MsgBox::~MsgBox() {}
-
-bool init = false;
 
 void AlignForWidth(float width, float alignment = 0.5f)
 {
@@ -47,7 +45,6 @@ void AlignForWidth(float width, float alignment = 0.5f)
 
 bool ImGuiAl::MsgBox::Init( const char* title, const char* text, std::vector<std::string> captions )
 {
-  init = false;
   m_Title = title;
   m_Text = text;
   m_Captions = captions;
@@ -65,13 +62,11 @@ int ImGuiAl::MsgBox::Draw()
     int dw = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 100 * (0.25 * ImGui::GetFontSize()) ).x;
     if (dw < 320) dw = 320;
     int dh = ImGui::CalcTextSize( m_Text, m_Text + strlen(m_Text), false, 100 * (0.25 * ImGui::GetFontSize()) ).y + (4.875f * ImGui::GetFontSize());
-    if (window) {
-      SDL_GetWindowSize(window, &sw, &sh);
-      if ((sw != dw || sh != dh) && !init) {
-        SDL_SetWindowSize(window, dw, dh);
-        SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-        init = true;
-      }
+    if (dialog) {
+      SDL_GetWindowSize(dialog, &sw, &sh);
+      SDL_SetWindowSize(dialog, dw, dh);
+      SDL_SetWindowPosition(dialog, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+      dialog = nullptr;
     }
       
     ImGui::Separator();
