@@ -65,8 +65,8 @@ int ImGuiAl::MsgBox::Draw()
     if (dialog) {
       SDL_GetWindowSize(dialog, &sw, &sh);
       SDL_SetWindowSize(dialog, dw, dh);
-      SDL_SetWindowPosition(dialog, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-      dialog = nullptr;
+      if (ngs::fs::environment_get_variable("IMGUI_DIALOG_PARENT").empty())
+        SDL_SetWindowPosition(dialog, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     }
       
     ImGui::Separator();
