@@ -106,7 +106,7 @@ namespace {
     if (icon == nullptr)
       icon = LoadIconW((HINSTANCE)GetWindowLongPtrW(hWnd, GWLP_HINSTANCE), MAKEINTRESOURCEW(0));
     if (icon == nullptr)
-      icon = LoadIconA(nullptr, IDI_APPLICATION);
+      icon = LoadIconW(nullptr, MAKEINTRESOURCEW(32512));
     return icon;
   }
   #endif
