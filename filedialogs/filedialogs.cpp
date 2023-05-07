@@ -511,6 +511,7 @@ namespace {
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
     SDL_DestroyWindow(window);
+    dialog = nullptr;
     window = nullptr;
     return result;
   }
