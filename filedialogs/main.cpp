@@ -42,6 +42,13 @@
 
 using namespace ngs::imgui;
 
+static std::string remove_trailing_zeros(double numb) {
+  std::string strnumb = std::to_string(numb);
+  while (!strnumb.empty() && strnumb.find('.') != string::npos && (strnumb.back() == '.' || strnumb.back() == '0'))
+    strnumb.pop_back();
+  return strnumb;
+}
+
 int main(int argc, const char **argv) {
   #if defined(__APPLE__) && defined(__MACH__)
   [[NSApplication sharedApplication] setActivationPolicy:(NSApplicationActivationPolicy)1];
@@ -76,7 +83,7 @@ int main(int argc, const char **argv) {
   } else if (argc == 4 && strcmp(argv[1], "--get-string") == 0) {
     std::cout << get_string(argv[2], argv[3]) << "\n";
   } else if (argc == 4 && strcmp(argv[1], "--get-number") == 0) {
-    std::cout << get_number(argv[2], strtod(argv[3], nullptr)) << "\n";
+    std::cout << remove_trailing_zeros(get_number(argv[2], strtod(argv[3], nullptr))) << "\n";
   } else if (argc == 4 && strcmp(argv[1], "--get-open-filename") == 0) {
     std::cout << get_open_filename(argv[2], argv[3]) << "\n";
   } else if (argc == 6 && strcmp(argv[1], "--get-open-filename-ext") == 0) {
