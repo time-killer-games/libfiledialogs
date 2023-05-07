@@ -264,7 +264,6 @@ namespace {
         if (e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_CLOSE) {
           if (SDL_GetWindowID(window) == e.window.windowID) {
             result = "(null)";
-            quit = true;
           }
         }
       }
