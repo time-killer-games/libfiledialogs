@@ -55,6 +55,8 @@ int main(int argc, const char **argv) {
       std::cout << "    --show-message           msg                   " << "\n";
       std::cout << "    --show-question          msg                   " << "\n";
       std::cout << "    --show-question-ext      msg                   " << "\n";
+      std::cout << "    --get-string             msg    def            " << "\n";
+      std::cout << "    --get-number             msg    def            " << "\n";
       std::cout << "    --get-open-filename      filter fname          " << "\n";
       std::cout << "    --get-open-filename-ext  filter fname dir title" << "\n";
       std::cout << "    --get-open-filenames     filter fname          " << "\n";
@@ -71,6 +73,10 @@ int main(int argc, const char **argv) {
     std::cout << show_question(argv[2]) << "\n";
   } else if (argc == 3 && strcmp(argv[1], "--show-question-ext") == 0) {
     std::cout << show_question_ext(argv[2]) << "\n";
+  } else if (argc == 4 && strcmp(argv[1], "--get-string") == 0) {
+    std::cout << get_string(argv[2], argv[3]) << "\n";
+  } else if (argc == 4 && strcmp(argv[1], "--get-number") == 0) {
+    std::cout << get_number(argv[2], strtod(argv[3], nullptr)) << "\n";
   } else if (argc == 4 && strcmp(argv[1], "--get-open-filename") == 0) {
     std::cout << get_open_filename(argv[2], argv[3]) << "\n";
   } else if (argc == 6 && strcmp(argv[1], "--get-open-filename-ext") == 0) {
