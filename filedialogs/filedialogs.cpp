@@ -243,7 +243,7 @@ namespace {
     style.Colors[ImGuiCol_PopupBg] = ImVec4(color_for_pops.x, color_for_pops.y, color_for_pops.z, 0.92f);
   }
 
-  void ImGuiEx::SetupImGuiStyle2() {
+  void SetupImGuiStyle2() {
     float text_0 = (float)strtod(ngs::fs::environment_get_variable("IMGUI_TEXT_COLOR_0").c_str(), nullptr);
     float text_1 = (float)strtod(ngs::fs::environment_get_variable("IMGUI_TEXT_COLOR_1").c_str(), nullptr);
     float text_2 = (float)strtod(ngs::fs::environment_get_variable("IMGUI_TEXT_COLOR_2").c_str(), nullptr);
