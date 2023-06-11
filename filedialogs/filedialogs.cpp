@@ -330,8 +330,12 @@ namespace {
       } else if (type == stringInputBox) {
         if (message.empty()) goto finish;
         vector<string> buttons;
-        buttons.push_back(IFD_OK);
-        buttons.push_back(IFD_CANCEL);
+        if (ngs::fs::environment_get_variable("IMGUI_INPUT_OKONLY") == std::to_string(1)) {
+          buttons.push_back(IFD_OK);
+        } else {
+          buttons.push_back(IFD_OK);
+          buttons.push_back(IFD_CANCEL);
+        }
         ImGuiAl::MsgBox msgbox;
         ImGui::PushID("##msgbox");
         strcpy(msgbox.Default, def.substr(0, 1023).c_str());
@@ -349,7 +353,12 @@ namespace {
       } else if (type == numberInputBox) {
         if (message.empty()) goto finish;
         vector<string> buttons;
-        buttons.push_back(IFD_OK);
+        if (ngs::fs::environment_get_variable("IMGUI_INPUT_OKONLY") == std::to_string(1)) {
+          buttons.push_back(IFD_OK);
+        } else {
+          buttons.push_back(IFD_OK);
+          buttons.push_back(IFD_CANCEL);
+        }
         ImGuiAl::MsgBox msgbox;
         ImGui::PushID("##msgbox");
         double defnum = strtod(def.c_str(), nullptr);
@@ -364,6 +373,7 @@ namespace {
         switch (selected) {
           case 0: result = remove_trailing_zeros(0); break;
           case 1: result = remove_trailing_zeros(strtod(msgbox.Result.c_str(), nullptr)); break;
+          case 2: result = remove_trailing_zeros(0); break;
         }
         ImGui::PopID();
         if (selected) goto finish;
