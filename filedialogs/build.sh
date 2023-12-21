@@ -40,7 +40,7 @@ elif [ $(uname) = "Linux" ]; then
     g++ "ImFileDialog.cpp" "imgui.cpp" "imgui_impl_sdl.cpp" "imgui_impl_sdlrenderer.cpp" "imgui_draw.cpp" "imgui_tables.cpp" "imgui_widgets.cpp" "filesystem.cpp" "filedialogs.cpp" "msgbox/imguial_msgbox.cpp" -o "libfiledialogs.so" -std=c++17 -DIFD_SHARED_LIBRARY -shared -Wno-format-security -I. -Llunasvg -llunasvg -DIMGUI_USE_WCHAR32 -static-libgcc -static-libstdc++ `pkg-config --cflags --libs sdl2 --static` `pkg-config --cflags --libs gtk+-3.0` `pkg-config --cflags --libs gio-2.0` `pkg-config --cflags --libs glib-2.0` -lX11 -lpthread -fPIC
   else
     clang++ "ImFileDialog.cpp" "imgui.cpp" "imgui_impl_sdl.cpp" "imgui_impl_sdlrenderer.cpp" "imgui_draw.cpp" "imgui_tables.cpp" "imgui_widgets.cpp" "filesystem.cpp" "filedialogs.cpp" "msgbox/imguial_msgbox.cpp" -o "libfiledialogs.so" -std=c++17 -DIFD_SHARED_LIBRARY -shared -Wno-format-security -I. -DIMGUI_USE_WCHAR32 -lSDL2 -lpthread -fPIC
-   fi
+  fi
 elif [ $(uname) = "FreeBSD" ]; then
   cd "lunasvg" && rm -f "CMakeCache.txt" &&  cmake . && make && cd ..;
   clang++ "ImFileDialog.cpp" "imgui.cpp" "imgui_impl_sdl.cpp" "imgui_impl_sdlrenderer.cpp" "imgui_draw.cpp" "imgui_tables.cpp" "imgui_widgets.cpp" "filesystem.cpp" "filedialogs.cpp" "msgbox/imguial_msgbox.cpp" -o "libfiledialogs.so" -std=c++17 -DIFD_SHARED_LIBRARY -shared -Wno-format-security -I. -Llunasvg -llunasvg -DIMGUI_USE_WCHAR32 `pkg-config --cflags --libs sdl2 --static` `pkg-config --cflags --libs gtk+-3.0` `pkg-config --cflags --libs gio-2.0` `pkg-config --cflags --libs glib-2.0` -lX11 -lc -lpthread -fPIC
