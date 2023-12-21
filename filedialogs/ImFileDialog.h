@@ -217,11 +217,11 @@ namespace ifd {
     0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff,
   };
 
-  const char *GetDefaultFolderIcon() {
+  static const char *GetDefaultFolderIcon() {
     return (const char*)&folder_icon[0];
   }
 
-  const char *GetDefaultFileIcon() {
+  static const char *GetDefaultFileIcon() {
     return (const char*)&file_icon[0];
   }
 }
