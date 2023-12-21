@@ -58,7 +58,7 @@
 #define DEFAULT_ICON_SIZE 32
 #define PI 3.141592f
 
-#elif (defined(__linux__) && !defined(__ANDROID__)) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__sun)
+#if (defined(__linux__) && !defined(__ANDROID__)) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__sun)
 using namespace lunasvg;
 #endif
 
