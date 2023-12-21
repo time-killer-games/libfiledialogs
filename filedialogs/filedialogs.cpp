@@ -37,7 +37,6 @@
 #include <map>
 
 #include "filedialogs.hpp"
-#include "SDL_syswm.h"
 #include "imgui_impl_sdlrenderer.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
@@ -46,6 +45,12 @@
 #include "ImFileDialogMacros.h"
 #include "ghc/filesystem.hpp"
 #include "filesystem.hpp"
+
+#if !defined(__ANDROID__)
+#include <SDL_syswm.h>
+#else
+#include <SDL2/SDL_syswm.h>
+#endif
 
 #include <sys/stat.h>
 #if defined(_WIN32) 
