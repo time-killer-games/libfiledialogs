@@ -56,7 +56,7 @@
 #else
 #if defined(__APPLE__) && defined(__MACH__)
 #include <AppKit/AppKit.h>
-#else
+#elif defined(__linux__) && !defined(__ANDROID__)
 #include <X11/Xlib.h>
 #endif
 #include <unistd.h>
@@ -534,7 +534,7 @@ namespace {
           (parentFrame.origin.y + (parentFrame.size.height / 2)) - (childFrame.size.height / 2),
           childFrame.size.width, childFrame.size.height) display:YES];
         }
-        #else
+        #elif defined(__linux__) && !defined(__ANDROID__)
         SDL_SysWMinfo system_info;
         SDL_VERSION(&system_info.version);
         if (!SDL_GetWindowWMInfo(window, &system_info)) return "";
