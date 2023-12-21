@@ -76,9 +76,6 @@ struct HumanReadable {
 };
 
 namespace ifd {
-  static const char *GetDefaultFolderIcon();
-  static const char *GetDefaultFileIcon();
-
   /* UI CONTROLS */
   bool FolderNode(const char* label, ImTextureID icon, bool& clicked) {
     ImGuiContext& g = *GImGui;
