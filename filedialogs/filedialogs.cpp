@@ -40,8 +40,8 @@
 #if !defined(__ANDROID__)
 #include "imgui_impl_sdlrenderer.h"
 #else
-#ifndef IMGUI_IMPL_OPENGL_ES2
-#define IMGUI_IMPL_OPENGL_ES2
+#ifndef IMGUI_IMPL_OPENGL_ES3
+#define IMGUI_IMPL_OPENGL_ES3
 #endif
 #include "imgui_impl_opengl3.h"
 #endif
@@ -298,7 +298,7 @@ namespace {
     const char *glsl_version = "#version 100";
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     #ifdef SDL_HINT_IME_SHOW_UI
     SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
@@ -386,7 +386,7 @@ namespace {
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
       glGenerateMipmap(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D, 0);
-      return (void*)tex;
+      return (void *)tex;
     };
     ifd::FileDialog::Instance().DeleteTexture = [](void* tex) {
       GLuint texID = (GLuint)((uintptr_t)tex);
