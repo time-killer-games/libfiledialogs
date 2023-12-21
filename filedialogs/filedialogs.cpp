@@ -40,6 +40,9 @@
 #if !defined(__ANDROID__)
 #include "imgui_impl_sdlrenderer.h"
 #else
+#ifndef IMGUI_IMPL_OPENGL_ES2
+#define IMGUI_IMPL_OPENGL_ES2
+#endif
 #include "imgui_impl_opengl3.h"
 #endif
 #include "imgui.h"
