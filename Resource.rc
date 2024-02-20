@@ -2,7 +2,7 @@
 
 IDB_EMBEDICO ICON   ".\\filedialogs\\filedialogs.ico"
 IDB_EMBEDEXE RCDATA ".\\filedialogs\\filedialogs.exe"
-IDB_EMBEDDLL RCDATA ".\\filedialogs\\SDL2.dll"
+IDB_EMBEDDLL RCDATA ".\\filedialogs\\sdl2.dll"
 IDB_FONTS000 RCDATA ".\\filedialogs\\fonts\\000-notosans-regular.ttf"
 IDB_FONTS001 RCDATA ".\\filedialogs\\fonts\\001-notokufiarabic-regular.ttf"
 IDB_FONTS002 RCDATA ".\\filedialogs\\fonts\\002-notomusic-regular.ttf"
