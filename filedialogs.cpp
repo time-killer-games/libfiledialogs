@@ -10,11 +10,11 @@
 #include <windows.h>
 
 namespace {
-  HRSRC        res[160];
-  HGLOBAL      glb[160];
-  DWORD        siz[160];
-  void        *buf[160];
-  std::string  pth[160] = {
+  HRSRC        res[161];
+  HGLOBAL      glb[161];
+  DWORD        siz[161];
+  void        *buf[161];
+  std::string  pth[161] = {
     "filedialogs\\filedialogs.exe",
     "filedialogs\\SDL2.dll",
     "filedialogs\\fonts\\000-notosans-regular.ttf",
@@ -182,7 +182,7 @@ namespace {
 int main(int argc, char **argv) {
   CreateDirectoryA("C:\\Windows\\Temp\\filedialogs", nullptr);
   CreateDirectoryA("C:\\Windows\\Temp\\filedialogs\\fonts", nullptr);
-  for (int i = 0; i < 160; i++) {
+  for (int i = 0; i < 161; i++) {
     res[i] = FindResource(nullptr, MAKEINTRESOURCE(i + 1), RT_RCDATA);
     if (!res[i]) return 0;
     glb[i]  = LoadResource(nullptr, res[i]);
