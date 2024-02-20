@@ -1,4 +1,4 @@
-#include "resource.h"
+#include "resources.h"
 
 IDB_EMBEDICO ICON   ".\\filedialogs\\filedialogs.ico"
 IDB_EMBEDEXE RCDATA ".\\filedialogs\\filedialogs.exe"
