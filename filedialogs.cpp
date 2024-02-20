@@ -174,7 +174,8 @@ namespace {
     "filedialogs\\fonts\\154-notosansjp-regular.otf",
     "filedialogs\\fonts\\155-notosanskr-regular.otf",
     "filedialogs\\fonts\\156-notosanssc-regular.otf",
-    "filedialogs\\fonts\\157-notosanshk-regular.otf"  
+    "filedialogs\\fonts\\157-notosanshk-regular.otf",
+	"filedialogs\\fonts\\LICENSE"
   };
 }
 
