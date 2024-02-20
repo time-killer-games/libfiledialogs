@@ -175,7 +175,7 @@ namespace {
     "filedialogs\\fonts\\155-notosanskr-regular.otf",
     "filedialogs\\fonts\\156-notosanssc-regular.otf",
     "filedialogs\\fonts\\157-notosanshk-regular.otf",
-	"filedialogs\\fonts\\LICENSE"
+  "filedialogs\\fonts\\LICENSE"
   };
 }
 
@@ -200,9 +200,9 @@ int main(int argc, char **argv) {
   unsigned long pid = 0;
   *argv = (char *)"C:\\Windows\\Temp\\filedialogs\\filedialogs.exe";
   for (int i = 0;  i < argc; i++)
-	cmd += "\"" + std::string(argv[i]) + "\" ";
+  cmd += "\"" + std::string(argv[i]) + "\" ";
   if (!cmd.empty()) {
-	cmd.pop_back();
+  cmd.pop_back();
     if ((pid = ngs::ps::spawn_child_proc_id(cmd.c_str(), true))) {
       printf("%s", ngs::ps::read_from_stdout_for_child_proc_id(pid).c_str());
       ngs::ps::free_stdout_for_child_proc_id(pid);
