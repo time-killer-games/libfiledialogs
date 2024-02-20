@@ -4,7 +4,7 @@
 #include <string>
 #include <cstdio>
 
-#include "resource.h"
+#include "resources.h"
 #include "apiprocess/process.hpp"
 
 #include <windows.h>
