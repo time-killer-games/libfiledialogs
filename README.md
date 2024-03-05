@@ -22,6 +22,8 @@ Based on [ImFileDialog](https://github.com/dfranx/ImFileDialog) by [dfranx](http
 #if (defined(__APPLE__) && defined(__MACH__))
 // Compile with: -framework AppKit -ObjC++
 #include <AppKit/AppKit.h> // NSApplication
+// macOS version checking macros
+#include <AvailabilityMacros.h>
 #endif
 
 /* setup home directory
@@ -49,7 +51,12 @@ namespace {
     #if (defined(__APPLE__) && defined(__MACH__))
     // hide icon from dock on macOS to match all the other platforms
     [[NSApplication sharedApplication] setActivationPolicy:(NSApplicationActivationPolicy)1];
+    #if (__MAC_OS_X_VERSION_MAX_ALLOWED < 140000)
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+    #else
+    [[NSApplication sharedApplication] yieldActivationToApplication:[NSRunningApplication currentApplication]];
+    [[NSApplication sharedApplication] activate];
+    #endif
     #endif
 
     // set imgui file dialogs window width and height; default is 640x360 pixels
