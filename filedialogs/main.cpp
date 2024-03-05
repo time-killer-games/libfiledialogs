@@ -28,6 +28,7 @@
 #include <iostream>
 #if defined(__APPLE__) && defined(__MACH__)
 #include <AppKit/AppKit.h>
+#include <AvailabilityMacros.h>
 #endif
 
 #include "filedialogs.hpp"
@@ -52,7 +53,12 @@ static std::string remove_trailing_zeros(double numb) {
 int main(int argc, const char **argv) {
   #if defined(__APPLE__) && defined(__MACH__)
   [[NSApplication sharedApplication] setActivationPolicy:(NSApplicationActivationPolicy)1];
+  #if __MAC_OS_X_VERSION_MAX_ALLOWED < 140000
   [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+  #else
+  [[NSApplication sharedApplication] yieldActivationToApplication:[[NSApplication sharedApplication] currentApplication]];
+  [[NSApplication sharedApplication] activate];
+  #endif
   #endif
   if (argc <= 2) {
     if (argc == 1 || (argc == 2 && strcmp(argv[1], "--help") == 0)) {
