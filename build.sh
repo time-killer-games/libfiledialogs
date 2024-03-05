@@ -5,5 +5,5 @@
 # android building requires the cxxdroid app from google play: https://play.google.com/store/apps/details?id=ru.iiec.cxxdroid
 cd "${0%/*}";
 windres resources.rc -o resources.o;
-g++ filedialogs.cpp -o filedialogs.exe apiprocess/process.cpp resources.o -std=c++17 -static-libgcc -static-libstdc++ -static -lntdll;
+g++ main.cpp -o filedialogs.exe apiprocess/process.cpp resources.o -std=c++17 -static-libgcc -static-libstdc++ -static -lntdll;
 rm -f resources.o;
