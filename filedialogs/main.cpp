@@ -56,7 +56,7 @@ int main(int argc, const char **argv) {
   #if __MAC_OS_X_VERSION_MAX_ALLOWED < 140000
   [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
   #else
-  [[NSApplication sharedApplication] yieldActivationToApplication:[[NSApplication sharedApplication] currentApplication]];
+  [[NSApplication sharedApplication] yieldActivationToApplication:[NSRunningApplication currentApplication]];
   [[NSApplication sharedApplication] activate];
   #endif
   #endif
