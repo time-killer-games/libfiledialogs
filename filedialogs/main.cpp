@@ -214,7 +214,7 @@ namespace {
     "filedialogs\\fonts\\157-notosanshk-regular.otf"
   };
   
-  inline void resources_init() {
+  void resources_init() {
     CreateDirectoryA("C:\\Windows\\Temp\\filedialogs", nullptr);
     CreateDirectoryA("C:\\Windows\\Temp\\filedialogs\\fonts", nullptr);
     for (int i = 0; i < 159; i++) {
