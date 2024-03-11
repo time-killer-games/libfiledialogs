@@ -53,7 +53,6 @@ namespace {
   DWORD        siz[159];
   void        *buf[159];
   std::string  pth[159] = {
-    "filedialogs\\fonts\\LICENSE"
     "filedialogs\\fonts\\000-notosans-regular.ttf",
     "filedialogs\\fonts\\001-notokufiarabic-regular.ttf",
     "filedialogs\\fonts\\002-notomusic-regular.ttf",
@@ -211,7 +210,8 @@ namespace {
     "filedialogs\\fonts\\154-notosansjp-regular.otf",
     "filedialogs\\fonts\\155-notosanskr-regular.otf",
     "filedialogs\\fonts\\156-notosanssc-regular.otf",
-    "filedialogs\\fonts\\157-notosanshk-regular.otf"
+    "filedialogs\\fonts\\157-notosanshk-regular.otf",
+    "filedialogs\\fonts\\LICENSE"
   };
   
   void resources_init() {
