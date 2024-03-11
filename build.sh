@@ -15,11 +15,5 @@ elif [ $(uname) = "OpenBSD" ]; then
 elif [ $(uname) = "SunOS" ]; then
   "./filedialogs/build (SDL Renderer).sh";
 else
-  if [ -f "./filedialogs/filedialogs.exe" ]; then
-    windres resources.rc -o resources.o;
-    g++ main.cpp -o filedialogs.exe apiprocess/process.cpp resources.o -std=c++17 -static-libgcc -static-libstdc++ -static -lntdll;
-    rm -f resources.o;
-  else
-    echo "make sure you build the visual c++ project first found in the \"filedialogs\" sub-directory of this repository's source tree.";
-  fi
+  echo "build the visual studio solution found in the \"filedialogs\" sub-directory of this repository's source tree.";
 fi
