@@ -26,7 +26,10 @@
 
 #include <cstring>
 #include <iostream>
-#if defined(__APPLE__) && defined(__MACH__)
+#if defined(_WIN32)
+#include "../resources.h"
+#include "filesystem.hpp"
+#elif defined(__APPLE__) && defined(__MACH__)
 #include <AppKit/AppKit.h>
 #include <AvailabilityMacros.h>
 #endif
@@ -51,7 +54,13 @@ static std::string remove_trailing_zeros(double numb) {
 }
 
 int main(int argc, const char **argv) {
-  #if defined(__APPLE__) && defined(__MACH__)
+  #if defined(_WIN32)
+  resources_init();
+  if (ngs::fs::environment_get_variable("IMGUI_FONT_PATH").empty() && 
+  ngs::fs::environment_get_variable("IMGUI_FONT_FILES").empty()) {
+    ngs::fs::environment_set_variable("IMGUI_FONT_PATH", "C:\\Windows\\Temp\\filedialogs\\fonts\\");
+  }
+  #elif defined(__APPLE__) && defined(__MACH__)
   [[NSApplication sharedApplication] setActivationPolicy:(NSApplicationActivationPolicy)1];
   #if __MAC_OS_X_VERSION_MAX_ALLOWED < 140000
   [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
