@@ -95,14 +95,9 @@
     <ClInclude Include="msgbox\imguial_msgbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\resources.h">
+    <ClInclude Include="resources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\resources.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="filedialogs.ico">
@@ -589,5 +584,10 @@
     <None Include="fonts\LICENSE">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -32,7 +32,6 @@
     <ClCompile Include="msgbox\imguial_msgbox.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\resources.h" />
     <ClInclude Include="filedialogs.hpp" />
     <ClInclude Include="filesystem.hpp" />
     <ClInclude Include="ghc\filesystem.hpp" />
@@ -47,10 +46,8 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="msgbox\imguial_msgbox.h" />
+    <ClInclude Include="resources.h" />
     <ClInclude Include="stb_image.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\resources.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="filedialogs.ico" />
@@ -217,6 +214,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="fonts\LICENSE" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

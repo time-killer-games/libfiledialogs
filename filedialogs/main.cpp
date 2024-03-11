@@ -27,7 +27,7 @@
 #include <cstring>
 #include <iostream>
 #if defined(_WIN32)
-#include "../resources.h"
+#include "resources.h"
 #include "filesystem.hpp"
 #elif defined(__APPLE__) && defined(__MACH__)
 #include <AppKit/AppKit.h>
