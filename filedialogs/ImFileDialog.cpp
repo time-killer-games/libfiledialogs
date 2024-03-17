@@ -3,6 +3,10 @@
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+#elif (defined(__APPLE__) && defined(__MACH__))
+#if !defined(IMGUI_IMPL_OPENGL_ES2)
+#define IMGUI_IMPL_OPENGL_ES2
+#endif
 #endif
 #ifndef STBI_WINDOWS_UTF8
 #define STBI_WINDOWS_UTF8
@@ -1001,8 +1005,8 @@ namespace ifd {
           for (int x = 0; x < width; x++) {
             int index = (y * width + x) * 4;
             #if defined(IMGUI_IMPL_OPENGL_ES2)
-            invData[index + 1] = rawData[index + 0];
-            invData[index + 0] = rawData[index + 1];
+            invData[index + 0] = rawData[index + 0];
+            invData[index + 1] = rawData[index + 1];
             invData[index + 2] = rawData[index + 2];
             invData[index + 3] = rawData[index + 3];
             #else
