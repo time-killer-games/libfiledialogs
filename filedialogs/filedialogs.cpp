@@ -51,9 +51,13 @@
 #include "filesystem.hpp"
 
 #if defined(IFD_USE_OPENGL)
-#include <SDL_opengl.h>
+#if (defined(__APPLE__) && defined(__MACH__))
 #if !defined(IMGUI_IMPL_OPENGL_ES2)
 #define IMGUI_IMPL_OPENGL_ES2
+#endif
+#include <SDL_opengles2.h>
+#else
+#include <SDL_opengl.h>
 #endif
 #endif
 #include <SDL_syswm.h>
