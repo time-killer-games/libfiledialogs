@@ -51,7 +51,14 @@
 #include "filesystem.hpp"
 
 #if defined(IFD_USE_OPENGL)
+#if (defined(__APPLE__) && defined(__MACH__))
+#include <SDL_opengles2.h>
+#if !defined(IMGUI_IMPL_OPENGL_ES2)
+#define IMGUI_IMPL_OPENGL_ES2
+#endif
+#else
 #include <SDL_opengl.h>
+#endif
 #endif
 #include <SDL_syswm.h>
 
@@ -297,18 +304,15 @@ namespace {
     SDL_WindowFlags windowFlags = (SDL_WindowFlags)(
     #else
     #if (defined(__APPLE__) && defined(__MACH__))
-    const char *glsl_version = "#version 150";
+    SDL_SetHint(SDL_HINT_OPENGL_ES_DRIVER, "1");
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     #else
-    const char *glsl_version = "#version 130";
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     #endif
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     #ifdef SDL_HINT_IME_SHOW_UI
     SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
     #endif
@@ -384,7 +388,7 @@ namespace {
     };
     #else
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+    ImGui_ImplOpenGL3_Init();
     ifd::FileDialog::Instance().CreateTexture = [](uint8_t *data, int w, int h, char fmt) -> void * {
       GLuint tex = 0;
       glGenTextures(1, &tex);
