@@ -5,7 +5,7 @@ if [ `uname` = "Darwin" ]; then
   if [ -f "/opt/local/bin/port" ]; then
     "./filedialogs/build (OGL Renderer).sh";
   else
-    echo "Macports installation not found! Please download and install Macports first from www.macports.org";
+    echo "MacPorts installation not found! Please download and install MacPorts first from www.macports.org";
   fi
 elif [ $(uname) = "Linux" ]; then
   "./filedialogs/build (OGL Renderer).sh";
