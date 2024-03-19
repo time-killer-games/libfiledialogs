@@ -10,9 +10,9 @@
 #define IMGUI_IMPL_OPENGL_ES2
 #endif
 #endif
+#endif
 #ifndef STBI_WINDOWS_UTF8
 #define STBI_WINDOWS_UTF8
-#endif
 #endif
 
 #include <cmath>
