@@ -3,7 +3,7 @@ cd "${0%/*}"
 
 # build command line executable
 if [ `uname` = "Darwin" ]; then
-  sudo port install libsdl2 +universal python311 ninja && git clone https://chromium.googlesource.com/angle/angle && git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git && sudo port select --set python python311 && export PATH=`pwd`/depot_tools:"$PATH" && cd angle && python scripts/bootstrap.py && gclient sync && git checkout main;
+  sudo port install libsdl2 +universal ninja && git clone https://chromium.googlesource.com/angle/angle && git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git && sudo port select --set python python311 && export PATH=`pwd`/depot_tools:"$PATH" && cd angle && python scripts/bootstrap.py && gclient sync && git checkout main;
   mkdir ../arm64 && gn gen ../arm64 && echo "target_cpu = \"arm64\"" >> ../arm64/args.gn && echo "angle_enable_metal=true" >> ../arm64/args.gn && GYP_GENERATORS=ninja gclient runhooks && ninja -j 10 -k1 -C ../arm64 && mkdir ../x86_64 && gn gen ../x86_64 && echo "target_cpu = \"x64\"" >> ../x86_64/args.gn && echo "angle_enable_metal=true" >> ../x86_64/args.gn && GYP_GENERATORS=ninja gclient runhooks && ninja -j 10 -k1 -C ../x86_64;
   lipo -create -output "../libEGL.dylib" "../arm64/libEGL.dylib" "../x86_64/libEGL.dylib";
   lipo -create -output "../libGLESv2.dylib" "../arm64/libGLESv2.dylib" "../x86_64/libGLESv2.dylib";
