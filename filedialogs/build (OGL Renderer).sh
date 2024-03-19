@@ -53,7 +53,8 @@ fi
 # build shared library
 if [ `uname` = "Darwin" ]; then
   clang++ "/opt/local/lib/libSDL2.a" "ImFileDialog.cpp" "imgui.cpp" "imgui_impl_sdl.cpp" "imgui_impl_opengl3.cpp" "imgui_draw.cpp" "imgui_tables.cpp" "imgui_widgets.cpp" "filesystem.cpp" "filedialogs.cpp" "msgbox/imguial_msgbox.cpp" -o "libfiledialogs.dylib" -std=c++17 -DIFD_USE_OPENGL -DIFD_SHARED_LIBRARY -shared -Wno-format-security -I. -DIMGUI_USE_WCHAR32 -I/opt/local/include -I/opt/local/include/SDL2 -Iangle/include -L. -ObjC++ -liconv -lEGL -lGLESv2 -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-weak_framework,CoreHaptics -Wl,-weak_framework,GameController -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal -fPIC -arch arm64 -arch x86_64 -fPIC;
-  install_name_tool -change @rpath/libEGL.dylib @loader_path/libEGL.dylib ./libfiledialogs.dylib; install_name_tool -change @rpath/libGLESv2.dylib @loader_path/libGLESv2.dylib ./libfiledialogs.dylib;
+  install_name_tool -change @rpath/libEGL.dylib @loader_path/libEGL.dylib ./libfiledialogs.dylib; 
+  install_name_tool -change @rpath/libGLESv2.dylib @loader_path/libGLESv2.dylib ./libfiledialogs.dylib;
   rm -fr "angle" "depot_tools" "arm64" "x86_64";
 elif [ $(uname) = "Linux" ]; then
   cd "lunasvg" && rm -f "CMakeCache.txt" &&  cmake . && make && cd ..;
