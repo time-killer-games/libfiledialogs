@@ -51,6 +51,7 @@
 #include "filesystem.hpp"
 
 #if defined(IFD_USE_OPENGL)
+#include <GL/glew.h>
 #include <SDL_opengl.h>
 #endif
 #include <SDL_syswm.h>
@@ -327,7 +328,10 @@ namespace {
     if (renderer == nullptr) return "";
     #else
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+   	glEnable(GL_DEPTH_TEST);
+	   glEnable(GL_STENCIL_TEST);
     SDL_GL_MakeCurrent(window, gl_context);
+	   if (glewInit() != GLEW_OK) return "";
     SDL_GL_SetSwapInterval(1);
     #endif
     IMGUI_CHECKVERSION();
@@ -389,6 +393,7 @@ namespace {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, (!fmt) ? GL_BGRA : GL_RGBA, GL_UNSIGNED_BYTE, data);
+      glGenerateMipmap(GL_TEXTURE_2D);
       glBindTexture(GL_TEXTURE_2D, 0);
       return (void *)(std::uintptr_t)tex;
     };
