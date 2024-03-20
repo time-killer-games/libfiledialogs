@@ -24,7 +24,7 @@
     <ClCompile Include="ImFileDialog.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
-    <ClCompile Include="imgui_impl_sdlrenderer.cpp" />
+    <ClCompile Include="imgui_impl_opengl3.cpp" />
     <ClCompile Include="imgui_impl_sdl.cpp" />
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
@@ -39,7 +39,8 @@
     <ClInclude Include="ImFileDialog.h" />
     <ClInclude Include="ImFileDialogMacros.h" />
     <ClInclude Include="imgui.h" />
-    <ClInclude Include="imgui_impl_sdlrenderer.h" />
+    <ClInclude Include="imgui_impl_opengl3.h" />
+    <ClInclude Include="imgui_impl_opengl3_loader.h" />
     <ClInclude Include="imgui_impl_sdl.h" />
     <ClInclude Include="imgui_internal.h" />
     <ClInclude Include="imstb_rectpack.h" />

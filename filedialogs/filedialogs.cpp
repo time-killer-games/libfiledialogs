@@ -80,9 +80,9 @@
 #if defined(IFD_USE_OPENGL)
 #pragma comment(lib, "OpenGL32.lib")
 #if defined(_WIN32) && !defined(_WIN64)
-#pragma comment(lib, __FILE__"\\..\\lib\\x86\\glew32.lib")
+#pragma comment(lib, __FILE__"\\..\\lib\\x86\\glew32s.lib")
 #elif defined(_WIN32) && defined(_WIN64)
-#pragma comment(lib, __FILE__"\\..\\lib\\x64\\glew32.lib")
+#pragma comment(lib, __FILE__"\\..\\lib\\x64\\glew32s.lib")
 #endif
 #endif
 #if defined(_WIN32) && !defined(_WIN64)
