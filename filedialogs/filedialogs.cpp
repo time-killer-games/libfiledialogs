@@ -328,10 +328,10 @@ namespace {
     if (renderer == nullptr) return "";
     #else
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
-   	glEnable(GL_DEPTH_TEST);
-	   glEnable(GL_STENCIL_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
     SDL_GL_MakeCurrent(window, gl_context);
-	   if (glewInit() != GLEW_OK) return "";
+    if (glewInit() != GLEW_OK) return "";
     SDL_GL_SetSwapInterval(1);
     #endif
     IMGUI_CHECKVERSION();
