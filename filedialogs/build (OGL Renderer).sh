@@ -3,7 +3,7 @@ cd "${0%/*}"
 
 # build command line executable
 if [ `uname` = "Darwin" ]; then
-  if [ `echo $NO_ANGLE` = "" ]; then
+  if [ "$NO_ANGLE" = "" ]; then
     sudo port install libsdl2 +universal glew +universal python311 ninja && git clone https://chromium.googlesource.com/angle/angle && git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git && sudo port select --set python python311 && export PATH=`pwd`/depot_tools:"$PATH" && cd angle && python scripts/bootstrap.py && gclient sync && git checkout main;
     mkdir ../arm64 && gn gen ../arm64 && echo "target_cpu=\"arm64\"" >> ../arm64/args.gn && echo "angle_enable_metal=true" >> ../arm64/args.gn && GYP_GENERATORS=ninja gclient runhooks && ninja -j 10 -k1 -C ../arm64 && mkdir ../x86_64 && gn gen ../x86_64 && echo "target_cpu=\"x64\"" >> ../x86_64/args.gn && echo "angle_enable_metal=true" >> ../x86_64/args.gn && GYP_GENERATORS=ninja gclient runhooks && ninja -j 10 -k1 -C ../x86_64;
     lipo -create -output "../libEGL.dylib" "../arm64/libEGL.dylib" "../x86_64/libEGL.dylib";
@@ -58,7 +58,7 @@ fi
 
 # build shared library
 if [ `uname` = "Darwin" ]; then
-  if [ `echo $NO_ANGLE` = "" ]; then
+  if [ "$NO_ANGLE" = "" ]; then
     clang++ "/opt/local/lib/libSDL2.a" "/opt/local/lib/libGLEW.a" "ImFileDialog.cpp" "imgui.cpp" "imgui_impl_sdl.cpp" "imgui_impl_opengl3.cpp" "imgui_draw.cpp" "imgui_tables.cpp" "imgui_widgets.cpp" "filesystem.cpp" "filedialogs.cpp" "msgbox/imguial_msgbox.cpp" -o "libfiledialogs.dylib" -std=c++17 -DIFD_USE_OPENGL -DIFD_SHARED_LIBRARY -shared -Wno-format-security -I. -DIMGUI_USE_WCHAR32 -I/opt/local/include -I/opt/local/include/SDL2 -Iangle/include -L. -ObjC++ -liconv -lEGL -lGLESv2 -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-weak_framework,CoreHaptics -Wl,-weak_framework,GameController -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal -fPIC -arch arm64 -arch x86_64 -fPIC;
     install_name_tool -change @rpath/libEGL.dylib @loader_path/libEGL.dylib "./libfiledialogs.dylib";
     install_name_tool -change @rpath/libGLESv2.dylib @loader_path/libGLESv2.dylib "./libfiledialogs.dylib";
