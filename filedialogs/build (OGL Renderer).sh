@@ -4,10 +4,10 @@ cd "${0%/*}"
 # build command line executable
 if [ `uname` = "Darwin" ]; then
   if [ "$NO_ANGLE" = "" ]; then
-    sudo port install libsdl2 +universal glew +universal python311 ninja;
+    sudo port install libsdl2 +universal glew +universal python312 ninja;
     git clone https://chromium.googlesource.com/angle/angle;
     git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git;
-    sudo port select --set python python311;
+    sudo port select --set python python312;
     export PATH=`pwd`/depot_tools:"$PATH";
     cd angle;
     python scripts/bootstrap.py;
