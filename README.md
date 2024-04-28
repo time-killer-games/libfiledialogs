@@ -22,8 +22,6 @@ Contact me on [Discord](https://discord.com) if you have any comments, questions
 #if (defined(__APPLE__) && defined(__MACH__))
 // Compile with: -framework AppKit -ObjC++
 #include <AppKit/AppKit.h> // NSApplication
-// macOS version checking macros
-#include <AvailabilityMacros.h>
 #endif
 
 /* setup home directory
