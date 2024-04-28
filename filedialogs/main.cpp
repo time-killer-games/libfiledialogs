@@ -37,7 +37,6 @@
 #include "filesystem.hpp"
 #elif defined(__APPLE__) && defined(__MACH__)
 #include <AppKit/AppKit.h>
-#include <AvailabilityMacros.h>
 #endif
 
 #include "filedialogs.hpp"
