@@ -253,12 +253,12 @@ int main(int argc, const char **argv) {
   }
   #elif defined(__APPLE__) && defined(__MACH__)
   [[NSApplication sharedApplication] setActivationPolicy:(NSApplicationActivationPolicy)1];
-  #if __MAC_OS_X_VERSION_MAX_ALLOWED < 140000
-  [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-  #else
-  [[NSApplication sharedApplication] yieldActivationToApplication:[NSRunningApplication currentApplication]];
-  [[NSApplication sharedApplication] activate];
-  #endif
+  if (@available(macOS 14.0, *)) {
+    [[NSApplication sharedApplication] yieldActivationToApplication:[NSRunningApplication currentApplication]];
+    [[NSApplication sharedApplication] activate];
+  } else {
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+  }
   #endif
   if (argc <= 2) {
     if (argc == 1 || (argc == 2 && strcmp(argv[1], "--help") == 0)) {
