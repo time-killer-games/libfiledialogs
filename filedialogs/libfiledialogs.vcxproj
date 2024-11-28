@@ -157,7 +157,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>IFD_USE_OPENGL;GLEW_STATIC;HAVE_LIBC;IFD_SHARED_LIBRARY;WIN32;NDEBUG;LIBFILEDIALOGS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_LIBC;IFD_SHARED_LIBRARY;WIN32;NDEBUG;LIBFILEDIALOGS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
@@ -204,7 +204,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>IFD_USE_OPENGL;GLEW_STATIC;HAVE_LIBC;IFD_SHARED_LIBRARY;NDEBUG;LIBFILEDIALOGS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_LIBC;IFD_SHARED_LIBRARY;NDEBUG;LIBFILEDIALOGS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
