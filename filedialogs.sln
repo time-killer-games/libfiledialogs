@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "filedialogs", "filedialogs.vcxproj", "{5C1967FD-0B9F-4AED-8764-EA4666B96C80}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libfiledialogs", "libfiledialogs.vcxproj", "{90759763-69CB-474D-8F90-5FE99823618A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		OGL Renderer|x64 = OGL Renderer|x64
+		OGL Renderer|x86 = OGL Renderer|x86
+		SDL Renderer|x64 = SDL Renderer|x64
+		SDL Renderer|x86 = SDL Renderer|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C1967FD-0B9F-4AED-8764-EA4666B96C80}.OGL Renderer|x64.ActiveCfg = OGL Renderer|x64
+		{5C1967FD-0B9F-4AED-8764-EA4666B96C80}.OGL Renderer|x64.Build.0 = OGL Renderer|x64
+		{5C1967FD-0B9F-4AED-8764-EA4666B96C80}.OGL Renderer|x86.ActiveCfg = OGL Renderer|Win32
+		{5C1967FD-0B9F-4AED-8764-EA4666B96C80}.OGL Renderer|x86.Build.0 = OGL Renderer|Win32
+		{5C1967FD-0B9F-4AED-8764-EA4666B96C80}.SDL Renderer|x64.ActiveCfg = SDL Renderer|x64
+		{5C1967FD-0B9F-4AED-8764-EA4666B96C80}.SDL Renderer|x64.Build.0 = SDL Renderer|x64
+		{5C1967FD-0B9F-4AED-8764-EA4666B96C80}.SDL Renderer|x86.ActiveCfg = SDL Renderer|Win32
+		{5C1967FD-0B9F-4AED-8764-EA4666B96C80}.SDL Renderer|x86.Build.0 = SDL Renderer|Win32
+		{90759763-69CB-474D-8F90-5FE99823618A}.OGL Renderer|x64.ActiveCfg = OGL Renderer|x64
+		{90759763-69CB-474D-8F90-5FE99823618A}.OGL Renderer|x64.Build.0 = OGL Renderer|x64
+		{90759763-69CB-474D-8F90-5FE99823618A}.OGL Renderer|x86.ActiveCfg = OGL Renderer|Win32
+		{90759763-69CB-474D-8F90-5FE99823618A}.OGL Renderer|x86.Build.0 = OGL Renderer|Win32
+		{90759763-69CB-474D-8F90-5FE99823618A}.SDL Renderer|x64.ActiveCfg = SDL Renderer|x64
+		{90759763-69CB-474D-8F90-5FE99823618A}.SDL Renderer|x64.Build.0 = SDL Renderer|x64
+		{90759763-69CB-474D-8F90-5FE99823618A}.SDL Renderer|x86.ActiveCfg = SDL Renderer|Win32
+		{90759763-69CB-474D-8F90-5FE99823618A}.SDL Renderer|x86.Build.0 = SDL Renderer|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7EEBB28-4205-432C-A426-91C15005AD3A}
+	EndGlobalSection
+EndGlobal

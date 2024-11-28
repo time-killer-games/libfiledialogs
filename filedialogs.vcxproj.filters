@@ -1,0 +1,602 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="filedialogs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImFileDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_sdl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="msgbox\imguial_msgbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_opengl3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_sdlrenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="filedialogs.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImFileDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_sdl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImFileDialogMacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ghc\filesystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="msgbox\imguial_msgbox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_opengl3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_opengl3_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_sdlrenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="filedialogs.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="fonts\000-NotoSans-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\001-NotoKufiArabic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\002-NotoMusic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\003-NotoNaskhArabic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\004-NotoNaskhArabicUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\005-NotoNastaliqUrdu-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\006-NotoSansAdlam-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\007-NotoSansAdlamUnjoined-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\008-NotoSansAnatolianHieroglyphs-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\009-NotoSansArabic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\010-NotoSansArabicUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\011-NotoSansArmenian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\012-NotoSansAvestan-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\013-NotoSansBamum-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\014-NotoSansBassaVah-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\015-NotoSansBatak-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\016-NotoSansBengali-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\017-NotoSansBengaliUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\018-NotoSansBhaiksuki-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\019-NotoSansBrahmi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\020-NotoSansBuginese-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\021-NotoSansBuhid-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\022-NotoSansCanadianAboriginal-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\023-NotoSansCarian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\024-NotoSansCaucasianAlbanian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\025-NotoSansChakma-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\026-NotoSansCham-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\027-NotoSansCherokee-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\028-NotoSansCoptic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\029-NotoSansCuneiform-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\030-NotoSansCypriot-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\031-NotoSansDeseret-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\032-NotoSansDevanagari-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\033-NotoSansDevanagariUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\034-NotoSansDisplay-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\035-NotoSansDuployan-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\036-NotoSansEgyptianHieroglyphs-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\037-NotoSansElbasan-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\038-NotoSansEthiopic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\039-NotoSansGeorgian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\040-NotoSansGlagolitic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\041-NotoSansGothic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\042-NotoSansGrantha-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\043-NotoSansGujarati-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\044-NotoSansGujaratiUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\045-NotoSansGurmukhi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\046-NotoSansGurmukhiUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\047-NotoSansHanifiRohingya-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\048-NotoSansHanunoo-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\049-NotoSansHatran-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\050-NotoSansHebrew-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\051-NotoSansImperialAramaic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\052-NotoSansIndicSiyaqNumbers-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\053-NotoSansInscriptionalPahlavi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\054-NotoSansInscriptionalParthian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\055-NotoSansJavanese-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\056-NotoSansKaithi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\057-NotoSansKannada-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\058-NotoSansKannadaUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\059-NotoSansKayahLi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\060-NotoSansKharoshthi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\061-NotoSansKhmer-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\062-NotoSansKhmerUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\063-NotoSansKhojki-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\064-NotoSansKhudawadi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\065-NotoSansLao-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\066-NotoSansLaoUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\067-NotoSansLepcha-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\068-NotoSansLimbu-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\069-NotoSansLinearA-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\070-NotoSansLinearB-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\071-NotoSansLisu-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\072-NotoSansLycian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\073-NotoSansLydian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\074-NotoSansMahajani-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\075-NotoSansMalayalam-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\076-NotoSansMalayalamUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\077-NotoSansMandaic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\078-NotoSansManichaean-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\079-NotoSansMarchen-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\080-NotoSansMath-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\081-NotoSansMayanNumerals-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\082-NotoSansMeeteiMayek-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\083-NotoSansMendeKikakui-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\084-NotoSansMeroitic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\085-NotoSansMiao-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\086-NotoSansModi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\087-NotoSansMongolian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\088-NotoSansMono-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\089-NotoSansMro-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\090-NotoSansMultani-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\091-NotoSansMyanmar-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\092-NotoSansMyanmarUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\093-NotoSansNabataean-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\094-NotoSansNewa-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\095-NotoSansNewTaiLue-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\096-NotoSansNKo-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\097-NotoSansOgham-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\098-NotoSansOlChiki-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\099-NotoSansOldHungarian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\100-NotoSansOldItalic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\101-NotoSansOldNorthArabian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\102-NotoSansOldPermic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\103-NotoSansOldPersian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\104-NotoSansOldSogdian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\105-NotoSansOldSouthArabian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\106-NotoSansOldTurkic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\107-NotoSansOriya-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\108-NotoSansOriyaUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\109-NotoSansOsage-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\110-NotoSansOsmanya-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\111-NotoSansPahawhHmong-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\112-NotoSansPalmyrene-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\113-NotoSansPauCinHau-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\114-NotoSansPhagsPa-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\115-NotoSansPhoenician-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\116-NotoSansPsalterPahlavi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\117-NotoSansRejang-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\118-NotoSansRunic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\119-NotoSansSamaritan-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\120-NotoSansSaurashtra-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\121-NotoSansSharada-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\122-NotoSansShavian-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\123-NotoSansSiddham-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\124-NotoSansSinhala-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\125-NotoSansSinhalaUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\126-NotoSansSoraSompeng-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\127-NotoSansSundanese-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\128-NotoSansSylotiNagri-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\129-NotoSansSymbols2-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\130-NotoSansSymbols-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\131-NotoSansSyriac-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\132-NotoSansTagalog-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\133-NotoSansTagbanwa-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\134-NotoSansTaiLe-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\135-NotoSansTaiTham-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\136-NotoSansTaiViet-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\137-NotoSansTakri-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\138-NotoSansTamil-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\139-NotoSansTamilSupplement-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\140-NotoSansTamilUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\141-NotoSansTelugu-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\142-NotoSansTeluguUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\143-NotoSansThaana-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\144-NotoSansThai-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\145-NotoSansThaiUI-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\146-NotoSansTibetan-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\147-NotoSansTifinagh-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\148-NotoSansTirhuta-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\149-NotoSansUgaritic-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\150-NotoSansVai-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\151-NotoSansWarangCiti-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\152-NotoSansYi-Regular.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\153-NotoSansTC-Regular.otf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\154-NotoSansJP-Regular.otf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\155-NotoSansKR-Regular.otf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\156-NotoSansSC-Regular.otf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\157-NotoSansHK-Regular.otf">
+      <Filter>Resource Files</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fonts\LICENSE">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
